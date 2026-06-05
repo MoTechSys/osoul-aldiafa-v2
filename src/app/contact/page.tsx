@@ -5,12 +5,12 @@ import {
   generateBreadcrumbSchema,
   generateWebPageSchema, jsonLd } from "@/lib/schema";
 
-const SITE_URL = "https://osoulaldiafa.com";
+const SITE_URL = "https://asoulaldiafa.com";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "تواصل معنا",
   description:
-    "تواصل مع أصول الضيافة عبر واتساب 0568997316 أو info@osoulaldiafa.com — استشارة مجانية لاختيار باقة الضيافة المناسبة.",
+    "تواصل مع أصول الضيافة عبر واتساب 0568997316 أو info@asoulaldiafa.com — استشارة مجانية لاختيار باقة الضيافة المناسبة.",
   path: "/contact",
   keywords: [
     "تواصل أصول الضيافة",

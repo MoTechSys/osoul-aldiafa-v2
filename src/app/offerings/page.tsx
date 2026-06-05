@@ -6,7 +6,7 @@ import {
   generateServiceSchema,
   generateWebPageSchema, jsonLd } from "@/lib/schema";
 
-const SITE_URL = "https://osoulaldiafa.com";
+const SITE_URL = "https://asoulaldiafa.com";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "تقديماتنا",

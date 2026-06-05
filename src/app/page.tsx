@@ -4,7 +4,7 @@ import {
   generateBreadcrumbSchema,
   generateFAQSchema, jsonLd } from "@/lib/schema";
 
-const SITE_URL = "https://osoulaldiafa.com";
+const SITE_URL = "https://asoulaldiafa.com";
 
 export const metadata: Metadata = {
   title: "أصول الضيافة | خدمات الضيافة الفاخرة في المملكة العربية السعودية",
@@ -47,7 +47,7 @@ const faqSchema = generateFAQSchema([
   {
     question: "كيف يمكنني الحجز؟",
     answer:
-      "عبر واتساب على الرقم 0568997316 أو البريد الإلكتروني info@osoulaldiafa.com، أو من خلال نموذج التواصل في صفحة \"تواصل معنا\".",
+      "عبر واتساب على الرقم 0568997316 أو البريد الإلكتروني info@asoulaldiafa.com، أو من خلال نموذج التواصل في صفحة \"تواصل معنا\".",
   },
   {
     question: "هل تقدّمون استشارة قبل الحجز؟",

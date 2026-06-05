@@ -76,7 +76,7 @@ export default function Footer() {
                 </svg>
               </motion.a>
               <motion.a
-                href="mailto:info@osoulaldiafa.com"
+                href="mailto:info@asoulaldiafa.com"
                 aria-label="بريد إلكتروني"
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -124,11 +124,11 @@ export default function Footer() {
                 </span>
                 <span dir="ltr">{WA_DISPLAY}</span>
               </a>
-              <a href="mailto:info@osoulaldiafa.com" className="flex items-start gap-3 text-pearl/55 text-sm hover:text-gold-bright transition-colors duration-200 min-h-[36px]">
+              <a href="mailto:info@asoulaldiafa.com" className="flex items-start gap-3 text-pearl/55 text-sm hover:text-gold-bright transition-colors duration-200 min-h-[36px]">
                 <span className="mt-0.5 flex-shrink-0">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#C5A059" strokeWidth="2" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
                 </span>
-                <span>info@osoulaldiafa.com</span>
+                <span>info@asoulaldiafa.com</span>
               </a>
               <div className="flex items-start gap-3 text-pearl/55 text-sm min-h-[36px]">
                 <span className="mt-0.5 flex-shrink-0">

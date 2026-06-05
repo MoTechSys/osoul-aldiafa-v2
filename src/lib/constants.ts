@@ -3,7 +3,7 @@
  * Central site constants — Osoul Al-Diafa
  */
 
-export const SITE_URL = "https://osoulaldiafa.com";
+export const SITE_URL = "https://asoulaldiafa.com";
 
 export const SITE_NAME = "أصول الضيافة";
 export const SITE_NAME_EN = "Osoul Al-Diafa";
@@ -15,7 +15,7 @@ export const WHATSAPP_DISPLAY = "0568997316";
 /** صيغة الاتصال (tel:) */
 export const PHONE_TEL = "+966568997316";
 
-export const EMAIL = "info@osoulaldiafa.com";
+export const EMAIL = "info@asoulaldiafa.com";
 
 /** رابط واتساب جاهز مع رسالة افتراضية */
 export function whatsappUrl(message = "مرحباً، أرغب بالاستفسار عن خدمات أصول الضيافة."): string {
