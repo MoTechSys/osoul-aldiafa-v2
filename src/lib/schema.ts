@@ -32,6 +32,38 @@ export function generateOrganizationSchema() {
   };
 }
 
+// فروع/مواقع الخدمة — إحداثيات دقيقة من خرائط جوجل (تحسين الظهور المحلي + "بالقرب مني")
+export const BRANCHES = [
+  {
+    name: "أصول الضيافة - بدر",
+    addressLocality: "بدر",
+    addressRegion: "منطقة المدينة المنورة",
+    lat: 23.773033,
+    lng: 38.796941,
+  },
+  {
+    name: "أصول الضيافة - ينبع البحر (دوار السفينة)",
+    addressLocality: "ينبع البحر",
+    addressRegion: "منطقة المدينة المنورة",
+    lat: 24.106080,
+    lng: 38.045997,
+  },
+  {
+    name: "أصول الضيافة - الهيئة الملكية بينبع",
+    addressLocality: "ينبع الصناعية",
+    addressRegion: "منطقة المدينة المنورة",
+    lat: 24.021181,
+    lng: 38.179746,
+  },
+  {
+    name: "أصول الضيافة - جدة (الحمدانية)",
+    addressLocality: "جدة",
+    addressRegion: "منطقة مكة المكرمة",
+    lat: 21.754844,
+    lng: 39.207821,
+  },
+] as const;
+
 export function generateLocalBusinessSchema() {
   return {
     "@context": "https://schema.org",
@@ -40,16 +72,45 @@ export function generateLocalBusinessSchema() {
     name: SITE_NAME,
     alternateName: "Osoul Al-Diafa",
     description:
-      "أصول الضيافة - خدمات ضيافة فاخرة في جميع مناطق المملكة العربية السعودية. قهوة عربية، شاي، تمور، وفريق صبّابين بزي تراثي.",
+      "أصول الضيافة - خدمات ضيافة فاخرة في جميع مناطق المملكة العربية السعودية. قهوة عربية، شاي، تمور، وفريق صبّابين بزي تراثي. فروع في بدر وينبع وجدة.",
     url: SITE_URL,
     telephone: PHONE,
     email: EMAIL,
     image: `${SITE_URL}/logo.webp`,
+    logo: `${SITE_URL}/logo.webp`,
     address: {
       "@type": "PostalAddress",
       addressCountry: "SA",
-      addressRegion: "المملكة العربية السعودية",
+      addressLocality: "ينبع",
+      addressRegion: "منطقة المدينة المنورة",
     },
+    // الموقع الرئيسي (ينبع البحر) — إحداثيات لخرائط جوجل
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 24.106080,
+      longitude: 38.045997,
+    },
+    // المناطق المخدومة فعلياً (تقوّي الظهور في كل مدينة)
+    areaServed: BRANCHES.map((b) => ({
+      "@type": "City",
+      name: b.addressLocality,
+    })),
+    // فروع متعددة → كل فرع يظهر محلياً
+    location: BRANCHES.map((b) => ({
+      "@type": "Place",
+      name: b.name,
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "SA",
+        addressLocality: b.addressLocality,
+        addressRegion: b.addressRegion,
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: b.lat,
+        longitude: b.lng,
+      },
+    })),
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: [
@@ -66,10 +127,6 @@ export function generateLocalBusinessSchema() {
     },
     priceRange: "$$$$",
     servesCuisine: "Arabic Hospitality",
-    areaServed: {
-      "@type": "Country",
-      name: "Saudi Arabia",
-    },
     sameAs: [
       `https://wa.me/${WHATSAPP_NUMBER}`,
     ],
