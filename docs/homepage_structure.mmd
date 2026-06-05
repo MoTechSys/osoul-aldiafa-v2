@@ -1,0 +1,20 @@
+graph TD
+    A[src/app/page.tsx - Server Component] --> B{Metadata & SEO}
+    A --> C[HomePageClient - Client Component]
+
+    C --> D[HERO Section]
+    D --> D1[Hero Image Desktop/Mobile]
+    D --> D2[Animated Text & Branding]
+    D --> D3[Call to Action Buttons]
+    D --> D4[Scroll Indicator]
+
+    C --> E[WHY US Section]
+    E --> E1[Section Header]
+    E --> E2[4 Feature Cards]
+
+    C --> F[PartnersSlider - Lazy Loaded]
+
+    C --> G[CTA Section]
+    G --> G1[Section Header]
+    G --> G2[Description]
+    G --> G3[Call to Action Buttons WhatsApp, Call]
