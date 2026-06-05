@@ -150,6 +150,17 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(212,175,55,0.10)" }}>
           <p className="text-pearl/35 text-xs">© {new Date().getFullYear()} أصول الضيافة. جميع الحقوق محفوظة.</p>
+          <p className="text-pearl/40 text-xs">
+            تطوير وتصميم{" "}
+            <a
+              href="https://wa.me/967770941666"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:text-gold/70 font-medium transition-colors duration-200"
+            >
+              م. معين العبّاسي
+            </a>
+          </p>
           <p className="text-gold/35 text-xs" style={{ letterSpacing: "0.1em" }}>OSOUL AL-DIAFA · ROYAL HOSPITALITY · KSA</p>
         </div>
       </div>
