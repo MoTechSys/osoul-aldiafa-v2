@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     "ضيافة مناسبات VIP",
     "تجهيز طاولات استقبال",
     "تقديمات فاخرة",
-    "Osoul Al-Diafa",
+    "Asoul Al-Diafa",
     "Saudi hospitality",
     "luxury catering",
   ],

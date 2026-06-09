@@ -12,7 +12,7 @@ export function generateOrganizationSchema() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: SITE_NAME,
-    alternateName: "Osoul Al-Diafa",
+    alternateName: "Asoul Al-Diafa",
     url: SITE_URL,
     logo: `${SITE_URL}/logo.webp`,
     foundingDate: "2017",
@@ -70,7 +70,7 @@ export function generateLocalBusinessSchema() {
     "@type": "LocalBusiness",
     "@id": `${SITE_URL}/#business`,
     name: SITE_NAME,
-    alternateName: "Osoul Al-Diafa",
+    alternateName: "Asoul Al-Diafa",
     description:
       "أصول الضيافة - خدمات ضيافة فاخرة في جميع مناطق المملكة العربية السعودية. قهوة عربية، شاي، تمور، وفريق صبّابين بزي تراثي. فروع في بدر وينبع وجدة.",
     url: SITE_URL,
@@ -217,7 +217,7 @@ export function generateWebSiteSchema() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
-    alternateName: "Osoul Al-Diafa",
+    alternateName: "Asoul Al-Diafa",
     url: SITE_URL,
     inLanguage: "ar",
     publisher: {

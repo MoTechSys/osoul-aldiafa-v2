@@ -113,7 +113,7 @@ function NavbarContent() {
               className="block text-gold/55"
               style={{ fontSize: "0.6rem", letterSpacing: "0.3em" }}
             >
-              OSOUL AL-DIAFA
+              ASOUL AL-DIAFA
             </span>
           </div>
         </Link>

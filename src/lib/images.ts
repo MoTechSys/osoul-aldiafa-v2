@@ -1,5 +1,5 @@
 /**
- * Centralized image paths for أصول الضيافة (Osoul Al-Diafa).
+ * Centralized image paths for أصول الضيافة (Asoul Al-Diafa).
  * All assets served locally from public/images/.
  *
  * Categories:

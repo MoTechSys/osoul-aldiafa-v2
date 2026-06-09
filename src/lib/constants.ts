@@ -1,12 +1,12 @@
 /**
  * ثوابت الموقع المركزية — أصول الضيافة
- * Central site constants — Osoul Al-Diafa
+ * Central site constants — Asoul Al-Diafa
  */
 
 export const SITE_URL = "https://asoulaldiafa.com";
 
 export const SITE_NAME = "أصول الضيافة";
-export const SITE_NAME_EN = "Osoul Al-Diafa";
+export const SITE_NAME_EN = "Asoul Al-Diafa";
 
 /** رقم واتساب — صيغة دولية بدون + (للروابط wa.me) */
 export const WHATSAPP_NUMBER = "966568997316";

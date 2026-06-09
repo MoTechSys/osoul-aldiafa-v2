@@ -41,7 +41,7 @@ export default function Footer() {
               <DallahLogo size={64} />
               <div>
                 <p className="gold-text font-amiri" style={{ fontSize: "1.35rem", fontWeight: 700 }}>أصول الضيافة</p>
-                <p className="text-gold/55" style={{ fontSize: "0.62rem", letterSpacing: "0.3em" }}>OSOUL AL-DIAFA · ROYAL HOSPITALITY</p>
+                <p className="text-gold/55" style={{ fontSize: "0.62rem", letterSpacing: "0.3em" }}>ASOUL AL-DIAFA · ROYAL HOSPITALITY</p>
               </div>
             </div>
             <p className="text-pearl/55 text-sm leading-relaxed max-w-sm">
@@ -161,7 +161,7 @@ export default function Footer() {
               م. معين العبّاسي
             </a>
           </p>
-          <p className="text-gold/35 text-xs" style={{ letterSpacing: "0.1em" }}>OSOUL AL-DIAFA · ROYAL HOSPITALITY · KSA</p>
+          <p className="text-gold/35 text-xs" style={{ letterSpacing: "0.1em" }}>ASOUL AL-DIAFA · ROYAL HOSPITALITY · KSA</p>
         </div>
       </div>
     </footer>

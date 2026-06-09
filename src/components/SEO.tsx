@@ -49,7 +49,7 @@ export function generatePageMetadata({
     "ضيافة المملكة",
     "ضيافة مناسبات",
     "قهوجي",
-    "Osoul Al-Diafa",
+    "Asoul Al-Diafa",
     "Saudi hospitality",
   ];
 

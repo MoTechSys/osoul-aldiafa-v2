@@ -187,7 +187,7 @@ export default function BottomNav() {
                     أصول الضيافة
                   </p>
                   <p className="osoul-menu__brandSub">
-                    OSOUL AL-DIAFA · SINCE 2017
+                    ASOUL AL-DIAFA · SINCE 2017
                   </p>
                 </div>
               </div>
