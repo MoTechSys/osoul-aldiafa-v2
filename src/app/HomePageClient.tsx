@@ -11,6 +11,7 @@ import {
   SETUP_IMAGES,
   DATES_IMAGES,
   BRAND_LOGO,
+  imageAlt,
 } from "@/lib/images";
 import { useWhatsAppUrl, WA_NUMBER } from "@/components/Navbar";
 import CountUp from "@/components/CountUp";
@@ -378,7 +379,7 @@ function PhotoMarquee() {
             className="relative h-32 sm:h-40 md:h-48 w-44 sm:w-56 md:w-72 flex-shrink-0 rounded-xl overflow-hidden pointer-events-none"
             style={{ border: "1px solid rgba(212,175,55,0.18)" }}
           >
-            <Image src={src} alt="" fill sizes="(max-width:640px) 176px, 288px" className="object-cover" draggable={false} />
+            <Image src={src} alt={imageAlt(src)} fill sizes="(max-width:640px) 176px, 288px" className="object-cover" draggable={false} />
             <div className="absolute inset-0 bg-gradient-to-t from-noir/70 via-transparent to-transparent" />
           </div>
         ))}
@@ -624,7 +625,7 @@ function Mosaic() {
               className={`relative overflow-hidden rounded-2xl cursor-pointer glint ${t.span}`}
               style={{ border: "1px solid rgba(212,175,55,0.18)" }}
             >
-              <Image src={t.src} alt="" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-1000" />
+              <Image src={t.src} alt={imageAlt(t.src)} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-1000" />
               <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 55%, rgba(10,10,10,0.65))" }} />
             </motion.div>
           ))}

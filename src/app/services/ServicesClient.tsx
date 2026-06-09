@@ -10,6 +10,7 @@ import {
   SETUP_IMAGES,
   DRINK_IMAGES,
   DATES_IMAGES,
+  imageAlt,
 } from "@/lib/images";
 import { WA_NUMBER } from "@/components/Navbar";
 
@@ -216,7 +217,7 @@ function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void
                   }}
                   aria-label={`صورة ${i + 1}`}
                 >
-                  <Image src={g} alt="" fill sizes="64px" className="object-cover" />
+                  <Image src={g} alt={imageAlt(g)} fill sizes="64px" className="object-cover" />
                 </button>
               ))}
             </div>

@@ -238,15 +238,15 @@ export default function ContactClient() {
         </div>
       </section>
 
-      {/* فروعنا — المواقع الفعلية مع روابط خرائط جوجل */}
+      {/* مناطق الخدمة — نقاط تواجدنا مع روابط خرائط جوجل */}
       <section id="branches" className="px-4 pb-16">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
-            <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ فروعنا ✦</p>
+            <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ أين تجدنا ✦</p>
             <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
-              مواقعنا
+              مناطق خدمتنا
             </h2>
-            <p className="text-pearl/55 text-sm mt-3 max-w-lg mx-auto">تفضّل بزيارتنا أو اضغط على الفرع لعرض الموقع على خرائط جوجل.</p>
+            <p className="text-pearl/55 text-sm mt-3 max-w-lg mx-auto">نصل إليك بفريقنا وعدّتنا — اضغط على المنطقة لعرض موقع تواجدنا على خرائط جوجل.</p>
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
             {BRANCHES.map((branch, i) => (
