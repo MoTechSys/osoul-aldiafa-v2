@@ -8,7 +8,7 @@ import {
   WHATSAPP_DISPLAY,
 } from "@/lib/constants";
 
-const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.webp`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 export interface SEOProps {
   title: string;

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     url: SITE_URL,
     images: [
       {
-        url: `${SITE_URL}/logo.webp`,
+        url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: "أصول الضيافة - خدمات الضيافة الفاخرة",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "أصول الضيافة | خدمات الضيافة الفاخرة",
     description: "خدمات الضيافة الفاخرة في جميع مناطق المملكة العربية السعودية",
-    images: [`${SITE_URL}/logo.webp`],
+    images: [`${SITE_URL}/og-image.jpg`],
   },
 };
 
