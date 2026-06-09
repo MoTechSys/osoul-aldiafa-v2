@@ -66,11 +66,11 @@ export const metadata: Metadata = {
     url: SITE_URL,
     images: [
       {
-        url: `${SITE_URL}/logo.webp`,
+        url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: "أصول الضيافة - خدمات الضيافة الفاخرة",
-        type: "image/webp",
+        type: "image/jpeg",
       },
     ],
   },
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     title: "أصول الضيافة | خدمات الضيافة الفاخرة",
     description:
       "نحيي أصول الضيافة العربية الأصيلة في جميع مناطق المملكة",
-    images: [`${SITE_URL}/logo.webp`],
+    images: [`${SITE_URL}/og-image.jpg`],
   },
   robots: {
     index: true,
