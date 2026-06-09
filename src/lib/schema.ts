@@ -40,6 +40,7 @@ export const BRANCHES = [
     addressRegion: "منطقة المدينة المنورة",
     lat: 23.773033,
     lng: 38.796941,
+    mapUrl: "https://maps.app.goo.gl/GHth1VbP8bnCJjn88",
   },
   {
     name: "أصول الضيافة - ينبع البحر (دوار السفينة)",
@@ -47,6 +48,7 @@ export const BRANCHES = [
     addressRegion: "منطقة المدينة المنورة",
     lat: 24.106080,
     lng: 38.045997,
+    mapUrl: "https://maps.app.goo.gl/e83Y1bG7aNJ4SpJ77",
   },
   {
     name: "أصول الضيافة - الهيئة الملكية بينبع",
@@ -54,6 +56,7 @@ export const BRANCHES = [
     addressRegion: "منطقة المدينة المنورة",
     lat: 24.021181,
     lng: 38.179746,
+    mapUrl: "https://maps.app.goo.gl/JJFp64FPWPHSutBLA",
   },
   {
     name: "أصول الضيافة - جدة (الحمدانية)",
@@ -61,6 +64,7 @@ export const BRANCHES = [
     addressRegion: "منطقة مكة المكرمة",
     lat: 21.754844,
     lng: 39.207821,
+    mapUrl: "https://maps.app.goo.gl/GG7gyREBTHMYJxUN9",
   },
 ] as const;
 
@@ -99,6 +103,7 @@ export function generateLocalBusinessSchema() {
     location: BRANCHES.map((b) => ({
       "@type": "Place",
       name: b.name,
+      hasMap: b.mapUrl,
       address: {
         "@type": "PostalAddress",
         addressCountry: "SA",

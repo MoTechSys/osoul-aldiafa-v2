@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { WA_NUMBER, WA_DISPLAY } from "@/components/Navbar";
+import { BRANCHES } from "@/lib/schema";
 
 const contactMethods = [
   {
@@ -234,6 +235,44 @@ export default function ContactClient() {
               إرسال عبر واتساب
             </motion.button>
           </motion.form>
+        </div>
+      </section>
+
+      {/* فروعنا — المواقع الفعلية مع روابط خرائط جوجل */}
+      <section id="branches" className="px-4 pb-16">
+        <div className="max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+            <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ فروعنا ✦</p>
+            <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
+              مواقعنا
+            </h2>
+            <p className="text-pearl/55 text-sm mt-3 max-w-lg mx-auto">تفضّل بزيارتنا أو اضغط على الفرع لعرض الموقع على خرائط جوجل.</p>
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
+            {BRANCHES.map((branch, i) => (
+              <motion.a
+                key={branch.name}
+                href={branch.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="group flex items-center gap-4 p-5 rounded-2xl transition-all"
+                style={{ background: "rgba(212,175,55,0.05)", border: "1px solid rgba(212,175,55,0.18)" }}
+              >
+                <span className="shrink-0 grid place-items-center w-11 h-11 rounded-full" style={{ background: "rgba(212,175,55,0.12)" }} aria-hidden>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                <span className="flex-1 text-right">
+                  <span className="block text-pearl font-amiri" style={{ fontSize: "1.05rem", fontWeight: 700 }}>{branch.addressLocality}</span>
+                  <span className="block text-pearl/50 text-xs mt-0.5">{branch.addressRegion}</span>
+                </span>
+                <span className="shrink-0 text-gold-bright text-xs font-medium opacity-70 group-hover:opacity-100 transition-opacity">الخريطة ←</span>
+              </motion.a>
+            ))}
+          </div>
         </div>
       </section>
 
