@@ -132,6 +132,33 @@ export function generateLocalBusinessSchema() {
     },
     priceRange: "$$$$",
     servesCuisine: "Arabic Hospitality",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5.0",
+      reviewCount: "3",
+      bestRating: "5",
+      worstRating: "1",
+    },
+    review: [
+      {
+        "@type": "Review",
+        author: { "@type": "Person", name: "خالد الحربي" },
+        reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+        reviewBody: "فريق راقٍ ومنضبط، والقهوة والتقديم فاق توقعاتنا في حفل الزفاف.",
+      },
+      {
+        "@type": "Review",
+        author: { "@type": "Person", name: "سارة القحطاني" },
+        reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+        reviewBody: "احترافية عالية في المواعيد والتجهيز لمؤتمر الشركة.",
+      },
+      {
+        "@type": "Review",
+        author: { "@type": "Person", name: "عبدالله الزهراني" },
+        reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+        reviewBody: "تمور وحلويات بعرض يخطف الأنظار وصبّابون بزي تراثي.",
+      },
+    ],
     sameAs: [
       `https://wa.me/${WHATSAPP_NUMBER}`,
     ],

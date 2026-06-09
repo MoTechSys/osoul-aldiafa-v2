@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Tajawal, Amiri } from "next/font/google";
 import "@/styles/globals.css";
 import BottomNav from "@/components/BottomNav";
+import { Analytics } from "@/components/Analytics";
 import {
   generateLocalBusinessSchema,
   generateWebSiteSchema,
@@ -64,6 +65,9 @@ export const metadata: Metadata = {
     "Arabic coffee servers",
   ],
   metadataBase: new URL(SITE_URL),
+  verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION }
+    : undefined,
   alternates: {
     canonical: SITE_URL,
     languages: {
@@ -179,6 +183,7 @@ export default function RootLayout({
         </a>
         {children}
         <BottomNav />
+        <Analytics />
       </body>
     </html>
   );

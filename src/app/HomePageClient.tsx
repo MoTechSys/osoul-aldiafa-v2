@@ -651,6 +651,48 @@ const steps = [
   { n: "٤", t: "ضيافة لا تُنسى", d: "نقدّم تجربة ضيافة مدروسة من البداية للنهاية." },
 ];
 
+// Testimonials — آراء العملاء (أقوى إشارة ثقة). بيانات مبدئية — يستبدلها العميل بآراء حقيقية.
+const testimonials = [
+  { name: "أ. خالد الحربي", role: "حفل زفاف — جدة", stars: 5, quote: "فريق راقٍ ومنضبط، والقهوة والتقديم فاق توقعاتنا. ضيوفنا أثنوا على الترتيب والأناقة." },
+  { name: "م. سارة القحطاني", role: "مؤتمر شركة — ينبع", stars: 5, quote: "احترافية عالية في المواعيد والتجهيز. ركن الضيافة كان واجهة أنيقة للفعالية." },
+  { name: "أ. عبدالله الزهراني", role: "مناسبة عائلية — بدر", stars: 5, quote: "تمور وحلويات بعرض يخطف الأنظار، وصبّابون بزي تراثي أضفوا لمسة أصيلة." },
+];
+
+function Testimonials() {
+  return (
+    <section className="py-24 px-4 relative overflow-hidden aurora-section bg-noir">
+      <div className="max-w-6xl mx-auto relative z-10">
+        <SectionLabel label="آراء ضيوفنا" />
+        <SectionTitle>قالوا عن أصول الضيافة</SectionTitle>
+        <div className="ornament-line mt-5 mx-auto" style={{ width: 110 }} />
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-5">
+          {testimonials.map((t, i) => (
+            <motion.div
+              key={t.name}
+              initial={{ opacity: 0.001, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              className="card-royal card-luxe text-right px-6 py-8 flex flex-col"
+            >
+              <div className="flex gap-1 mb-4 justify-end" aria-label={`تقييم ${t.stars} من 5`}>
+                {Array.from({ length: t.stars }).map((_, k) => (
+                  <span key={k} style={{ color: "#E2C68E", fontSize: "1.05rem" }}>★</span>
+                ))}
+              </div>
+              <p className="text-pearl/85 text-sm leading-loose flex-1">“{t.quote}”</p>
+              <div className="mt-5 pt-4" style={{ borderTop: "1px solid rgba(212,175,55,0.14)" }}>
+                <p className="gold-text font-amiri" style={{ fontSize: "1.05rem", fontWeight: 700 }}>{t.name}</p>
+                <p className="text-pearl/50 text-xs mt-1">{t.role}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Process() {
   return (
     <section className="py-24 px-4 relative overflow-hidden aurora-section" style={{ background: "linear-gradient(180deg, #0a0a0a 0%, #050505 100%)" }}>
@@ -736,6 +778,7 @@ export function HomePageClient() {
       <Stats />
       <Pillars />
       <Mosaic />
+      <Testimonials />
       <Process />
       <FinalCTA />
     </div>
