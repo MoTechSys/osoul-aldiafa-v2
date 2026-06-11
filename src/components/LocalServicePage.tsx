@@ -23,6 +23,7 @@ export interface LocalServicePageProps {
   heroImage: string;
   heroAlt: string;
   sections: { h2: string; body: string; img?: string; imgAlt?: string }[];
+  extraSections?: { h2: string; body: string }[];
   districts: string[];
   packages: Package[];
   pricingNote: string;
@@ -110,6 +111,18 @@ export default function LocalServicePage(props: LocalServicePageProps) {
                 />
               </div>
             )}
+          </section>
+        ))}
+
+        {/* أقسام نصية إضافية (تعميق المحتوى) */}
+        {props.extraSections?.map((s, i) => (
+          <section key={`extra-${i}`}>
+            <h2 className="text-gold-bright font-amiri text-2xl sm:text-3xl font-bold mb-4">
+              {s.h2}
+            </h2>
+            <p className="text-pearl/80 leading-loose whitespace-pre-line">
+              {s.body}
+            </p>
           </section>
         ))}
 
