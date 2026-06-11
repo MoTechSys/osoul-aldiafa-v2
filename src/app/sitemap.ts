@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { LOCAL_PAGES, localSlug } from "@/lib/localPages";
+import { SERVICE_HUB_SLUGS } from "@/lib/serviceHubs";
 
 const SITE_URL = "https://asoulaldiafa.com";
 
@@ -22,7 +23,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "weekly" as const,
   }));
 
-  return [...coreRoutes, ...localRoutes].map((route) => ({
+  const hubRoutes = SERVICE_HUB_SLUGS.map((slug) => ({
+    path: `/${slug}`,
+    priority: 0.85,
+    changeFrequency: "weekly" as const,
+  }));
+
+  return [...coreRoutes, ...hubRoutes, ...localRoutes].map((route) => ({
     url: `${SITE_URL}${route.path}`,
     lastModified: now,
     changeFrequency: route.changeFrequency,
