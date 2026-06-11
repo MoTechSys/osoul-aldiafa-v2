@@ -132,36 +132,59 @@ export function generateLocalBusinessSchema() {
     },
     priceRange: "$$$$",
     servesCuisine: "Arabic Hospitality",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5.0",
-      reviewCount: "3",
-      bestRating: "5",
-      worstRating: "1",
-    },
-    review: [
-      {
-        "@type": "Review",
-        author: { "@type": "Person", name: "خالد الحربي" },
-        reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
-        reviewBody: "فريق راقٍ ومنضبط، والقهوة والتقديم فاق توقعاتنا في حفل الزفاف.",
-      },
-      {
-        "@type": "Review",
-        author: { "@type": "Person", name: "سارة القحطاني" },
-        reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
-        reviewBody: "احترافية عالية في المواعيد والتجهيز لمؤتمر الشركة.",
-      },
-      {
-        "@type": "Review",
-        author: { "@type": "Person", name: "عبدالله الزهراني" },
-        reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
-        reviewBody: "تمور وحلويات بعرض يخطف الأنظار وصبّابون بزي تراثي.",
-      },
-    ],
+    // ملاحظة: أُزيلت aggregateRating/review الذاتية — التقييمات الذاتية على موقع الشركة
+    // مخالفة لسياسة Google (self-serving reviews) وقد تُسقط النتائج الغنية. التقييمات
+    // الحقيقية تُعرض عبر Google Business Profile لا عبر schema الموقع.
     sameAs: [
       `https://wa.me/${WHATSAPP_NUMBER}`,
     ],
+  };
+}
+
+/**
+ * LocalBusiness خاص بمدينة معيّنة — لصفحات (خدمة × مدينة).
+ * يقوّي الظهور المحلي لكل مدينة على حدة (geo + addressLocality دقيقان).
+ */
+export function generateCityLocalBusinessSchema(city: {
+  ar: string;
+  region: string;
+  url: string;
+  lat?: number;
+  lng?: number;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: `${SITE_NAME} - ${city.ar}`,
+    image: `${SITE_URL}/logo.webp`,
+    url: city.url,
+    telephone: PHONE,
+    email: EMAIL,
+    priceRange: "$$$$",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "SA",
+      addressLocality: city.ar,
+      addressRegion: city.region,
+    },
+    ...(city.lat && city.lng
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: city.lat,
+            longitude: city.lng,
+          },
+        }
+      : {}),
+    areaServed: { "@type": "City", name: city.ar },
+    parentOrganization: { "@type": "Organization", name: SITE_NAME, "@id": `${SITE_URL}/#business` },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      opens: "00:00",
+      closes: "23:59",
+    },
+    sameAs: [`https://wa.me/${WHATSAPP_NUMBER}`],
   };
 }
 
