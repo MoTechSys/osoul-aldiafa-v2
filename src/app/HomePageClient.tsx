@@ -713,7 +713,7 @@ function Process() {
               className="relative card-royal pt-12 px-5 pb-6 sm:pt-14 sm:px-7 sm:pb-7 cursor-pointer"
             >
               <span
-                className="absolute top-4 right-5 sm:right-6 w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-amiri text-noir"
+                className="absolute top-4 left-5 sm:left-6 w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-amiri text-noir"
                 style={{ background: "var(--gradient-royal)", fontSize: "1.3rem", fontWeight: 700, boxShadow: "0 6px 18px rgba(212,175,55,0.35)" }}
               >
                 {s.n}
