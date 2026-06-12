@@ -95,10 +95,15 @@ export function generateLocalBusinessSchema() {
       longitude: 38.045997,
     },
     // المناطق المخدومة فعلياً (تقوّي الظهور في كل مدينة)
-    areaServed: BRANCHES.map((b) => ({
-      "@type": "City",
-      name: b.addressLocality,
-    })),
+    areaServed: [
+      ...BRANCHES.map((b) => ({
+        "@type": "City",
+        name: b.addressLocality,
+      })),
+      // مدن إضافية مخدومة (لها صفحات مخصصة)
+      { "@type": "City", name: "المدينة المنورة" },
+      { "@type": "City", name: "مكة المكرمة" },
+    ],
     // فروع متعددة → كل فرع يظهر محلياً
     location: BRANCHES.map((b) => ({
       "@type": "Place",
