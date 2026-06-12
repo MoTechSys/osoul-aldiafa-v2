@@ -367,7 +367,7 @@ button, a, [role="button"] {
 }
 
 /* leave room behind the mobile nav so content isn't covered */
-@media(max-width:860px){ body{ padding-bottom: calc(94px + env(safe-area-inset-bottom, 0)); } }
+@media(max-width:860px){ body{ padding-bottom: calc(84px + env(safe-area-inset-bottom, 0)); } }
 
 /* ═══════════ Mobile menu sheet ═══════════ */
 .osoul-menu__scrim{

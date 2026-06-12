@@ -433,7 +433,7 @@ const whyTiles = [
 
 function WhyUs() {
   return (
-    <section className="relative py-24 px-4 bg-noir overflow-hidden aurora-section">
+    <section className="relative py-14 sm:py-24 px-4 bg-noir overflow-hidden aurora-section">
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionLabel label="لماذا أصول الضيافة" />
         <SectionTitle>تفاصيلٌ تُصنع منها التجارب الفاخرة</SectionTitle>
@@ -483,7 +483,7 @@ const statItems: {
 
 function Stats() {
   return (
-    <section className="relative py-20 px-4 bg-noir overflow-hidden aurora-section">
+    <section className="relative py-12 sm:py-20 px-4 bg-noir overflow-hidden aurora-section">
       <div className="max-w-6xl mx-auto relative z-10">
         <SectionLabel label="أرقام تتحدث عنّا" />
         <SectionTitle>ثقةٌ تُبنى بالتفاصيل</SectionTitle>
@@ -546,7 +546,7 @@ const pillars = [
 
 function Pillars() {
   return (
-    <section className="py-24 px-4 relative overflow-hidden aurora-section" style={{ background: "linear-gradient(180deg, #050505 0%, #0a0a0a 100%)" }}>
+    <section className="py-14 sm:py-24 px-4 relative overflow-hidden aurora-section" style={{ background: "linear-gradient(180deg, #050505 0%, #0a0a0a 100%)" }}>
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionLabel label="ثلاثُ ركائز" />
         <SectionTitle>ضيافة على ثلاثة أعمدة</SectionTitle>
@@ -606,7 +606,7 @@ function Mosaic() {
     { src: TEAM_IMAGES[9], span: "",             aspect: "aspect-[4/3]" },
   ];
   return (
-    <section className="py-24 px-4 bg-noir relative aurora-section">
+    <section className="py-14 sm:py-24 px-4 bg-noir relative aurora-section">
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionLabel label="من أعمالنا" />
         <SectionTitle>لمحات من المناسبات</SectionTitle>
@@ -660,7 +660,7 @@ const testimonials = [
 
 function Testimonials() {
   return (
-    <section className="py-24 px-4 relative overflow-hidden aurora-section bg-noir">
+    <section className="py-14 sm:py-24 px-4 relative overflow-hidden aurora-section bg-noir">
       <div className="max-w-6xl mx-auto relative z-10">
         <SectionLabel label="آراء ضيوفنا" />
         <SectionTitle>قالوا عن أصول الضيافة</SectionTitle>
@@ -695,7 +695,7 @@ function Testimonials() {
 
 function Process() {
   return (
-    <section className="py-24 px-4 relative overflow-hidden aurora-section" style={{ background: "linear-gradient(180deg, #0a0a0a 0%, #050505 100%)" }}>
+    <section className="py-14 sm:py-24 px-4 relative overflow-hidden aurora-section" style={{ background: "linear-gradient(180deg, #0a0a0a 0%, #050505 100%)" }}>
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionLabel label="رحلة الحجز" />
         <SectionTitle>أربع خطوات نجمع فيها أصول الضيافة</SectionTitle>
@@ -734,7 +734,7 @@ function Process() {
 function FinalCTA() {
   const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("السلام عليكم، أرغب في حجز خدمات أصول الضيافة.")}`;
   return (
-    <section className="relative py-24 px-4 bg-noir overflow-hidden">
+    <section className="relative py-14 sm:py-24 px-4 bg-noir overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}

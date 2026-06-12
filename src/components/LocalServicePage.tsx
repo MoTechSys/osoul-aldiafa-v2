@@ -54,7 +54,7 @@ export default function LocalServicePage(props: LocalServicePageProps) {
           />
           <div className="absolute inset-0 bg-black/65" />
         </div>
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto py-20">
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto py-12 sm:py-20">
           <div className="mb-4">
             <Breadcrumbs items={props.breadcrumbItems} />
           </div>

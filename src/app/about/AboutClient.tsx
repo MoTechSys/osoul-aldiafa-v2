@@ -119,7 +119,7 @@ export default function AboutClient() {
       </section>
 
       {/* Values */}
-      <section className="py-20 px-4" style={{ background: "linear-gradient(180deg, #050505 0%, #0a0a0a 100%)" }}>
+      <section className="py-12 sm:py-20 px-4" style={{ background: "linear-gradient(180deg, #050505 0%, #0a0a0a 100%)" }}>
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
             <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ قيمنا ✦</p>
