@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
+import { motion, useScroll, useTransform, useReducedMotion, useMotionValue, useAnimationFrame } from "motion/react";
 import {
   HERO_IMAGES,
   TEAM_IMAGES,
@@ -358,20 +358,48 @@ function Hero() {
 function PhotoMarquee() {
   const strip = [...SETUP_IMAGES, ...TEAM_IMAGES.slice(0, 6), ...PRODUCT_IMAGES.slice(0, 5)];
   const reduceMotion = useReducedMotion();
-  const [dragging, setDragging] = useState(false);
-  const items = [...strip, ...strip];
+  const items = [...strip, ...strip]; // نسختان → لف سلس بلا قفزة
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const dragging = useRef(false);
+  const SPEED = 28; // بكسل/ثانية (سرعة اللف التلقائي)
+
+  // لف تلقائي مستمر يسارًا، يتوقف أثناء السحب، ويعيد التدوير بلا انقطاع (infinite loop)
+  useAnimationFrame((_, delta) => {
+    if (reduceMotion || dragging.current) return;
+    const track = trackRef.current;
+    if (!track) return;
+    const half = track.scrollWidth / 2; // عرض النصف (النسخة الأولى)
+    let next = x.get() - (SPEED * delta) / 1000;
+    // إعادة التدوير: لما يوصل -نصف العرض يرجع للبداية (بلا فراغ)
+    if (half > 0 && next <= -half) next += half;
+    x.set(next);
+  });
+
   return (
     <section className="relative py-10 overflow-hidden border-y border-gold/15 bg-noir-rich">
       <motion.div
+        ref={trackRef}
         className="flex gap-4 will-change-transform cursor-grab active:cursor-grabbing"
-        style={{ width: "max-content" }}
+        style={{ width: "max-content", x }}
         drag="x"
-        dragConstraints={{ left: -2000, right: 0 }}
-        dragElastic={0.08}
-        onDragStart={() => setDragging(true)}
-        onDragEnd={() => setDragging(false)}
-        animate={reduceMotion || dragging ? undefined : { x: ["0%", "-50%"] }}
-        transition={reduceMotion || dragging ? undefined : { duration: 55, repeat: Infinity, ease: "linear" }}
+        dragMomentum={false}
+        dragElastic={0.05}
+        onDragStart={() => { dragging.current = true; }}
+        onDragEnd={() => {
+          dragging.current = false;
+          // تطبيع الموضع داخل نطاق اللف لمنع الفراغ الأسود
+          const track = trackRef.current;
+          if (!track) return;
+          const half = track.scrollWidth / 2;
+          let v = x.get();
+          if (half > 0) {
+            while (v <= -half) v += half;
+            while (v > 0) v -= half;
+            x.set(v);
+          }
+        }}
       >
         {items.map((src, i) => (
           <div
