@@ -34,7 +34,7 @@ export default function Footer() {
       />
 
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-5">
@@ -140,10 +140,54 @@ export default function Footer() {
 
             <h3 className="text-gold mb-3 mt-6 font-amiri" style={{ fontSize: "0.95rem", fontWeight: 700, letterSpacing: "0.1em" }}>خدماتنا</h3>
             <div className="flex flex-wrap gap-1.5">
-              {["صبّابين قهوة", "تقديم تمر", "تجهيز ركن ضيافة", "بوفيه حلويات", "ضيافة فعاليات", "ضيافة مؤتمرات"].map((s) => (
-                <span key={s} className="text-pearl/45 text-xs px-2 py-1 rounded-full" style={{ background: "rgba(212,175,55,0.06)", border: "1px solid rgba(212,175,55,0.12)" }}>{s}</span>
+              {[
+                { label: "قهوجيين ومباشرين", href: "/qahwajiin-mubasherin" },
+                { label: "ركن قهوة عربية", href: "/rukn-qahwa-arabiya" },
+                { label: "ضيافة أعراس", href: "/diyafa-aaras" },
+                { label: "ضيافة مؤتمرات", href: "/diyafa-mutamarat" },
+                { label: "تجهيز ضيافة حفلات", href: "/tajheez-diyafa-haflat" },
+              ].map((s) => (
+                <Link key={s.href} href={s.href} className="text-pearl/55 text-xs px-2 py-1 rounded-full hover:text-gold-bright transition-colors" style={{ background: "rgba(212,175,55,0.06)", border: "1px solid rgba(212,175,55,0.12)" }}>{s.label}</Link>
               ))}
             </div>
+          </div>
+
+          {/* خدماتنا حسب المدينة — روابط داخلية لصفحات الـ SEO المحلية */}
+          <div>
+            <h3 className="text-gold mb-4 font-amiri" style={{ fontSize: "0.95rem", fontWeight: 700, letterSpacing: "0.1em" }}>صبابين قهوة حسب المدينة</h3>
+            <ul className="space-y-2.5">
+              {[
+                { label: "صبابين قهوة جدة", href: "/sababin-qahwa-jeddah" },
+                { label: "صبابين قهوة ينبع", href: "/sababin-qahwa-yanbu" },
+                { label: "صبابين قهوة بدر", href: "/sababin-qahwa-badr" },
+                { label: "صبابين قهوة المدينة المنورة", href: "/sababin-qahwa-madinah" },
+                { label: "صبابين قهوة مكة", href: "/sababin-qahwa-makkah" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-pearl/55 text-sm hover:text-gold-bright transition-colors duration-200 flex items-center gap-2 group min-h-[36px]">
+                    <span className="w-3 h-px bg-gold/35 group-hover:w-5 group-hover:bg-gold transition-all duration-300" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <h3 className="text-gold mb-3 mt-6 font-amiri" style={{ fontSize: "0.95rem", fontWeight: 700, letterSpacing: "0.1em" }}>ضيافة مناسبات حسب المدينة</h3>
+            <ul className="space-y-2.5">
+              {[
+                { label: "ضيافة مناسبات جدة", href: "/diyafa-munasabat-jeddah" },
+                { label: "ضيافة مناسبات ينبع", href: "/diyafa-munasabat-yanbu" },
+                { label: "ضيافة مناسبات بدر", href: "/diyafa-munasabat-badr" },
+                { label: "ضيافة مناسبات المدينة", href: "/diyafa-munasabat-madinah" },
+                { label: "ضيافة مناسبات مكة", href: "/diyafa-munasabat-makkah" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-pearl/55 text-sm hover:text-gold-bright transition-colors duration-200 flex items-center gap-2 group min-h-[36px]">
+                    <span className="w-3 h-px bg-gold/35 group-hover:w-5 group-hover:bg-gold transition-all duration-300" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
