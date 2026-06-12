@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useReducedMotion, useMotionValue, useAnimationFrame } from "motion/react";
@@ -355,63 +355,81 @@ function Hero() {
 // Marquee strip of real photos — a strong, visual "proof" right
 // under the hero (replaces the old partners marquee).
 // ─────────────────────────────────────────────────────────────
+// دالة رياضية لضمان التفاف الشريط (Seamless Wrap) بلا فراغ مهما سُحب بقوة — مطابقة لمنطق "كيف الضيافة"
+const wrapMarquee = (min: number, max: number, v: number) => {
+  const range = max - min;
+  return ((((v - min) % range) + range) % range) + min;
+};
+
 function PhotoMarquee() {
   const strip = [...SETUP_IMAGES, ...TEAM_IMAGES.slice(0, 6), ...PRODUCT_IMAGES.slice(0, 5)];
   const reduceMotion = useReducedMotion();
-  const items = [...strip, ...strip]; // نسختان → لف سلس بلا قفزة
+  // 4 مجموعات (بدل نسختين) لضمان عدم ظهور أي فراغ مهما كانت الشاشة عملاقة أو سُحب الشريط بقوة
+  const sets = [0, 1, 2, 3];
 
-  const trackRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const dragging = useRef(false);
-  const SPEED = 28; // بكسل/ثانية (سرعة اللف التلقائي)
+  const contentRef = useRef<HTMLDivElement>(null);
+  const baseX = useMotionValue(0);
+  const [contentWidth, setContentWidth] = useState(0);
+  const SPEED = 28; // بكسل/ثانية (سرعة اللف التلقائي) — كما هي
 
-  // لف تلقائي مستمر يسارًا، يتوقف أثناء السحب، ويعيد التدوير بلا انقطاع (infinite loop)
+  // قياس عرض مجموعة واحدة بدقة (يُعاد بعد تحميل الصور/الخطوط وعند تغيير حجم النافذة)
+  useEffect(() => {
+    const measure = () => {
+      if (contentRef.current) setContentWidth(contentRef.current.getBoundingClientRect().width);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    const timer = setTimeout(measure, 1000);
+    return () => {
+      window.removeEventListener("resize", measure);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  // اللف اللحظي: في كل إطار وعند كل سحب، الموضع يُطبّع داخل النطاق فلا تظهر نهاية أبداً
+  const x = useTransform(baseX, (v) => {
+    if (contentWidth === 0) return 0;
+    return wrapMarquee(-contentWidth, 0, v);
+  });
+
+  // لف تلقائي مستمر يسارًا (يتوقف تلقائيًا عند السحب لأن onPan يحرّك baseX)
   useAnimationFrame((_, delta) => {
-    if (reduceMotion || dragging.current) return;
-    const track = trackRef.current;
-    if (!track) return;
-    const half = track.scrollWidth / 2; // عرض النصف (النسخة الأولى)
-    let next = x.get() - (SPEED * delta) / 1000;
-    // إعادة التدوير: لما يوصل -نصف العرض يرجع للبداية (بلا فراغ)
-    if (half > 0 && next <= -half) next += half;
-    x.set(next);
+    if (reduceMotion || contentWidth === 0) return;
+    baseX.set(baseX.get() - (SPEED * delta) / 1000);
   });
 
   return (
     <section className="relative py-10 overflow-hidden border-y border-gold/15 bg-noir-rich">
-      <motion.div
-        ref={trackRef}
-        className="flex gap-4 will-change-transform cursor-grab active:cursor-grabbing"
-        style={{ width: "max-content", x }}
-        drag="x"
-        dragMomentum={false}
-        dragElastic={0.05}
-        onDragStart={() => { dragging.current = true; }}
-        onDragEnd={() => {
-          dragging.current = false;
-          // تطبيع الموضع داخل نطاق اللف لمنع الفراغ الأسود
-          const track = trackRef.current;
-          if (!track) return;
-          const half = track.scrollWidth / 2;
-          let v = x.get();
-          if (half > 0) {
-            while (v <= -half) v += half;
-            while (v > 0) v -= half;
-            x.set(v);
-          }
-        }}
-      >
-        {items.map((src, i) => (
-          <div
-            key={i}
-            className="relative h-32 sm:h-40 md:h-48 w-44 sm:w-56 md:w-72 flex-shrink-0 rounded-xl overflow-hidden pointer-events-none"
-            style={{ border: "1px solid rgba(212,175,55,0.18)" }}
-          >
-            <Image src={src} alt={imageAlt(src)} fill sizes="(max-width:640px) 176px, 288px" className="object-cover" draggable={false} />
-            <div className="absolute inset-0 bg-gradient-to-t from-noir/70 via-transparent to-transparent" />
-          </div>
-        ))}
-      </motion.div>
+      {/* dir=ltr يفصل رياضيات الحركة عن اتجاه الموقع العربي (RTL) */}
+      <div dir="ltr" className="overflow-hidden touch-pan-y">
+        <motion.div
+          className="flex gap-4 will-change-transform w-max cursor-grab active:cursor-grabbing"
+          style={{ x }}
+          // onPan يحدّث baseX لحظيًا أثناء السحب → اللف يحصل في كل لحظة بلا اختفاء
+          onPan={(_e, info) => {
+            baseX.set(baseX.get() + info.delta.x);
+          }}
+        >
+          {sets.map((setIndex) => (
+            <div
+              key={setIndex}
+              ref={setIndex === 0 ? contentRef : null}
+              className="flex gap-4 shrink-0 items-center"
+            >
+              {strip.map((src, i) => (
+                <div
+                  key={`${setIndex}-${i}`}
+                  className="relative h-32 sm:h-40 md:h-48 w-44 sm:w-56 md:w-72 flex-shrink-0 rounded-xl overflow-hidden pointer-events-none"
+                  style={{ border: "1px solid rgba(212,175,55,0.18)" }}
+                >
+                  <Image src={src} alt={imageAlt(src)} fill sizes="(max-width:640px) 176px, 288px" className="object-cover" draggable={false} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-noir/70 via-transparent to-transparent" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   );
 }
