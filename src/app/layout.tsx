@@ -65,9 +65,11 @@ export const metadata: Metadata = {
     "Arabic coffee servers",
   ],
   metadataBase: new URL(SITE_URL),
-  verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION
-    ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION }
-    : undefined,
+  verification: {
+    google:
+      process.env.NEXT_PUBLIC_GSC_VERIFICATION ||
+      "HsOj3WOc5Lh7C3z5oIzGdB4QynbGIN7kVbi3eL8HLLc",
+  },
   alternates: {
     canonical: SITE_URL,
     languages: {
