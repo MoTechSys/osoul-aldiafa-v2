@@ -15,7 +15,7 @@ export const WHATSAPP_DISPLAY = "0568997316";
 /** صيغة الاتصال (tel:) */
 export const PHONE_TEL = "+966568997316";
 
-export const EMAIL = "info@asoulaldiafa.com";
+export const EMAIL = "osoulaldiafa@gmail.com";
 
 /** رابط واتساب جاهز مع رسالة افتراضية */
 export function whatsappUrl(message = "مرحباً، أرغب بالاستفسار عن خدمات أصول الضيافة."): string {

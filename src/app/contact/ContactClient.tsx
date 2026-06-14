@@ -36,8 +36,8 @@ const contactMethods = [
       </svg>
     ),
     label: "البريد الإلكتروني",
-    value: "info@asoulaldiafa.com",
-    href: "mailto:info@asoulaldiafa.com",
+    value: "osoulaldiafa@gmail.com",
+    href: "mailto:osoulaldiafa@gmail.com",
     color: "#C5A059",
   },
   {
