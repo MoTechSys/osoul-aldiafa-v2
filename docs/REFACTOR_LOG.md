@@ -74,3 +74,10 @@ Deferred (documented): 1.10 noUncheckedIndexedAccess, 2.1 real content (needs ow
 - **Font fix:** Amiri failed in @vercel/og Satori ("lookupType 5 substFormat 3 not supported" — advanced Arabic ligatures). Switched to **Tajawal** (simple sans, 60KB) → builds & prerenders clean.
 - **Scope:** Provides an automatic branded OG for routes without a custom OG image. Homepage keeps its existing dedicated og-image.jpg (its manual openGraph.images override stays).
 - **Gates:** build EXIT 0 (opengraph-image prerenders) · typecheck 0 · lint 0 · test 4/4.
+
+### Task 4.2b — Playwright E2E (critical path) ✅
+- **What:** Added Playwright (@playwright/test + chromium) with `playwright.config.ts` (auto build+serve on :3200) and `tests/e2e/critical-path.spec.ts` (4 tests): homepage→10 city links, city H1 visible & non-transparent in DOM, WhatsApp CTA → wa.me, city page emits Service schema referencing #business.
+- **REAL BUG FOUND & FIXED:** the E2E surfaced that the city hero H1 was rendered via `whileInView` (RevealOnScroll), so it sat at opacity:0 until scrolled into view — visually a flash/hidden-text for users on an above-the-fold heading. Fixed: hero H1 is now a plain server `<h1>` (renders immediately, never transparent). RevealOnScroll kept (with new `immediate` option) for below-the-fold use.
+- **Local-env note:** initial E2E runs failed with MIME-400/ChunkLoadError — caused by a stale/zombie `next-server` holding the port (per web-deploy-vercel-ops lesson). Fixed by killing the exact PID on the port + `reuseExistingServer:false`; not a code issue. Added test-results/ to .gitignore.
+- **Result:** 4/4 E2E pass · 4/4 unit pass.
+- **Gates:** typecheck 0 · lint 0 · build 0 · unit 4/4 · e2e 4/4.

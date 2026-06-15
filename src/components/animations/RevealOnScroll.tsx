@@ -15,11 +15,18 @@ export function RevealOnScroll({
   delay = 0,
   as = "div",
   className,
+  immediate = false,
 }: {
   children: ReactNode;
   delay?: number;
   as?: ElementType;
   className?: string;
+  /**
+   * For above-the-fold elements (e.g. hero H1): animate on mount instead of on
+   * scroll. Prevents the element from sitting at opacity:0 while in view, which
+   * looks like a flash/hidden content to the user.
+   */
+  immediate?: boolean;
 }) {
   const reduce = useReducedMotion();
   const MotionTag = motion[as as keyof typeof motion] as typeof motion.div;
@@ -27,6 +34,19 @@ export function RevealOnScroll({
   if (reduce) {
     const Tag = as;
     return <Tag className={className}>{children}</Tag>;
+  }
+
+  if (immediate) {
+    return (
+      <MotionTag
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay, ease: [0.32, 0.72, 0, 1] }}
+        className={className}
+      >
+        {children}
+      </MotionTag>
+    );
   }
 
   return (

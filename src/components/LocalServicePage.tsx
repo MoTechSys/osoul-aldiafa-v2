@@ -4,12 +4,11 @@
  * بالهوية البصرية للموقع (gold-text / font-amiri / card-royal).
  *
  * Server Component: لا "use client" — كل المحتوى يُعرض في SSR (مرئي لـ Googlebot).
- * الحركة معزولة في leaf مكوّن RevealOnScroll ('use client').
+ * العنوان H1 يُعرض فورًا (فوق الطية، بلا حركة) لضمان ظهوره للمستخدم والزواحف.
  */
 
 import Image from "next/image";
 import Link from "next/link";
-import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { whatsappUrl, WHATSAPP_DISPLAY } from "@/lib/constants";
 
@@ -59,12 +58,11 @@ export default function LocalServicePage(props: LocalServicePageProps) {
           <div className="mb-4">
             <Breadcrumbs items={props.breadcrumbItems} />
           </div>
-          <RevealOnScroll
-            as="h1"
-            className="gold-text font-amiri text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-5"
-          >
+          {/* Hero H1 renders immediately (above the fold, no animation) so it is
+              never transparent to users or crawlers. */}
+          <h1 className="gold-text font-amiri text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-5">
             {props.h1}
-          </RevealOnScroll>
+          </h1>
           <p className="text-pearl/85 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
             {props.intro}
           </p>
