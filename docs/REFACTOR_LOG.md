@@ -39,3 +39,12 @@
 - **What:** Enabled `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, `noImplicitReturns`, `forceConsistentCasingInFileNames` (all on top of existing `strict: true`). Fixed the resulting real bug: BottomNav.tsx useEffect now returns `undefined` on all paths (noImplicitReturns). Added `if (!c) throw` guards in localContent.tsx.
 - **DEVIATION (owner-authorised "make the smartest call"):** `noUncheckedIndexedAccess` was NOT enabled. Enabling it produced 100+ errors, ALL from fixed-index access into static, known-length data arrays (e.g. `PRODUCT_IMAGES[8]`, `CITIES[p.city]` inside maps over the same source). These indexes are guaranteed at author time, so the flag would add 100+ high-risk edits with no real safety value — exactly the "noise without value" the skill warns against. Kept every other valuable strict flag instead. Revisit if the data layer moves to dynamic sources.
 - **Gates:** typecheck EXIT 0 · lint 0 · build EXIT 0.
+
+## Phase 2 — selected tasks (owner authorised "do what's best")
+Decision: executed the high-value, zero/low-risk tasks (2.4 internal links; 2.1 deferred — needs real owner content). SKIPPED 2.2/2.3 (dynamic-route consolidation) — the 10 city pages are already indexed & ranking; consolidation is a maintenance win, not an SEO win, and risks breaking live indexed URLs. Revisit later if desired.
+
+### Task 2.4 — Home → city internal links ✅
+- **What:** New Server Component `src/components/ServiceAreas.tsx` rendering 10 descriptive-anchor links (service × city), inserted into the homepage server tree (`app/page.tsx`).
+- **Why:** Home previously had ZERO direct links to local landing pages (crawl-path + PageRank gap, audit H9).
+- **Verification (live):** Googlebot sees all 10 city links in homepage HTML (server-rendered).
+- **Gates:** typecheck EXIT 0 · lint 0 · build EXIT 0.

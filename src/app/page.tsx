@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { HomePageClient } from "./HomePageClient";
+import { ServiceAreas } from "@/components/ServiceAreas";
 import {
   generateBreadcrumbSchema,
   generateFAQSchema, jsonLd } from "@/lib/schema";
@@ -66,6 +67,7 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
       <HomePageClient />
+      <ServiceAreas />
     </>
   );
 }
