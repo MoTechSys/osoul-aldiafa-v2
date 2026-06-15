@@ -1,14 +1,15 @@
-"use client";
-
 /**
  * مكوّن مشترك لصفحات الخدمات المحلية (خدمة × مدينة).
  * يعرض محتوى عربي غني (H1 + H2s + باقات + أحياء + لماذا نحن + أسعار + FAQ + CTA)
  * بالهوية البصرية للموقع (gold-text / font-amiri / card-royal).
+ *
+ * Server Component: لا "use client" — كل المحتوى يُعرض في SSR (مرئي لـ Googlebot).
+ * الحركة معزولة في leaf مكوّن RevealOnScroll ('use client').
  */
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { whatsappUrl, WHATSAPP_DISPLAY } from "@/lib/constants";
 
@@ -58,15 +59,12 @@ export default function LocalServicePage(props: LocalServicePageProps) {
           <div className="mb-4">
             <Breadcrumbs items={props.breadcrumbItems} />
           </div>
-          <motion.h1
-            initial={false}
-            whileInView={{ opacity: [0, 1], y: [16, 0] }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+          <RevealOnScroll
+            as="h1"
             className="gold-text font-amiri text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-5"
           >
             {props.h1}
-          </motion.h1>
+          </RevealOnScroll>
           <p className="text-pearl/85 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
             {props.intro}
           </p>
