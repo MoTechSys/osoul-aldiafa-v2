@@ -52,6 +52,7 @@ export default function BottomNav() {
         document.body.style.overflow = prev;
       };
     }
+    return undefined;
   }, [open]);
 
   // ESC to close

@@ -34,3 +34,8 @@
 - **1.11 GA env-only:** removed hardcoded DEFAULT_GA_ID from Analytics.tsx; now reads NEXT_PUBLIC_GA_ID only.
 - **Gates:** typecheck EXIT 0 · lint 0 · build EXIT 0.
 - ⚠️ OWNER ACTION: ensure `NEXT_PUBLIC_GA_ID=G-TLRS7CGGGY` is set in Vercel env (Production+Preview) or GA stops tracking after this deploy.
+
+### Task 1.10 — Tighten tsconfig.json ✅ (with one documented deviation)
+- **What:** Enabled `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, `noImplicitReturns`, `forceConsistentCasingInFileNames` (all on top of existing `strict: true`). Fixed the resulting real bug: BottomNav.tsx useEffect now returns `undefined` on all paths (noImplicitReturns). Added `if (!c) throw` guards in localContent.tsx.
+- **DEVIATION (owner-authorised "make the smartest call"):** `noUncheckedIndexedAccess` was NOT enabled. Enabling it produced 100+ errors, ALL from fixed-index access into static, known-length data arrays (e.g. `PRODUCT_IMAGES[8]`, `CITIES[p.city]` inside maps over the same source). These indexes are guaranteed at author time, so the flag would add 100+ high-risk edits with no real safety value — exactly the "noise without value" the skill warns against. Kept every other valuable strict flag instead. Revisit if the data layer moves to dynamic sources.
+- **Gates:** typecheck EXIT 0 · lint 0 · build EXIT 0.
