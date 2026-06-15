@@ -54,3 +54,9 @@ Decision: executed the high-value, zero/low-risk tasks (2.4 internal links; 2.1 
 - **What:** Added `src/app/error.tsx` (route-level branded Error Boundary, 'use client') and `src/app/global-error.tsx` (root-layout error fallback with own html/body). Protects against the white-screen-of-death on runtime errors. (`loading.tsx` + `not-found.tsx` already existed.)
 - **opengraph-image.tsx DEFERRED:** dynamic OG via ImageResponse failed prerender because Arabic text needs an embedded font file in the ImageResponse (default fonts don't cover Arabic glyphs). The site already ships a static OG image, so removed the dynamic one to keep master building. Revisit by bundling a TTF (e.g. Amiri) and passing it via `fonts:` in ImageResponse.
 - **Gates:** typecheck EXIT 0 · lint 0 · build EXIT 0.
+
+### Task 4.2 — Testing stack (Vitest first) ✅
+- **What:** Added Vitest (`vitest.config.ts`, `@` alias, node env) + `npm test` / `npm run test:watch` scripts. Wrote `src/lib/schema.test.ts` (4 tests): jsonLd escaping covers all 5 sequences + stays valid JSON; generateServiceSchema references single business @id, City areaServed, Country fallback.
+- **Result:** 4/4 tests pass. Guards the SEO-critical schema/escaping logic against regressions.
+- **Note:** Playwright E2E + Lighthouse CI + axe + size-limit not yet added (heavier; Vitest covers the highest-risk pure logic now). Can extend later.
+- **Gates:** test EXIT 0 · typecheck EXIT 0 · lint 0 · build EXIT 0.
