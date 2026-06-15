@@ -68,3 +68,9 @@ Next 14→16 + React 18→19 + Tailwind 3→4 is THREE simultaneous major upgrad
 master is green: test + typecheck + lint + build all EXIT 0. All work pushed. Original state preserved in branch V1.
 Completed: Phase 1 (all 10 tasks), Phase 2.4, Phase 4.1 (error boundaries) + 4.2 (Vitest).
 Deferred (documented): 1.10 noUncheckedIndexedAccess, 2.1 real content (needs owner), 2.2/2.3 dynamic routes (risk vs indexed pages), 3.x stack upgrade, 4.1 dynamic OG (needs Arabic font), 4.2 Playwright/Lighthouse/axe/size-limit, 4.3 CI workflows.
+
+### Task 4.1b — Dynamic opengraph-image (now WORKING) ✅
+- **What:** Re-added `src/app/opengraph-image.tsx` (ImageResponse, 1200×630, branded gradient + Arabic copy) with an embedded font under `src/app/_fonts/`.
+- **Font fix:** Amiri failed in @vercel/og Satori ("lookupType 5 substFormat 3 not supported" — advanced Arabic ligatures). Switched to **Tajawal** (simple sans, 60KB) → builds & prerenders clean.
+- **Scope:** Provides an automatic branded OG for routes without a custom OG image. Homepage keeps its existing dedicated og-image.jpg (its manual openGraph.images override stays).
+- **Gates:** build EXIT 0 (opengraph-image prerenders) · typecheck 0 · lint 0 · test 4/4.
