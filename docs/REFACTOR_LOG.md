@@ -81,3 +81,10 @@ Deferred (documented): 1.10 noUncheckedIndexedAccess, 2.1 real content (needs ow
 - **Local-env note:** initial E2E runs failed with MIME-400/ChunkLoadError — caused by a stale/zombie `next-server` holding the port (per web-deploy-vercel-ops lesson). Fixed by killing the exact PID on the port + `reuseExistingServer:false`; not a code issue. Added test-results/ to .gitignore.
 - **Result:** 4/4 E2E pass · 4/4 unit pass.
 - **Gates:** typecheck 0 · lint 0 · build 0 · unit 4/4 · e2e 4/4.
+
+## Phase 2 (cont.) — Task 2.2 dynamic route consolidation ✅
+- **What:** Replaced the 10 duplicated static city dirs with one `src/app/[serviceCity]/page.tsx` (generateStaticParams from LOCAL_PAGES; `dynamicParams = false`). The 10 old files differed ONLY in 3 constants (SERVICE/CITY/PATH) — now derived from the slug, so SEO output is identical. Deleted all 10 old dirs.
+- **Why safe:** same URLs, same metadata/keywords/schema, verified live (all 10 → 200; unknown slug → 404; hub pages unaffected → 200). E2E 4/4 still pass.
+- **Bonus:** city page First Load JS dropped 146kB → ~102kB after consolidation.
+- **Decision on 2.3 (hub consolidation):** SKIPPED — hubs already have static dirs and would risk route collision with [serviceCity] at root for low benefit; left as-is per "safe default".
+- **Gates:** typecheck 0 · lint 0 · build 0 · unit 4/4 · e2e 4/4. status codes verified (200/404/200).
