@@ -88,3 +88,9 @@ Deferred (documented): 1.10 noUncheckedIndexedAccess, 2.1 real content (needs ow
 - **Bonus:** city page First Load JS dropped 146kB → ~102kB after consolidation.
 - **Decision on 2.3 (hub consolidation):** SKIPPED — hubs already have static dirs and would risk route collision with [serviceCity] at root for low benefit; left as-is per "safe default".
 - **Gates:** typecheck 0 · lint 0 · build 0 · unit 4/4 · e2e 4/4. status codes verified (200/404/200).
+
+## Phase 3 — Stack Upgrade: ATTEMPTED then ABANDONED (evidence-based)
+Not a guess this time — actually ran `@tailwindcss/upgrade` on an isolated branch (`pre-stack-upgrade`, master untouched). Result: the codemod aborted mid-migration ("Cannot apply unknown utility class `gold-text`") because the site defines many custom utilities via `@layer`/`@apply` in globals.css (gold-text, card-royal, ghost-button, gold-shine, film-grain…) that Tailwind v4 cannot auto-migrate. The half-migrated state failed to build (needs `@tailwindcss/postcss`, PostCSS rewrite, and hand-rewriting every custom utility into v4 syntax). On a live, fast (87KB), indexed site with ~zero SEO upside, this is high-cost/high-risk. ABANDONED: reset the experiment, restored Tailwind 3, deleted the branch, reinstalled clean. Next 16 + React 19 not attempted (motion/embla React-19 readiness + the Tailwind blocker make the full triple-upgrade a separate dedicated project). master verified green afterwards (build + unit 4/4 + e2e 4/4).
+
+## ✅✅ FINAL — all safe/medium work done; only full stack-upgrade deliberately deferred
+master green: build · typecheck · lint · unit 4/4 · e2e 4/4. Original state in branch V1.
