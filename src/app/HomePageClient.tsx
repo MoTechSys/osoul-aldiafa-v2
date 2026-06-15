@@ -47,8 +47,8 @@ function SectionLabel({ label }: { label: string }) {
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <motion.h2
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={false}
+      whileInView={{ opacity: [0, 1], y: [24, 0] }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="text-pearl text-center font-amiri"
@@ -260,10 +260,7 @@ function Hero() {
           <span className="h-px w-8 bg-gradient-to-r from-gold to-transparent" />
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        <h1
           className="gold-text font-amiri"
           style={{
             fontSize: "clamp(1.5rem, 5vw, 2.4rem)",
@@ -274,7 +271,7 @@ function Hero() {
           }}
         >
           أصول الضيافة
-        </motion.h1>
+        </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}

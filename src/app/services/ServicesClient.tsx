@@ -247,11 +247,11 @@ export default function ServicesClient() {
       <section className="relative pt-6 pb-10 px-4 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "var(--gradient-vignette)" }} />
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ خدماتنا ✦</motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-pearl mb-4 font-amiri" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.15 }}>
+          <motion.p initial={false} whileInView={{ opacity: [0, 1], y: [-10, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ خدماتنا ✦</motion.p>
+          <motion.h1 initial={false} whileInView={{ opacity: [0, 1], y: [30, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, delay: 0.1, ease: [0.32, 0.72, 0, 1] }} className="text-pearl mb-4 font-amiri" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.15 }}>
             باقات ضيافة على<br /><span className="gold-text">أصول التقديم العربي</span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
+          <motion.p initial={false} whileInView={{ opacity: [0, 1], y: [20, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, delay: 0.2, ease: [0.32, 0.72, 0, 1] }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
             من صبّابي القهوة بالزي التراثي إلى تجهيز أركان الضيافة وبوفيهات التمر — كلٌّ بإتقان وذوقٍ لا يُجامل.
           </motion.p>
         </div>

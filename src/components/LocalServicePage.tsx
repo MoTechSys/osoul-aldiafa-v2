@@ -59,9 +59,10 @@ export default function LocalServicePage(props: LocalServicePageProps) {
             <Breadcrumbs items={props.breadcrumbItems} />
           </div>
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={false}
+            whileInView={{ opacity: [0, 1], y: [16, 0] }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
             className="gold-text font-amiri text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-5"
           >
             {props.h1}
