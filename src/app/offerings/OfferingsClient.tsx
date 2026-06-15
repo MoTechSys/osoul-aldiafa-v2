@@ -132,7 +132,7 @@ function Lightbox({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="relative w-full h-screen max-h-[78vh] rounded-2xl overflow-hidden shadow-2xl border border-gold/15">
-            <Image src={item.img} alt={item.title} fill className="object-contain" priority />
+            <Image src={item.img} alt={item.title} fill className="object-contain" />
           </div>
           <div className="mt-6 text-center">
             <h3 className="text-2xl font-amiri text-gold-bright mb-2">{item.title}</h3>

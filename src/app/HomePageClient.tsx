@@ -242,7 +242,6 @@ function Hero() {
             alt="أصول الضيافة"
             width={200}
             height={200}
-            priority
             className="w-[100px] h-[100px] sm:w-[140px] sm:h-[140px]"
           />
         </motion.div>

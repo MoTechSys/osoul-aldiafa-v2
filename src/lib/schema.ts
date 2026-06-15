@@ -258,8 +258,12 @@ export function generateWebSiteSchema() {
  * Safe JSON-LD serializer (escapes <, >, & to prevent XSS in <script>)
  */
 export function jsonLd(obj: unknown): string {
+  // Escape characters that can break either the <script> tag boundary (< > &)
+  // or a JavaScript string literal (U+2028 line sep, U+2029 paragraph sep).
   return JSON.stringify(obj)
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
-    .replace(/&/g, "\\u0026");
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
 }

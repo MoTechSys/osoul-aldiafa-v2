@@ -139,7 +139,6 @@ function Lightbox({
                 src={item.image}
                 alt={seoAlt[item.category]}
                 fill
-                priority
                 sizes="100vw"
                 className="object-contain shadow-2xl"
               />

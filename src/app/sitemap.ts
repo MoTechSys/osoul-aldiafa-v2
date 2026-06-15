@@ -4,8 +4,12 @@ import { SERVICE_HUB_SLUGS } from "@/lib/serviceHubs";
 
 const SITE_URL = "https://asoulaldiafa.com";
 
+// Static publish date. Update manually when content is meaningfully edited.
+// Do NOT use `new Date()` here — it makes every URL appear "just modified" on
+// every build, which causes Google to lose trust in lastmod and crawl less.
+const PUBLISHED = "2026-06-15";
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date().toISOString();
 
   const coreRoutes = [
     { path: "/", priority: 1.0, changeFrequency: "weekly" as const },
@@ -31,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [...coreRoutes, ...hubRoutes, ...localRoutes].map((route) => ({
     url: `${SITE_URL}${route.path}`,
-    lastModified: now,
+    lastModified: PUBLISHED,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));

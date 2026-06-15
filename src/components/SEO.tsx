@@ -59,9 +59,7 @@ export function generatePageMetadata({
     keywords: [...defaultKeywords, ...keywords],
     alternates: {
       canonical: url,
-      languages: {
-        "ar-SA": url,
-      },
+      // languages omitted: monolingual Arabic site (see layout.tsx).
     },
     openGraph: {
       type: ogType,

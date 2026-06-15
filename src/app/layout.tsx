@@ -72,9 +72,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
-    languages: {
-      "ar-SA": SITE_URL,
-    },
+    // `languages` omitted: the site is monolingual Arabic. Declaring an
+    // ar-SA alternate that points to the same URL is unnecessary and can
+    // mislead Google. Re-add only if real translated routes (e.g. /en) exist.
   },
   openGraph: {
     type: "website",
@@ -140,7 +140,7 @@ export const viewport: Viewport = {
   ],
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
+  // maximumScale removed: capping zoom violates WCAG 2.1 SC 1.4.4 (Resize Text).
   viewportFit: "cover",
 };
 

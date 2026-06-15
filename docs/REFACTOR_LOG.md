@@ -24,3 +24,13 @@
 - **Note:** The ONE legitimate LocalBusiness entity remains in layout.tsx (`generateLocalBusinessSchema`, @id /#business) with real branches (Yanbu/Badr/Jeddah) as `Place` — this is correct and required, not a duplicate.
 - **Verification (live):** city page Service schema → `areaServed:{City,"جدة"}` + `@id .../#business`. No per-city LocalBusiness.
 - **Gates:** typecheck EXIT 0 · lint 0 · build EXIT 0.
+
+### Tasks 1.4, 1.5, 1.7, 1.8, 1.9, 1.11 (batch) ✅
+- **1.4 sitemap lastModified:** `new Date()` → static `PUBLISHED = "2026-06-15"`. Live sitemap.xml now shows a single stable date. (Google keeps trust in lastmod.)
+- **1.5 hreflang:** removed `languages: { "ar-SA" }` from layout.tsx + SEO.tsx (monolingual site). Live: no hreflang tags.
+- **1.7 priority:** kept on the two real LCP heroes (HomePageClient hero, LocalServicePage hero); removed from logo (HomePageClient:245), offerings lightbox, portfolio lightbox.
+- **1.8 maximumScale:** removed `maximumScale: 5` from viewport (WCAG 2.1 SC 1.4.4). Live: no maximum-scale.
+- **1.9 jsonLd:** added U+2028 / U+2029 escaping (now 5 escape sequences).
+- **1.11 GA env-only:** removed hardcoded DEFAULT_GA_ID from Analytics.tsx; now reads NEXT_PUBLIC_GA_ID only.
+- **Gates:** typecheck EXIT 0 · lint 0 · build EXIT 0.
+- ⚠️ OWNER ACTION: ensure `NEXT_PUBLIC_GA_ID=G-TLRS7CGGGY` is set in Vercel env (Production+Preview) or GA stops tracking after this deploy.

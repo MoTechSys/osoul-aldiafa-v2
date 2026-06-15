@@ -2,12 +2,11 @@
 // لتفعيله: ضع NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX في متغيّرات بيئة Vercel ثم أعد النشر.
 import Script from "next/script";
 
-// معرّف GA4 (عام، غير سرّي). يمكن تجاوزه عبر NEXT_PUBLIC_GA_ID في بيئة Vercel.
-const DEFAULT_GA_ID = "G-TLRS7CGGGY";
-
+// معرّف GA4 يُقرأ من البيئة فقط (NEXT_PUBLIC_GA_ID في Vercel). لا قيمة افتراضية
+// مضمّنة في الكود — إن لم يوجد المعرّف لا يُحمَّل أي سكربت تتبّع.
 export function Analytics() {
-  const GA_ID = process.env.NEXT_PUBLIC_GA_ID || DEFAULT_GA_ID;
-  if (!GA_ID) return null; // لا تتبّع حتى يُضاف المعرّف
+  const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+  if (!GA_ID) return null; // لا تتبّع حتى يُضاف المعرّف في بيئة Vercel
 
   return (
     <>
