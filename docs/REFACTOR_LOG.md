@@ -99,3 +99,12 @@ master green: build · typecheck · lint · unit 4/4 · e2e 4/4. Original state 
 - **What:** Added official social profiles (username = domain `asoulaldiafa`): TikTok `@asoulaldiafa`, Instagram `asoulaldiafa`, Snapchat `add/asoulaldiafa`. Centralized in `constants.ts` SOCIAL_LINKS.
 - **Where:** (1) Schema.org `sameAs` in BOTH Organization + LocalBusiness entities (Local-SEO entity linking). (2) New `SocialButtons3D.tsx` — large luxurious 3D buttons (gold/onyx, layered shadows, sheen, lift-on-hover, brand glow, reduced-motion safe) inserted in the Footer under "تابعنا على منصّات التواصل".
 - **Verified live:** footer links present; homepage sameAs lists all 3; Arabic labels render. unit 4/4 · e2e 4/4 · build/typecheck/lint green.
+
+## Site name (Arabic) in Google + favicon (owner request via screenshot)
+- **Problem (red):** Google showed "asoulaldiafa.com" above the result instead of "أصول الضيافة".
+  **Root cause:** the homepage `page.tsx` defined its own `openGraph` block WITHOUT `siteName`, which fully overrode the layout's OG — so `og:site_name` was MISSING from the homepage (the page Google weighs most). WebSite schema name was fine but og:site_name is the stronger direct signal.
+  **Fix:** added `type: "website"`, `siteName: "أصول الضيافة"`, `locale: "ar_SA"` to homepage openGraph. Verified live-build now emits `<meta property="og:site_name" content="أصول الضيافة">`.
+- **Problem (green):** favicon shows a generic globe in results.
+  **Diagnosis:** icon files + metadata are all correct and served 200 (/favicon.ico, /icon.svg, apple-touch-icon). The globe = Google hasn't re-crawled/fetched the favicon yet (site only recently added to GSC). This resolves with time + re-indexing; no code bug. (favicon.ico is a valid multi-size .ico ≥48px as Google prefers.)
+- **Owner action:** in Google Search Console, use URL Inspection → Request Indexing on the homepage to speed up re-crawl of the new site name + favicon.
+- **Gates:** typecheck 0 · lint 0 · build 0.
