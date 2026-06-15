@@ -6,7 +6,6 @@ import {
   generateBreadcrumbSchema,
   generateServiceSchema,
   generateFAQSchema,
-  generateCityLocalBusinessSchema,
   generateWebPageSchema,
   jsonLd,
 } from "@/lib/schema";
@@ -42,13 +41,8 @@ const serviceSchema = generateServiceSchema({
   name: `${data.page.serviceAr} في ${cityInfo.ar}`,
   description: data.metaDescription,
   url: `${SITE_URL}${PATH}`,
-});
-const cityBusinessSchema = generateCityLocalBusinessSchema({
-  ar: cityInfo.ar,
-  region: cityInfo.region,
-  url: `${SITE_URL}${PATH}`,
-  lat: cityInfo.lat,
-  lng: cityInfo.lng,
+  cityAr: cityInfo.ar,
+  serviceType: data.page.serviceAr,
 });
 const faqSchema = generateFAQSchema(data.faqs);
 const webPageSchema = generateWebPageSchema({
@@ -61,9 +55,7 @@ export default function Page() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(serviceSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(cityBusinessSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(serviceSchema) }} />      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(webPageSchema) }} />
       <LocalServicePage {...data.page} />
     </>

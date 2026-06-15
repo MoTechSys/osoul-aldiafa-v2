@@ -150,49 +150,6 @@ export function generateLocalBusinessSchema() {
  * LocalBusiness خاص بمدينة معيّنة — لصفحات (خدمة × مدينة).
  * يقوّي الظهور المحلي لكل مدينة على حدة (geo + addressLocality دقيقان).
  */
-export function generateCityLocalBusinessSchema(city: {
-  ar: string;
-  region: string;
-  url: string;
-  lat?: number;
-  lng?: number;
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: `${SITE_NAME} - ${city.ar}`,
-    image: `${SITE_URL}/logo.webp`,
-    url: city.url,
-    telephone: PHONE,
-    email: EMAIL,
-    priceRange: "$$$$",
-    address: {
-      "@type": "PostalAddress",
-      addressCountry: "SA",
-      addressLocality: city.ar,
-      addressRegion: city.region,
-    },
-    ...(city.lat && city.lng
-      ? {
-          geo: {
-            "@type": "GeoCoordinates",
-            latitude: city.lat,
-            longitude: city.lng,
-          },
-        }
-      : {}),
-    areaServed: { "@type": "City", name: city.ar },
-    parentOrganization: { "@type": "Organization", name: SITE_NAME, "@id": `${SITE_URL}/#business` },
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-      opens: "00:00",
-      closes: "23:59",
-    },
-    sameAs: [`https://wa.me/${WHATSAPP_NUMBER}`],
-  };
-}
-
 export function generateBreadcrumbSchema(
   items: { name: string; url: string }[]
 ) {
@@ -234,6 +191,10 @@ export function generateServiceSchema(service: {
   name: string;
   description: string;
   url: string;
+  /** Arabic city name; when provided, areaServed is the specific City (for city×service pages). */
+  cityAr?: string;
+  /** Service type label, e.g. "صبابين قهوة". Falls back to a generic label. */
+  serviceType?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -241,16 +202,17 @@ export function generateServiceSchema(service: {
     name: service.name,
     description: service.description,
     url: service.url,
+    // Reference the SINGLE LocalBusiness entity by @id — never create a new
+    // LocalBusiness per city (that implies a physical branch = doorway signal).
     provider: {
       "@type": "LocalBusiness",
       name: SITE_NAME,
       "@id": `${SITE_URL}/#business`,
     },
-    areaServed: {
-      "@type": "Country",
-      name: "Saudi Arabia",
-    },
-    serviceType: "Hospitality Services",
+    areaServed: service.cityAr
+      ? { "@type": "City", name: service.cityAr }
+      : { "@type": "Country", name: "Saudi Arabia" },
+    serviceType: service.serviceType ?? "Hospitality Services",
   };
 }
 

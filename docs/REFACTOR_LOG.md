@@ -17,3 +17,10 @@
 - **Why:** The SEO-critical city pages (10 of them) now render fully server-side; content reaches Googlebot in the initial HTML.
 - **Verification (live):** `curl -A "Googlebot/2.1" /sababin-qahwa-jeddah` → H1 present in raw HTML, NO opacity:0. City page First Load JS 148kB → 146kB.
 - **Gates:** typecheck EXIT 0 · lint 0 warnings · build EXIT 0.
+
+### Task 1.3 — Replace per-city LocalBusiness with Service schema ✅
+- **What:** Deleted `generateCityLocalBusinessSchema` entirely. Enhanced `generateServiceSchema` to accept `cityAr` (→ `areaServed: City`) + `serviceType`, referencing the single business entity via `provider.@id = /#business`. Updated all 10 city pages: removed the duplicate cityBusinessSchema import/const/<script>, passed cityAr+serviceType to the Service schema.
+- **Why:** A LocalBusiness per city (incl. Makkah/Madinah with no real branch) signals fake local entities = doorway/spam pattern. Now each city page emits Service (→ one business @id) + Breadcrumb + FAQPage only.
+- **Note:** The ONE legitimate LocalBusiness entity remains in layout.tsx (`generateLocalBusinessSchema`, @id /#business) with real branches (Yanbu/Badr/Jeddah) as `Place` — this is correct and required, not a duplicate.
+- **Verification (live):** city page Service schema → `areaServed:{City,"جدة"}` + `@id .../#business`. No per-city LocalBusiness.
+- **Gates:** typecheck EXIT 0 · lint 0 · build EXIT 0.
