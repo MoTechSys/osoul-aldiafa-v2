@@ -60,3 +60,11 @@ Decision: executed the high-value, zero/low-risk tasks (2.4 internal links; 2.1 
 - **Result:** 4/4 tests pass. Guards the SEO-critical schema/escaping logic against regressions.
 - **Note:** Playwright E2E + Lighthouse CI + axe + size-limit not yet added (heavier; Vitest covers the highest-risk pure logic now). Can extend later.
 - **Gates:** test EXIT 0 · typecheck EXIT 0 · lint 0 · build EXIT 0.
+
+## Phase 3 — Stack Upgrade: DEFERRED (risk decision)
+Next 14→16 + React 18→19 + Tailwind 3→4 is THREE simultaneous major upgrades on a live, indexed site that leans on `motion`, `embla-carousel`, and extensive Tailwind 3 config. High breakage risk, ~zero SEO upside (site is already fast: 87KB shared JS, good LCP, single LCP priority image). Per owner's "do what's best" + the non-negotiable "never leave master broken", this is deferred deliberately rather than rushed. Recommend doing it later as its own isolated effort with full regression testing (the Vitest base from 4.2 helps).
+
+## FINAL STATE
+master is green: test + typecheck + lint + build all EXIT 0. All work pushed. Original state preserved in branch V1.
+Completed: Phase 1 (all 10 tasks), Phase 2.4, Phase 4.1 (error boundaries) + 4.2 (Vitest).
+Deferred (documented): 1.10 noUncheckedIndexedAccess, 2.1 real content (needs owner), 2.2/2.3 dynamic routes (risk vs indexed pages), 3.x stack upgrade, 4.1 dynamic OG (needs Arabic font), 4.2 Playwright/Lighthouse/axe/size-limit, 4.3 CI workflows.
