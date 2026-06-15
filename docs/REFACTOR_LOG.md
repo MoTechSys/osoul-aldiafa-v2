@@ -94,3 +94,8 @@ Not a guess this time — actually ran `@tailwindcss/upgrade` on an isolated bra
 
 ## ✅✅ FINAL — all safe/medium work done; only full stack-upgrade deliberately deferred
 master green: build · typecheck · lint · unit 4/4 · e2e 4/4. Original state in branch V1.
+
+## Social links (owner request via voice) ✅
+- **What:** Added official social profiles (username = domain `asoulaldiafa`): TikTok `@asoulaldiafa`, Instagram `asoulaldiafa`, Snapchat `add/asoulaldiafa`. Centralized in `constants.ts` SOCIAL_LINKS.
+- **Where:** (1) Schema.org `sameAs` in BOTH Organization + LocalBusiness entities (Local-SEO entity linking). (2) New `SocialButtons3D.tsx` — large luxurious 3D buttons (gold/onyx, layered shadows, sheen, lift-on-hover, brand glow, reduced-motion safe) inserted in the Footer under "تابعنا على منصّات التواصل".
+- **Verified live:** footer links present; homepage sameAs lists all 3; Arabic labels render. unit 4/4 · e2e 4/4 · build/typecheck/lint green.

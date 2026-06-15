@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { DallahLogo } from "@/components/DallahLogo";
+import { SocialButtons3D } from "@/components/SocialButtons3D";
 import { navLinks, useWhatsAppUrl, WA_NUMBER, WA_DISPLAY } from "@/components/Navbar";
 
 export default function Footer() {
@@ -189,6 +190,14 @@ export default function Footer() {
               ))}
             </ul>
           </div>
+        </div>
+
+        {/* Social — luxurious 3D buttons */}
+        <div className="py-10 mb-2 flex flex-col items-center gap-6" style={{ borderTop: "1px solid rgba(212,175,55,0.10)" }}>
+          <h3 className="gold-text font-amiri text-center" style={{ fontSize: "1.15rem", fontWeight: 700 }}>
+            تابعنا على منصّات التواصل
+          </h3>
+          <SocialButtons3D />
         </div>
 
         {/* Bottom bar */}

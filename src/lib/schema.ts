@@ -5,6 +5,7 @@ import {
   PHONE_TEL as PHONE,
   EMAIL,
   WHATSAPP_NUMBER,
+  SOCIAL_LINKS,
 } from "@/lib/constants";
 
 export function generateOrganizationSchema() {
@@ -28,6 +29,9 @@ export function generateOrganizationSchema() {
     },
     sameAs: [
       `https://wa.me/${WHATSAPP_NUMBER}`,
+      SOCIAL_LINKS.tiktok,
+      SOCIAL_LINKS.instagram,
+      SOCIAL_LINKS.snapchat,
     ],
   };
 }
@@ -142,6 +146,9 @@ export function generateLocalBusinessSchema() {
     // الحقيقية تُعرض عبر Google Business Profile لا عبر schema الموقع.
     sameAs: [
       `https://wa.me/${WHATSAPP_NUMBER}`,
+      SOCIAL_LINKS.tiktok,
+      SOCIAL_LINKS.instagram,
+      SOCIAL_LINKS.snapchat,
     ],
   };
 }

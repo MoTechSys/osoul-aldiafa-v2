@@ -17,6 +17,14 @@ export const PHONE_TEL = "+966568997316";
 
 export const EMAIL = "osoulaldiafa@gmail.com";
 
+// Official social profiles — username matches the domain (asoulaldiafa).
+// Used in Footer buttons + Schema.org sameAs (entity verification / Local SEO).
+export const SOCIAL_LINKS = {
+  tiktok: "https://www.tiktok.com/@asoulaldiafa",
+  instagram: "https://www.instagram.com/asoulaldiafa",
+  snapchat: "https://www.snapchat.com/add/asoulaldiafa",
+} as const;
+
 /** رابط واتساب جاهز مع رسالة افتراضية */
 export function whatsappUrl(message = "مرحباً، أرغب بالاستفسار عن خدمات أصول الضيافة."): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
