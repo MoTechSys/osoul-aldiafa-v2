@@ -5,7 +5,7 @@ import {
   generateBreadcrumbSchema,
   generateWebPageSchema, jsonLd } from "@/lib/schema";
 
-const SITE_URL = "https://asoulaldiafa.com";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "معرض الأعمال",

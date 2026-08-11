@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { LOCAL_PAGES, localSlug } from "@/lib/localPages";
 import { SERVICE_HUB_SLUGS } from "@/lib/serviceHubs";
 
-const SITE_URL = "https://asoulaldiafa.com";
+import { SITE_URL } from "@/lib/constants";
 
 // Static publish date. Update manually when content is meaningfully edited.
 // Do NOT use `new Date()` here — it makes every URL appear "just modified" on
