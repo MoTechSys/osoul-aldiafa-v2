@@ -5,7 +5,7 @@ import {
   generateBreadcrumbSchema,
   generateFAQSchema, jsonLd } from "@/lib/schema";
 
-const SITE_URL = "https://asoulaldiafa.com";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "أصول الضيافة | خدمات الضيافة الفاخرة في المملكة العربية السعودية",

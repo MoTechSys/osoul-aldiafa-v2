@@ -8,7 +8,7 @@ import {
   generateWebSiteSchema,
   generateOrganizationSchema, jsonLd } from "@/lib/schema";
 
-const SITE_URL = "https://asoulaldiafa.com";
+import { SITE_URL } from "@/lib/constants";
 
 const tajawal = Tajawal({
   subsets: ["arabic", "latin"],
