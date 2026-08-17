@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   verification: {
     google:
       process.env.NEXT_PUBLIC_GSC_VERIFICATION ||
-      "HsOj3WOc5Lh7C3z5oIzGdB4QynbGIN7kVbi3eL8HLLc",
+      "3MZ4yQ5xBdUOSJPm5nWsBKXyKNcKAiiPEW3SqCoFWHQ",
   },
   alternates: {
     canonical: SITE_URL,
