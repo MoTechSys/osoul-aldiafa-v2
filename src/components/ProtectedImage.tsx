@@ -61,7 +61,7 @@ const ProtectedImage: React.FC<ProtectedImageProps> = ({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo.webp"
+                src="/logo-192.webp"
                 alt=""
                 className="w-full h-auto"
                 draggable={false}

@@ -6,6 +6,7 @@
  */
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function Error({
   error,
@@ -37,12 +38,12 @@ export default function Error({
         >
           حاول مرّة أخرى
         </button>
-        <a
+        <Link
           href="/"
           className="px-7 py-3 rounded-full border border-gold/40 text-pearl hover:bg-gold/10 transition"
         >
           العودة للرئيسية
-        </a>
+        </Link>
       </div>
     </main>
   );

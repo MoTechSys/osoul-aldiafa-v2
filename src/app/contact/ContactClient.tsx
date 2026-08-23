@@ -4,7 +4,9 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { WA_NUMBER, WA_DISPLAY } from "@/components/Navbar";
-import { BRANCHES } from "@/lib/schema";
+import { CITIES } from "@/lib/localPages";
+import { EMAIL } from "@/lib/constants";
+import { SocialButtons3D } from "@/components/SocialButtons3D";
 
 const contactMethods = [
   {
@@ -36,8 +38,9 @@ const contactMethods = [
       </svg>
     ),
     label: "البريد الإلكتروني",
-    value: "osoulaldiafa@gmail.com",
-    href: "mailto:osoulaldiafa@gmail.com",
+    // البريد من الثابت المركزي لا نصًّا حرفيًا: أي تغيير للبريد يسري تلقائيًا
+    value: EMAIL,
+    href: `mailto:${EMAIL}`,
     color: "#C5A059",
   },
   {
@@ -48,7 +51,9 @@ const contactMethods = [
       </svg>
     ),
     label: "تغطيتنا",
-    value: "كامل المملكة العربية السعودية",
+    // ⚠️ يجب أن يطابق CITIES في localPages.ts و SERVICE_AREAS في schema.ts.
+    // كان مكتوبًا «كامل المملكة» وهو يعارض البيانات المهيكلة (٥ مدن).
+    value: "منطقتا مكة المكرمة والمدينة المنورة",
     href: "#coverage",
     color: "#C5A059",
   },
@@ -86,7 +91,7 @@ export default function ContactClient() {
             </svg>
           </motion.div>
           <h2 className="text-pearl mb-3 font-amiri" style={{ fontSize: "1.8rem", fontWeight: 700 }}>شكراً لتواصلك!</h2>
-          <p className="text-pearl/55 text-sm mb-6">تم إرسال رسالتك عبر واتساب. سنتواصل معك بأقرب وقت.</p>
+          <p className="text-pearl/75 text-sm mb-6">تم إرسال رسالتك عبر واتساب. سنتواصل معك بأقرب وقت.</p>
           <button onClick={() => setSubmitted(false)} className="ghost-button px-6 py-3 rounded-full text-sm">إرسال رسالة أخرى</button>
         </motion.div>
       </div>
@@ -128,7 +133,7 @@ export default function ContactClient() {
                 {method.icon}
               </div>
               <p className="text-pearl text-sm" style={{ fontWeight: 600 }}>{method.label}</p>
-              <p className="text-pearl/45 text-xs mt-1 truncate" dir="ltr">{method.value}</p>
+              <p className="text-pearl/75 text-xs mt-1 truncate" dir="ltr">{method.value}</p>
             </motion.a>
           ))}
         </div>
@@ -146,8 +151,10 @@ export default function ContactClient() {
             <h2 className="text-pearl mb-6 font-amiri" style={{ fontSize: "1.4rem", fontWeight: 700 }}>أرسل لنا رسالتك</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-pearl/55 text-xs mb-2">الاسم *</label>
+                <label htmlFor="contact-name" className="block text-pearl/75 text-xs mb-2">الاسم *</label>
                 <input
+                  id="contact-name"
+                  name="name"
                   type="text"
                   required
                   value={formData.name}
@@ -158,8 +165,10 @@ export default function ContactClient() {
                 />
               </div>
               <div>
-                <label className="block text-pearl/55 text-xs mb-2">رقم الجوال *</label>
+                <label htmlFor="contact-phone" className="block text-pearl/75 text-xs mb-2">رقم الجوال *</label>
                 <input
+                  id="contact-phone"
+                  name="phone"
                   type="tel"
                   required
                   value={formData.phone}
@@ -171,8 +180,10 @@ export default function ContactClient() {
                 />
               </div>
               <div>
-                <label className="block text-pearl/55 text-xs mb-2">البريد الإلكتروني</label>
+                <label htmlFor="contact-email" className="block text-pearl/75 text-xs mb-2">البريد الإلكتروني</label>
                 <input
+                  id="contact-email"
+                  name="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -183,19 +194,25 @@ export default function ContactClient() {
                 />
               </div>
               <div>
-                <label className="block text-pearl/55 text-xs mb-2">تاريخ المناسبة</label>
+                <label htmlFor="contact-date" className="block text-pearl/75 text-xs mb-2">تاريخ المناسبة</label>
                 <input
+                  id="contact-date"
+                  name="date"
                   type="date"
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-noir text-pearl text-sm"
                   style={{ border: "1px solid rgba(212,175,55,0.18)" }}
+                  aria-label="تاريخ المناسبة"
                 />
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-pearl/55 text-xs mb-2">نوع الخدمة</label>
+              <label htmlFor="contact-service" className="block text-pearl/75 text-xs mb-2">نوع الخدمة</label>
               <select
+                id="contact-service"
+                name="service"
+                aria-label="نوع الخدمة"
                 value={formData.service}
                 onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                 className="w-full px-4 py-3 rounded-xl bg-noir text-pearl text-sm"
@@ -211,7 +228,7 @@ export default function ContactClient() {
               </select>
             </div>
             <div className="mb-6">
-              <label className="block text-pearl/55 text-xs mb-2">رسالتك *</label>
+              <label className="block text-pearl/75 text-xs mb-2">رسالتك *</label>
               <textarea
                 required
                 rows={4}
@@ -238,39 +255,35 @@ export default function ContactClient() {
         </div>
       </section>
 
-      {/* مناطق الخدمة — نقاط تواجدنا مع روابط خرائط جوجل */}
-      <section id="branches" className="px-4 pb-16">
+      {/* مناطق نخدمها — النشاط مزوّد خدمة متنقّل بلا مقر (SAB) */}
+      <section id="service-areas" className="px-4 pb-16">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
-            <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ أين تجدنا ✦</p>
+            <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ مناطق نخدمها ✦</p>
             <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
               مناطق خدمتنا
             </h2>
-            <p className="text-pearl/55 text-sm mt-3 max-w-lg mx-auto">نصل إليك بفريقنا وعدّتنا — اضغط على المنطقة لعرض موقع تواجدنا على خرائط جوجل.</p>
+            <p className="text-pearl/75 text-sm mt-3 max-w-lg mx-auto">فريقنا متنقّل يصل إليك بعدّته الكاملة — هذه أبرز المدن التي نخدمها باستمرار.</p>
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
-            {BRANCHES.map((branch, i) => (
-              <motion.a
-                key={branch.name}
-                href={branch.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+            {Object.values(CITIES).map((city, i) => (
+              <motion.div
+                key={city.slug}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="group flex items-center gap-4 p-5 rounded-2xl transition-all"
+                className="flex items-center gap-4 p-5 rounded-2xl"
                 style={{ background: "rgba(212,175,55,0.05)", border: "1px solid rgba(212,175,55,0.18)" }}
               >
                 <span className="shrink-0 grid place-items-center w-11 h-11 rounded-full" style={{ background: "rgba(212,175,55,0.12)" }} aria-hidden>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 </span>
                 <span className="flex-1 text-right">
-                  <span className="block text-pearl font-amiri" style={{ fontSize: "1.05rem", fontWeight: 700 }}>{branch.addressLocality}</span>
-                  <span className="block text-pearl/50 text-xs mt-0.5">{branch.addressRegion}</span>
+                  <span className="block text-pearl font-amiri" style={{ fontSize: "1.05rem", fontWeight: 700 }}>{city.ar}</span>
+                  <span className="block text-pearl/60 text-xs mt-0.5">{city.region}</span>
                 </span>
-                <span className="shrink-0 text-gold-bright text-xs font-medium opacity-70 group-hover:opacity-100 transition-opacity">الخريطة ←</span>
-              </motion.a>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -281,12 +294,18 @@ export default function ContactClient() {
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
             <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ تغطيتنا ✦</p>
             <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
-              نخدم كامل المملكة العربية السعودية
+              نخدم منطقتي مكة المكرمة والمدينة المنورة
             </h2>
-            <p className="text-pearl/55 text-sm mt-3 max-w-lg mx-auto">نتنقّل بفريقنا وعدّتنا لأي مدينة أو منطقة — أينما كانت مناسبتك، نحن نصل.</p>
+            <p className="text-pearl/75 text-sm mt-3 max-w-lg mx-auto">
+              تغطيتنا التشغيلية الثابتة هي منطقتا مكة المكرمة والمدينة المنورة،
+              وفيها نضمن الفريق والعدّة والوقت. وما خرج عنها نناقشه طلبًا بطلب قبل
+              أي التزام — لا نعد بما لا نملك أدواته.
+            </p>
           </motion.div>
           <div className="flex flex-wrap justify-center gap-3">
-            {["جدة", "مكة المكرمة", "المدينة المنورة", "الدمام", "الخبر", "الطائف", "أبها", "تبوك", "حائل", "نجران", "جازان", "بريدة", "الأحساء", "وسائر مناطق المملكة"].map((city, i) => (
+            {/* ⚠️ يجب أن تطابق هذه القائمة CITIES في localPages.ts ونطاق SERVICE_AREAS
+                في schema.ts. تعارض المحتوى المرئي مع البيانات المهيكلة يضرّ الثقة والفهرسة. */}
+            {[...Object.values(CITIES).map((c) => c.ar), "ومواقع أخرى بحسب الطلب"].map((city, i) => (
               <motion.span
                 key={city}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -299,6 +318,22 @@ export default function ContactClient() {
               </motion.span>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* حساباتنا — بطاقات لكل حساب، ومطابقة لِـ sameAs في البيانات المهيكلة */}
+      <section id="accounts" className="px-4 pb-24">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
+            <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ حساباتنا ✦</p>
+            <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
+              تابع أعمالنا على حساباتنا الرسمية
+            </h2>
+            <p className="text-pearl/75 text-sm mt-3 max-w-lg mx-auto">
+              هذه هي حساباتنا المعتمدة فقط. ما نشرناه فيها من أعمال هو ما نستطيع أن نقف خلفه.
+            </p>
+          </motion.div>
+          <SocialButtons3D />
         </div>
       </section>
     </div>

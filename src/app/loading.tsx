@@ -28,7 +28,7 @@ export default function Loading() {
           أصول الضيافة
         </p>
         <p
-          className="text-pearl/45 text-xs"
+          className="text-pearl/75 text-xs"
           style={{ letterSpacing: "0.25em" }}
         >
           جاري التحميل...

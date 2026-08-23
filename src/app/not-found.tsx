@@ -40,7 +40,7 @@ export default function NotFound() {
         >
           الصفحة غير موجودة
         </h2>
-        <p className="text-pearl/55 text-sm mb-9 leading-relaxed max-w-sm mx-auto">
+        <p className="text-pearl/75 text-sm mb-9 leading-relaxed max-w-sm mx-auto">
           عذراً، الصفحة التي تبحث عنها غير موجودة أو ربما تم نقلها — لنعد بك إلى أصول الضيافة.
         </p>
         <Link

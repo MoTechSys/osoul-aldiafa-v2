@@ -109,9 +109,12 @@ function NavbarContent() {
             >
               أصول الضيافة
             </span>
+            {/* الاسم اللاتيني تحت الشعار — 0.6rem (9.6px) → 0.75rem (12px).
+                لاتيني وليس عربيًا، لذا 12px مقبول بصريًا هنا، وهو حدّ جوجل
+                الأدنى للنص المقروء على الهاتف. */}
             <span
-              className="block text-gold/55"
-              style={{ fontSize: "0.6rem", letterSpacing: "0.3em" }}
+              className="block text-gold/80"
+              style={{ fontSize: "0.75rem", letterSpacing: "0.22em" }}
             >
               ASOUL AL-DIAFA
             </span>

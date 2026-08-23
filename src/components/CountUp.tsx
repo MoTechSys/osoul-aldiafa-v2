@@ -42,12 +42,11 @@ export default function CountUp({
       typeof window !== "undefined" &&
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) {
-      setValue(to);
-      return;
-    }
+    // Reduced motion: jump instantly via a zero-duration animation so state
+    // updates flow through the same external-system callback (no direct
+    // setState inside the effect body — react-hooks/set-state-in-effect).
     const controls = animate(from, to, {
-      duration,
+      duration: prefersReduced ? 0 : duration,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (v) => setValue(v),
     });

@@ -10,6 +10,8 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/admin/", "/private/"],
       },
     ],
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    // خريطتان: الصفحات + الصور. جوجل يسمح بإعلان أكثر من خريطة في robots.txt،
+    // وخريطة الصور منفصلة لأن Next 14.2.35 لا يدعم وسوم الصور في sitemap.ts.
+    sitemap: [`${SITE_URL}/sitemap.xml`, `${SITE_URL}/sitemap-images.xml`],
   };
 }

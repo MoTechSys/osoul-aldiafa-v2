@@ -7,6 +7,7 @@ import {
   WHATSAPP_NUMBER,
   SOCIAL_LINKS,
 } from "@/lib/constants";
+import { CITIES } from "@/lib/localPages";
 
 export function generateOrganizationSchema() {
   return {
@@ -32,99 +33,43 @@ export function generateOrganizationSchema() {
       SOCIAL_LINKS.tiktok,
       SOCIAL_LINKS.instagram,
       SOCIAL_LINKS.snapchat,
+      SOCIAL_LINKS.x,
+      SOCIAL_LINKS.facebook,
     ],
   };
 }
 
-// فروع/مواقع الخدمة — إحداثيات دقيقة من خرائط جوجل (تحسين الظهور المحلي + "بالقرب مني")
-export const BRANCHES = [
-  {
-    name: "أصول الضيافة - بدر",
-    addressLocality: "بدر",
-    addressRegion: "منطقة المدينة المنورة",
-    lat: 23.773033,
-    lng: 38.796941,
-    mapUrl: "https://maps.app.goo.gl/GHth1VbP8bnCJjn88",
+/**
+ * مناطق الخدمة — النشاط مزوّد خدمة متنقّل (SAB) بلا مقر أو موقع فيزيائي.
+ * كل مدينة مخدومة تمثَّل بدائرة GeoCircle حول مركزها (لا address ولا geo للنشاط نفسه).
+ */
+export const SERVICE_AREAS = Object.values(CITIES).map((c) => ({
+  "@type": "GeoCircle" as const,
+  name: c.ar,
+  geoMidpoint: {
+    "@type": "GeoCoordinates" as const,
+    latitude: c.lat,
+    longitude: c.lng,
   },
-  {
-    name: "أصول الضيافة - ينبع البحر (دوار السفينة)",
-    addressLocality: "ينبع البحر",
-    addressRegion: "منطقة المدينة المنورة",
-    lat: 24.106080,
-    lng: 38.045997,
-    mapUrl: "https://maps.app.goo.gl/e83Y1bG7aNJ4SpJ77",
-  },
-  {
-    name: "أصول الضيافة - الهيئة الملكية بينبع",
-    addressLocality: "ينبع الصناعية",
-    addressRegion: "منطقة المدينة المنورة",
-    lat: 24.021181,
-    lng: 38.179746,
-    mapUrl: "https://maps.app.goo.gl/JJFp64FPWPHSutBLA",
-  },
-  {
-    name: "أصول الضيافة - جدة (الحمدانية)",
-    addressLocality: "جدة",
-    addressRegion: "منطقة مكة المكرمة",
-    lat: 21.754844,
-    lng: 39.207821,
-    mapUrl: "https://maps.app.goo.gl/GG7gyREBTHMYJxUN9",
-  },
-] as const;
+  geoRadius: 30000,
+}));
 
-export function generateLocalBusinessSchema() {
+export function generateProfessionalServiceSchema() {
   return {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "ProfessionalService",
     "@id": `${SITE_URL}/#business`,
     name: SITE_NAME,
     alternateName: "Asoul Al-Diafa",
     description:
-      "أصول الضيافة - خدمات ضيافة فاخرة في جميع مناطق المملكة العربية السعودية. قهوة عربية، شاي، تمور، وفريق صبّابين بزي تراثي. فروع في بدر وينبع وجدة.",
+      "أصول الضيافة — خدمات ضيافة فاخرة متنقّلة في منطقتي مكة المكرمة والمدينة المنورة: قهوة عربية، شاي، تمور، وفريق صبّابين وقهوجيين بزي تراثي يصل إليك أينما كانت مناسبتك.",
     url: SITE_URL,
     telephone: PHONE,
     email: EMAIL,
     image: `${SITE_URL}/logo.webp`,
     logo: `${SITE_URL}/logo.webp`,
-    address: {
-      "@type": "PostalAddress",
-      addressCountry: "SA",
-      addressLocality: "ينبع",
-      addressRegion: "منطقة المدينة المنورة",
-    },
-    // الموقع الرئيسي (ينبع البحر) — إحداثيات لخرائط جوجل
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: 24.106080,
-      longitude: 38.045997,
-    },
-    // المناطق المخدومة فعلياً (تقوّي الظهور في كل مدينة)
-    areaServed: [
-      ...BRANCHES.map((b) => ({
-        "@type": "City",
-        name: b.addressLocality,
-      })),
-      // مدن إضافية مخدومة (لها صفحات مخصصة)
-      { "@type": "City", name: "المدينة المنورة" },
-      { "@type": "City", name: "مكة المكرمة" },
-    ],
-    // فروع متعددة → كل فرع يظهر محلياً
-    location: BRANCHES.map((b) => ({
-      "@type": "Place",
-      name: b.name,
-      hasMap: b.mapUrl,
-      address: {
-        "@type": "PostalAddress",
-        addressCountry: "SA",
-        addressLocality: b.addressLocality,
-        addressRegion: b.addressRegion,
-      },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: b.lat,
-        longitude: b.lng,
-      },
-    })),
+    // SAB: مناطق خدمة فقط — بلا address وبلا geo (R5 / SC2 / SC3)
+    serviceArea: SERVICE_AREAS,
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: [
@@ -140,23 +85,19 @@ export function generateLocalBusinessSchema() {
       closes: "23:59",
     },
     priceRange: "$$$$",
-    servesCuisine: "Arabic Hospitality",
     // ملاحظة: أُزيلت aggregateRating/review الذاتية — التقييمات الذاتية على موقع الشركة
-    // مخالفة لسياسة Google (self-serving reviews) وقد تُسقط النتائج الغنية. التقييمات
-    // الحقيقية تُعرض عبر Google Business Profile لا عبر schema الموقع.
+    // مخالفة لسياسة Google (self-serving reviews) وقد تُسقط النتائج الغنية.
     sameAs: [
       `https://wa.me/${WHATSAPP_NUMBER}`,
       SOCIAL_LINKS.tiktok,
       SOCIAL_LINKS.instagram,
       SOCIAL_LINKS.snapchat,
+      SOCIAL_LINKS.x,
+      SOCIAL_LINKS.facebook,
     ],
   };
 }
 
-/**
- * LocalBusiness خاص بمدينة معيّنة — لصفحات (خدمة × مدينة).
- * يقوّي الظهور المحلي لكل مدينة على حدة (geo + addressLocality دقيقان).
- */
 export function generateBreadcrumbSchema(
   items: { name: string; url: string }[]
 ) {
@@ -209,10 +150,10 @@ export function generateServiceSchema(service: {
     name: service.name,
     description: service.description,
     url: service.url,
-    // Reference the SINGLE LocalBusiness entity by @id — never create a new
-    // LocalBusiness per city (that implies a physical branch = doorway signal).
+    // Reference the SINGLE ProfessionalService entity by @id — never create a
+    // new per-city business entity (that implies a physical location = doorway signal).
     provider: {
-      "@type": "LocalBusiness",
+      "@type": "ProfessionalService",
       name: SITE_NAME,
       "@id": `${SITE_URL}/#business`,
     },

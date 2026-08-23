@@ -4,31 +4,19 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "motion/react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import {
-  SETUP_IMAGES,
-  TEAM_IMAGES,
-  PRODUCT_IMAGES,
-  DATES_IMAGES,
-  DRINK_IMAGES,
-} from "@/lib/images";
+import { imageAlt } from "@/lib/images";
+import { PORTFOLIO_ENTRIES, type PortfolioCategory } from "@/lib/pageImages";
+import { WA_NUMBER } from "@/components/Navbar";
 
 const ITEMS_PER_PAGE = 12;
 
-type FilterType = "all" | "setups" | "team" | "products" | "dates";
+type FilterType = "all" | PortfolioCategory;
 
-interface PortfolioItem {
-  id: number;
-  image: string;
-  category: FilterType;
-}
+type PortfolioItem = (typeof PORTFOLIO_ENTRIES)[number];
 
-const portfolioItems: PortfolioItem[] = [
-  ...SETUP_IMAGES.map((img, i) => ({ id: 100 + i, image: img, category: "setups" as FilterType })),
-  ...TEAM_IMAGES.map((img, i) => ({ id: 200 + i, image: img, category: "team" as FilterType })),
-  ...PRODUCT_IMAGES.map((img, i) => ({ id: 300 + i, image: img, category: "products" as FilterType })),
-  ...DATES_IMAGES.map((img, i) => ({ id: 400 + i, image: img, category: "dates" as FilterType })),
-  ...DRINK_IMAGES.map((img, i) => ({ id: 500 + i, image: img, category: "products" as FilterType })),
-];
+// تُقرأ من مصدر الحقيقة الواحد (src/lib/pageImages.ts) حتى تبقى خريطة الصور
+// في sitemap-images.xml مطابقة تمامًا لما تعرضه هذه الصفحة فعلاً.
+const portfolioItems: readonly PortfolioItem[] = PORTFOLIO_ENTRIES;
 
 const filters: { key: FilterType; label: string; icon: string }[] = [
   { key: "all",      label: "الكل",          icon: "◎" },
@@ -39,11 +27,11 @@ const filters: { key: FilterType; label: string; icon: string }[] = [
 ];
 
 const seoAlt: Record<FilterType, string> = {
-  all: "أعمال أصول الضيافة في المملكة العربية السعودية",
-  setups: "أركان ضيافة وتجهيزات بوفيهات",
-  team: "فريق صبّابين ومباشرين بزي تراثي",
-  products: "أدوات تقديم ذهبية - دلال وفناجين وصواني",
-  dates: "تمر وحلويات وتقديمات فاخرة",
+  all: "تفاصيل بصرية لأساليب الضيافة السعودية",
+  setups: "تكوين أركان الضيافة ومساحات التقديم",
+  team: "قهوجيين وصبابين بملابس مستلهمة من الطابع السعودي",
+  products: "دلال وفناجين وصواني ضمن مشاهد التقديم",
+  dates: "ترتيبات التمر والحلويات في الضيافة",
 };
 
 function Lightbox({
@@ -137,7 +125,7 @@ function Lightbox({
             <div className="relative w-full h-full max-w-[95vw] max-h-[85vh] md:max-w-[80vw] md:max-h-[80vh]">
               <Image
                 src={item.image}
-                alt={seoAlt[item.category]}
+                alt={imageAlt(item.image, seoAlt[item.category])}
                 fill
                 sizes="100vw"
                 className="object-contain shadow-2xl"
@@ -162,7 +150,14 @@ export default function PortfolioClient() {
   const displayed = filtered.slice(0, displayCount);
   const hasMore = displayCount < filtered.length;
 
-  useEffect(() => { setDisplayCount(ITEMS_PER_PAGE); }, [activeFilter]);
+  // Reset pagination when the filter changes — "adjust state during render"
+  // pattern (https://react.dev/learn/you-might-not-need-an-effect) avoids the
+  // extra cascading render an effect-based reset would cause.
+  const [prevFilter, setPrevFilter] = useState<FilterType>(activeFilter);
+  if (activeFilter !== prevFilter) {
+    setPrevFilter(activeFilter);
+    setDisplayCount(ITEMS_PER_PAGE);
+  }
 
   return (
     <div className="min-h-screen bg-noir pb-32">
@@ -173,11 +168,57 @@ export default function PortfolioClient() {
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <motion.p initial={false} whileInView={{ opacity: [0, 1], y: [-10, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ معرض أعمالنا ✦</motion.p>
           <motion.h1 initial={false} whileInView={{ opacity: [0, 1], y: [30, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, delay: 0.1, ease: [0.32, 0.72, 0, 1] }} className="text-pearl mb-4 font-amiri" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.15 }}>
-            توثيقُ لحظات<br /><span className="gold-text">الذوق الراقي</span>
+            اقرأ تفاصيل الصورة<br /><span className="gold-text">قبل تحديد توجّهك</span>
           </motion.h1>
           <motion.p initial={false} whileInView={{ opacity: [0, 1], y: [20, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, delay: 0.2, ease: [0.32, 0.72, 0, 1] }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
-            صورٌ حقيقية من مناسباتنا تظهر كيف نُحيي أصول الضيافة العربية.
+            معرض بصري للاستدلال على التكوين وحركة الخدمة والأدوات؛ مصدر كل مشهد وحدوده يُفهمان من بياناته المتاحة، لا من الافتراض.
           </motion.p>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 pb-10" aria-labelledby="portfolio-reading-title">
+        <div className="grid lg:grid-cols-[0.9fr_1.4fr] gap-7 lg:gap-12 items-start">
+          <div>
+            <p className="text-gold-bright text-xs mb-3">طريقة القراءة</p>
+            <h2 id="portfolio-reading-title" className="font-amiri text-pearl text-2xl sm:text-3xl font-bold leading-snug mb-4">
+              لا تبحث عن نسخة مطابقة؛ التقط القرار خلف المشهد
+            </h2>
+            <p className="text-pearl/70 text-sm leading-8">
+              وظيفة المعرض أن يمنحك أدلة بصرية للنقاش. بعض الصور قد تكون لمنتج، أو ترتيب، أو لقطة تعريفية،
+              ولا تكفي الصورة وحدها لإثبات أنها من مناسبة عميل منفّذة. لذلك اقرأ ما يظهر فعلاً، ثم اسأل عن
+              إمكان تطبيق التوجّه ضمن طلبك.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <article className="rounded-2xl border border-gold/15 bg-onyx p-5">
+              <h3 className="font-amiri text-gold-bright text-xl mb-2">التكوين والمساحة</h3>
+              <p className="text-pearl/65 text-sm leading-7">
+                راقب توزيع الارتفاعات، الفراغ حول الركن، ووضوح نقطة الاستقبال. الصورة تساعد على وصف الإيقاع
+                البصري، لكنها لا تحدد القياسات أو ملاءمة الترتيب لمساحة أخرى.
+              </p>
+            </article>
+            <article className="rounded-2xl border border-gold/15 bg-onyx p-5">
+              <h3 className="font-amiri text-gold-bright text-xl mb-2">مسار الخدمة</h3>
+              <p className="text-pearl/65 text-sm leading-7">
+                في فئة الفريق، انتبه إلى هيئة القهوجيين والصبابين، موضع الوقوف، وكيف تبدو حركة التقديم.
+                العدد والأدوار والتنظيم الفعلي لا تُستنتج من لقطة واحدة.
+              </p>
+            </article>
+            <article className="rounded-2xl border border-gold/15 bg-onyx p-5">
+              <h3 className="font-amiri text-gold-bright text-xl mb-2">الأدوات والعلاقات</h3>
+              <p className="text-pearl/65 text-sm leading-7">
+                اقرأ تناسق الدلة والفنجان والصينية مع الخلفية، لا لون المعدن بوصفه إثباتاً للخامة. حدّد ما
+                جذبك: الشكل، النقش، درجة اللون، أو بساطة التجميع.
+              </p>
+            </article>
+            <article className="rounded-2xl border border-gold/15 bg-onyx p-5">
+              <h3 className="font-amiri text-gold-bright text-xl mb-2">حدود الاستدلال</h3>
+              <p className="text-pearl/65 text-sm leading-7">
+                الزاوية والإضاءة والقص تغيّر قراءة الحجم واللون. استخدم الفئة والصورة كنقطة مرجعية، ثم اطلب
+                توضيح المتاح والمناسب لنوع المناسبة وعدد الضيوف والموقع.
+              </p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -218,7 +259,7 @@ export default function PortfolioClient() {
             >
               <Image
                 src={item.image}
-                alt={seoAlt[item.category]}
+                alt={imageAlt(item.image, seoAlt[item.category])}
                 width={600}
                 height={800}
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -251,7 +292,7 @@ export default function PortfolioClient() {
 
         {displayed.length === 0 && (
           <div className="text-center py-12 sm:py-20">
-            <p className="text-pearl/40 text-lg">لا توجد صور في هذه الفئة حالياً</p>
+            <p className="text-pearl/75 text-lg">لا توجد صور في هذه الفئة حالياً</p>
           </div>
         )}
       </div>
@@ -261,6 +302,24 @@ export default function PortfolioClient() {
           <Lightbox items={displayed} initialIndex={selectedIndex} onClose={() => setSelectedIndex(null)} />
         )}
       </AnimatePresence>
+
+      <section className="mt-20 text-center p-8 sm:p-12 rounded-3xl mx-4 max-w-2xl sm:mx-auto card-royal" aria-labelledby="portfolio-cta-title">
+        <h2 id="portfolio-cta-title" className="text-pearl mb-3 font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
+          شاركنا ما قرأته في الصورة
+        </h2>
+        <p className="text-pearl/75 text-sm leading-7 mb-6 max-w-lg mx-auto">
+          اذكر اسم الفئة أو ترتيب الصورة، ثم صف ما أعجبك تحديداً: التكوين، حركة التقديم، الأداة، أو درجة
+          اللون. سنناقش إمكان ترجمة المرجع إلى طلبك، ويظل النطاق النهائي هو ما يُعتمد كتابةً.
+        </p>
+        <a
+          href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("السلام عليكم، مرجعي من معرض الأعمال هو فئة: ___، والصورة رقم: ___. أعجبني فيها: ___. أرغب في مناقشة توجّه قريب منها، مع اعتماد النطاق النهائي كتابةً.")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="gold-button inline-flex items-center gap-3 px-8 py-4 rounded-full text-sm tracking-widest"
+        >
+          صف المرجع الذي أعجبك
+        </a>
+      </section>
     </div>
   );
 }

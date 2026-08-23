@@ -21,9 +21,14 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: blob: https://images.unsplash.com https://via.placeholder.com https://*.unsplash.com https://raw.githubusercontent.com",
+      // أُضيفت مستودعات جوجل: قياس في المتصفّح أظهر حجب
+      // `googletagmanager.com/td?id=…` (بكسل قياس صوريٌ) وهو يُسقط
+      // قياسات التحويل ويملأ لوحة أخطاء المتصفّح.
+      "img-src 'self' data: blob: https://images.unsplash.com https://via.placeholder.com https://*.unsplash.com https://raw.githubusercontent.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com",
       "font-src 'self' https://fonts.gstatic.com data:",
-      "connect-src 'self' https://www.google-analytics.com https://wa.me",
+      // `*.google-analytics.com` لأن القياسات تُرسل إلى نطاقات فرعية
+      // إقليمية (مثل region1.…) لا إلى النطاق الرئيس وحده.
+      "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com https://wa.me",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -91,7 +96,7 @@ const nextConfig = {
         ],
       },
       {
-        source: "/(.*)\\.(jpg|jpeg|png|gif|svg|webp|avif|ico|woff|woff2)",
+        source: "/(.*)\\.(jpg|jpeg|png|gif|svg|webp|avif|ico|woff|woff2|mp4|webm)",
         headers: [
           {
             key: "Cache-Control",

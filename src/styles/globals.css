@@ -20,7 +20,7 @@
   --gold-bright:    #E2C68E;   /* champagne */
   --gold-deep:      #A67C37;   /* antique */
   --gold-glow:      #E2C68E;   /* highlight */
-  --bronze:         #85642E;
+  --bronze:         #85642E; /* decorative only — never text (3.43:1 fails WCAG AA) */
 
   /* ── PEARL ── */
   --pearl:          #F5EFE0;
@@ -46,6 +46,44 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   أرضية الخط المقروء على الهاتف (≤767px).
+
+   الخلفية: قياس فعلي على iPhone 12 وجد 44٪ من نصوص /services أصغر
+   من 14px، وستة عناصر بـ 9px. المصدر الرسمي:
+   developer.chrome.com/docs/lighthouse/seo/font-size — «أحجام الخطوط
+   الأصغر من 12px يصعب قراءتها على الهاتف»، ويرسب الفحص إذا كان
+   ≥40٪ من النص أصغر من 12px.
+
+   ⚠️ حدّ مُختبَر — لا تعتمد عليها وحدها:
+   جُرِّبت أولًا بـ :where() (أولوية صفرية) فلم تعمل، لأن فئات Tailwind
+   مثل text-[10px] تتغلّب عليها. القياس الفعلي:
+     عنصر بلا فئة  → 16px ✅
+     text-[10px]   → 10px 🔴 (تغلّبت)
+     style سطري 9px → 9px  🔴 (تغلّبت)
+   الحل هنا: طبقة utilities (بعد Tailwind في الترتيب) + محدِّد بأولوية
+   أعلى. لكن النمط السطري (style=) يبقى أقوى دائمًا — لذلك تبقى
+   القاعدة الصحيحة: أصلِح الحجم في مكان النص نفسه. هذه شبكة أمان
+   للفئات فقط، وليست بديلًا عن المراجعة.
+   ــ 2026-08-22
+   ───────────────────────────────────────────────────────────── */
+@layer utilities {
+  @media (max-width: 767px) {
+    body p[class],
+    body span[class],
+    body li[class],
+    body a[class],
+    body dd[class],
+    body figcaption[class],
+    body label[class],
+    body small[class],
+    body td[class],
+    body th[class] {
+      font-size: max(1em, 12px);
+    }
+  }
 }
 
 body {
@@ -306,7 +344,9 @@ button, a, [role="button"] {
 
 .osoul-bottomnav__item{
   flex:1; display:flex; flex-direction:column; align-items:center; gap:5px;
-  color:#8a8278; font-size:11px; font-weight:600; text-decoration:none;
+  /* تسميات الشريط السفلي — رُفعت 11px → 13px.
+     هذا شريط التنقل الأساسي على الهاتف؛ 11px عربي مع حركات = إجهاد قراءة. */
+  color:#8a8278; font-size:13px; font-weight:600; text-decoration:none;
   transition:color .25s, transform .2s;
   min-height:48px;
   justify-content:flex-end;
@@ -358,9 +398,11 @@ button, a, [role="button"] {
 @keyframes osoulRing { to { transform: rotate(360deg); } }
 .osoul-bottomnav__center:active .osoul-bottomnav__centerInner{ transform:scale(.93); }
 .osoul-bottomnav__centerLabel{
-  font-size:10.5px;
+  /* 10.5px → 13px، والتتبّع خُفّض 0.18em → 0.06em:
+     التتبّع الواسع يفكّك اتصال الحروف العربية ويجعلها أصعب من اللاتينية. */
+  font-size:13px;
   font-weight:700;
-  letter-spacing:0.18em;
+  letter-spacing:0.06em;
   color:#E2C68E;
   text-shadow:0 0 12px rgba(197,160,89,.45);
   margin-top:-2px;
@@ -422,9 +464,15 @@ button, a, [role="button"] {
 }
 .osoul-menu__brandTitle{ font-size:1.25rem; font-weight:700; line-height:1.05; }
 .osoul-menu__brandSub{
-  color: rgba(197,160,89,0.55);
-  font-size:0.6rem;
-  letter-spacing:0.35em;
+  /* 0.6rem (9.6px) → 0.8125rem (13px) — كان أصغر من الحد المقروء. */
+  color: rgba(197,160,89,0.85);
+  font-size:0.8125rem;
+  /* م-٢٠أ — «شوف كيف النص كيف مبعثر، يشتي يكون كذا يعني واحد، صف واحد».
+     السبب المقيس: تَتابُع «ASOUL AL-DIAFA · SINCE 2017» مع تَتْبيع حروف 0.2em
+     يتجاوز العرض المتاح بجانب الشعار (٦٤ بكسل + فراغ)، فينكسر السطر ويهبط
+     «2017» وحده في سطر ثانٍ. الحل: تقليل التتبيع + منع اللف نهائيًا. */
+  letter-spacing:0.08em;
+  white-space:nowrap;
   margin-top:3px;
 }
 .osoul-menu__grid{
@@ -475,13 +523,17 @@ button, a, [role="button"] {
 .osoul-menu__tileLabel{
   font-family: 'Amiri', 'Tajawal', serif;
   font-weight:700;
-  font-size:0.8rem;
+  /* 0.8rem (12.8px) → 0.9375rem (15px) — تسمية زر لمس، يجب أن تُقرأ بلا تركيز. */
+  font-size:0.9375rem;
   color: inherit;
-  line-height:1.2;
+  line-height:1.35;
 }
+/* م-٢٠ج — «خليه حجمه وحجم الاتصال يكونا نفس الحجم».
+   كان 2fr 1fr ⇒ زر واتساب أعرض من زر الاتصال بمرتين. الآن 1fr 1fr = عرض متساوٍ
+   بالقياس لا بالتقدير، وكلاهما بنفس الحشو والارتفاع الأدنى. */
 .osoul-menu__cta{
   display:grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap:10px;
   margin-top:22px;
 }
@@ -499,19 +551,20 @@ button, a, [role="button"] {
   position:relative;
 }
 .osoul-menu__ctaPhone{
-  font-size:0.78rem;
+  /* رقم الهاتف — 0.78rem (12.5px) → 0.875rem (14px). رقم يُقرأ ويُحفظ: لا يصح تصغيره. */
+  font-size:0.875rem;
   font-weight:600;
   opacity:0.85;
   margin-inline-start:auto;
 }
 .osoul-menu__ctaCall{
   display:flex; align-items:center; justify-content:center;
-  gap:8px;
+  gap:10px;
   background: rgba(197,160,89,0.12);
   border:1px solid rgba(197,160,89,0.35);
   color:#E2C68E;
-  font-weight:700;
-  padding:14px 12px;
+  font-weight:800;
+  padding:14px 18px;
   border-radius:18px;
   text-decoration:none;
   min-height:54px;
@@ -519,8 +572,31 @@ button, a, [role="button"] {
 .osoul-menu__foot{
   margin-top:18px;
   text-align:center;
-  color: rgba(245,239,224,0.35);
-  font-size:0.7rem;
+  color: rgba(245,239,224,0.45);
+  /* 0.7rem (11.2px) → 0.8125rem (13px) + عتامة 0.35→0.45 (تباين). */
+  font-size:0.8125rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+}
+/* م-٢٠د — سطرا التذييل: كل سطر مستقل ومركّز، فلا يلتفّ النصّ عشوائيًا. */
+.osoul-menu__footLine{ margin:0; line-height:1.6; }
+.osoul-menu__devLink{
+  color: rgba(197,160,89,0.95);
+  font-weight:700;
+  text-decoration:none;
+  border-bottom:1px solid rgba(197,160,89,0.45);
+  /* هدف لمس مقبول: ٢٤ بكسل هو أدنى حجم في WCAG 2.2 (2.5.8 Target Size Minimum). */
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding-inline:2px;
+}
+.osoul-menu__devLink:hover,
+.osoul-menu__devLink:focus-visible{
+  color:#E2C68E;
+  border-bottom-color:#E2C68E;
 }
 
 /* ═══════════ Premium effects ═══════════ */
@@ -829,3 +905,80 @@ button, a, [role="button"] {
   -webkit-overflow-scrolling: touch;
 }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* =========================================================================
+   D5 — Accessibility & motion (مهندس التفاعل والوصول)
+   ========================================================================= */
+
+/* D5.2 — Global visible focus indicator on every interactive element.
+   Keyboard users must always see where focus is (WCAG 2.4.7). We use
+   :focus-visible so pointer clicks don't show a ring, keyboard does. */
+:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+/* Remove the default UA outline only where we provide the focus-visible one,
+   never remove focus styling outright. */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible),
+select:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* D5.1 — Global reduced-motion kill-switch. A single authoritative rule that
+   stops ALL animation/transition/smooth-scroll when the user asks for reduced
+   motion — supersedes the scattered per-component blocks (E14). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════ حركة دخول الهيرو بـ CSS خالص (إصلاح LCP) ═══════════
+   المشكلة التي أُصلحت: كانت عناصر الهيرو (الشعار، H1، الوصف، الأزرار)
+   تبدأ من initial={{opacity:0}} عبر motion/react — أي أنها تُرسَم مخفية
+   في HTML الأولي ولا تظهر إلا بعد اكتمال الـhydration وتشغيل JS.
+   النتيجة: LCP على الرئيسية = 2252ms مع أن FCP = 896ms.
+   الحل: نفس الحركة تمامًا بصريًا، لكن بـ CSS animation تبدأ فورًا
+   مع أول رسمة — بلا انتظار JS. لا تغيير في الشكل النهائي.            */
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes heroFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes heroLogoIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.85); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes heroRule {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.hero-in-card  { animation: heroRise   1s   cubic-bezier(0.22,1,0.36,1) both; }
+.hero-in-logo  { animation: heroLogoIn 1.1s cubic-bezier(0.22,1,0.36,1) both; }
+.hero-in-since { animation: heroFade   0.7s ease 0.6s  both; }
+.hero-in-pills { animation: heroRise   0.7s cubic-bezier(0.22,1,0.36,1) 0.85s both; }
+.hero-in-rule  { animation: heroRule   0.9s cubic-bezier(0.22,1,0.36,1) 0.9s  both; }
+.hero-in-hint  { animation: heroFade   0.6s ease 1.4s  both; }
+
+/* احترام تفضيل تقليل الحركة: يظهر المحتوى فورًا بلا أي حركة */
+@media (prefers-reduced-motion: reduce) {
+  .hero-in-card, .hero-in-logo, .hero-in-since,
+  .hero-in-pills, .hero-in-rule, .hero-in-hint {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -11,3 +11,5 @@ tsconfig.tsbuildinfo
 test-results/
 playwright-report/
 /playwright/.cache/
+coverage/
+.lighthouseci/

@@ -5,12 +5,12 @@ import {
   generateBreadcrumbSchema,
   generateWebPageSchema, jsonLd } from "@/lib/schema";
 
-import { SITE_URL } from "@/lib/constants";
+import { SITE_URL, EMAIL } from "@/lib/constants";
 
 export const metadata: Metadata = generatePageMetadata({
-  title: "تواصل معنا",
+  title: "اطلب قهوجيين وضيافة لمناسبتك الآن",
   description:
-    "تواصل مع أصول الضيافة عبر واتساب 0568997316 أو osoulaldiafa@gmail.com — استشارة مجانية لاختيار باقة الضيافة المناسبة.",
+    `تواصل مع أصول الضيافة عبر واتساب 0568997316 أو البريد ${EMAIL} — استشارة مجانية لاختيار باقة الضيافة الأنسب لمناسبتك وموقعك.`,
   path: "/contact",
   keywords: [
     "تواصل أصول الضيافة",

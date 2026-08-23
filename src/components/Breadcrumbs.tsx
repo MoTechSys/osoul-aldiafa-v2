@@ -17,6 +17,8 @@ const pathLabels: Record<string, string> = {
   "/portfolio": "معرض الأعمال",
   "/about": "من نحن",
   "/contact": "تواصل معنا",
+  "/privacy": "سياسة الخصوصية",
+  "/terms": "الشروط والأحكام",
 };
 
 function BreadcrumbsContent({
@@ -58,7 +60,7 @@ function BreadcrumbsContent({
                 <>
                   <Link
                     href={crumb.href}
-                    className="text-gold-deep/70 hover:text-gold-bright transition-colors duration-200"
+                    className="text-gold-deep hover:text-gold-bright transition-colors duration-200"
                     itemProp="item"
                   >
                     <span itemProp="name">{crumb.label}</span>
@@ -72,7 +74,7 @@ function BreadcrumbsContent({
                 </>
               ) : (
                 <span
-                  className="text-pearl/55"
+                  className="text-pearl/75"
                   aria-current="page"
                   itemProp="name"
                 >

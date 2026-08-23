@@ -120,6 +120,22 @@ const services: ServiceItem[] = [
 function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void }) {
   const [current, setCurrent] = useState(0);
 
+  // م-١٩ (٢٢ أغسطس ٢٠٢٦) — سبب بطء تبديل الصور: لا شيء يُحمَّل مسبقًا.
+  // كل صورة في المعرض كانت تبدأ تنزيلها في اللحظة التي يضغط فيها الزائر
+  // على مصغّرتها، فينتظر شبكةً كاملة قبل أن يرى شيئًا. الحل: بمجرد فتح
+  // النافذة نطلب كل صور هذه الخدمة في الخلفية، فتدخل كاش المتصفح وتصبح
+  // النقرة التالية فورية من القرص لا من الشبكة.
+  // تشبيهًا: بدل أن نُحضر فنجان القهوة بعد أن يطلبه الضيف، نُعِدّ الأباريق
+  // كلها عند دخوله المجلس — فالطلب لا ينتظر التحضير.
+  // التكلفة مقبولة: الطلب يبدأ بعد فتح النافذة (تفاعل صريح) لا عند تحميل
+  // الصفحة، فلا يزاحم LCP، والصور مضغوطة webp أصلًا.
+  useEffect(() => {
+    service.gallery.forEach((src) => {
+      const img = new window.Image();
+      img.src = src;
+    });
+  }, [service.gallery]);
+
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onEsc);
@@ -149,7 +165,9 @@ function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void
         exit={{ opacity: 0, scale: 0.94, y: 30 }}
         transition={{ type: "spring", damping: 26, stiffness: 250 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-5xl max-h-[92vh] overflow-hidden rounded-3xl flex flex-col md:flex-row card-royal"
+        // max-h-[92dvh] لا 92vh: على الجوال تحسب dvh ارتفاع النافذة الفعلي بعد
+        // شريط أدوات المتصفح، فلا يُقتطع الزر الثابت أسفل النافذة (م-١٨).
+        className="relative w-full max-w-5xl max-h-[92dvh] overflow-hidden rounded-3xl flex flex-col md:flex-row card-royal"
       >
         <button
           onClick={onClose}
@@ -186,17 +204,30 @@ function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 p-5 sm:p-8 overflow-y-auto bg-onyx/30 backdrop-blur-sm">
+        {/* م-١٨ (٢٢ أغسطس ٢٠٢٦) — زر «احجز هذه الخدمة» كان آخر عنصر داخل نفس
+            الصندوق الذي يُمرَّر (overflow-y-auto)، فكان يسقط تحت الطيّة: الزائر
+            يقرأ الوصف والمزايا والمصغّرات، ولا يرى زر الحجز إلا إن مرّر لآخر
+            النافذة — وأكثر الناس لا يمرّرون.
+            الحل بنيويًا لا بصريًا: العمود صار flex عموديًّا من طبقتين —
+            (١) المحتوى يأخذ المتبقّي ويُمرَّر وحده (flex-1 overflow-y-auto)،
+            (٢) الزر خارج منطقة التمرير تمامًا (flex-shrink-0) فيثبت في
+            الأسفل دائمًا مهما طال الوصف.
+            تشبيهًا: نقلنا زر الطلب من آخر صفحات قائمة الطعام إلى شريط ثابت
+            أسفل الطاولة — يراه الضيف من أول لحظة ولا يبحث عنه.
+            وضُبط الحد الأدنى للمس ٥٢بكسل وفق WCAG 2.5.5 (Target Size). */}
+        <div className="w-full md:w-1/2 flex flex-col bg-onyx/30 backdrop-blur-sm min-h-0">
+          <div className="flex-1 overflow-y-auto p-5 sm:p-8 min-h-0">
           <div className="hidden md:block mb-6">
             <p className="text-gold-bright text-xs" style={{ letterSpacing: "0.2em" }}>{service.subtitle}</p>
             <h2 className="text-pearl font-amiri" style={{ fontSize: "2rem", fontWeight: 700, lineHeight: 1.2 }}>{service.title}</h2>
           </div>
 
-          <p className="text-pearl/70 text-sm leading-relaxed">{service.description}</p>
+          {/* وصف الخدمة = النص الأساسي ⇒ 16px (حجم المتصفح الافتراضي) وسطر 1.75. */}
+          <p className="text-pearl/75 text-[16px] leading-[1.75]">{service.description}</p>
 
           <div className="grid grid-cols-2 gap-x-4 gap-y-3 mt-6">
             {service.features.map((f) => (
-              <div key={f} className="flex items-center gap-2 text-pearl/80 text-[12px]">
+              <div key={f} className="flex items-center gap-2 text-pearl/85 text-[14px] leading-[1.6]">
                 <span className="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
                 {f}
               </div>
@@ -204,7 +235,8 @@ function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void
           </div>
 
           <div className="pt-6 mt-6 border-t border-gold/15">
-            <p className="text-gold-bright text-[10px] font-bold mb-3 tracking-widest">صور من الخدمة</p>
+            {/* عنوان المعرض — 10px → 13px (نص ثانوي مقروء). */}
+            <p className="text-gold-bright text-[13px] font-bold mb-3 tracking-normal">صور من الخدمة</p>
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
               {service.gallery.map((g, i) => (
                 <button
@@ -223,14 +255,23 @@ function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void
             </div>
           </div>
 
-          <a
-            href={`https://wa.me/${WA_NUMBER}?text=${waMsg}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 gold-button flex items-center justify-center gap-3 w-full py-4 rounded-full text-sm tracking-widest"
-          >
-            احجز هذه الخدمة
-          </a>
+          </div>
+
+          {/* الطبقة الثابتة: خارج منطقة التمرير أعلاه */}
+          <div className="flex-shrink-0 p-4 sm:p-5 border-t border-gold/20 bg-noir/95 backdrop-blur-md">
+            <a
+              href={`https://wa.me/${WA_NUMBER}?text=${waMsg}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gold-button flex items-center justify-center gap-3 w-full py-4 rounded-full text-sm tracking-widest font-bold min-h-[52px]"
+            >
+              {/* أيقونة واتساب — إشارة بصرية للقناة قبل قراءة النص */}
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="w-5 h-5">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347" />
+              </svg>
+              احجز هذه الخدمة عبر واتساب
+            </a>
+          </div>
         </div>
       </motion.div>
     </motion.div>
@@ -249,7 +290,7 @@ export default function ServicesClient() {
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <motion.p initial={false} whileInView={{ opacity: [0, 1], y: [-10, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ خدماتنا ✦</motion.p>
           <motion.h1 initial={false} whileInView={{ opacity: [0, 1], y: [30, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, delay: 0.1, ease: [0.32, 0.72, 0, 1] }} className="text-pearl mb-4 font-amiri" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.15 }}>
-            باقات ضيافة على<br /><span className="gold-text">أصول التقديم العربي</span>
+            باقات ضيافة على{" "}<br /><span className="gold-text">أصول التقديم العربي</span>
           </motion.h1>
           <motion.p initial={false} whileInView={{ opacity: [0, 1], y: [20, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.6, delay: 0.2, ease: [0.32, 0.72, 0, 1] }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
             من صبّابي القهوة بالزي التراثي إلى تجهيز أركان الضيافة وبوفيهات التمر — كلٌّ بإتقان وذوقٍ لا يُجامل.
@@ -257,8 +298,19 @@ export default function ServicesClient() {
         </div>
       </section>
 
-      <section className="px-4 pb-20">
+      <section className="px-4 pb-20" aria-labelledby="services-grid-heading">
         <div className="max-w-7xl mx-auto">
+          {/* عيب مُثبَت (S6): كانت الصفحة تنتقل من h1 مباشرة إلى h3 بطاقات الخدمات،
+              فيسمع مستخدم قارئ الشاشة مستوى ناقصًا ويظن أنه فوّت عنوانًا. القسم
+              كان بلا عنوان أصلًا — فالإصلاح الصحيح إضافة h2 حقيقي يصف الشبكة،
+              لا خفض مستوى البطاقات (الذي يُخفي التحذير ويترك الشبكة بلا اسم). */}
+          <h2
+            id="services-grid-heading"
+            className="text-pearl mb-8 font-amiri text-center"
+            style={{ fontSize: "clamp(1.35rem, 3.2vw, 1.9rem)", fontWeight: 700, lineHeight: 1.3 }}
+          >
+            باقات الضيافة المتاحة
+          </h2>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
             {services.map((s, i) => (
               <motion.button
@@ -279,13 +331,23 @@ export default function ServicesClient() {
                     className="object-cover kenburns-slow"
                   />
                   <div className="absolute inset-0 img-overlay" />
-                  <span className="absolute top-2 right-2 sm:top-3 sm:right-3 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] tracking-widest text-gold-bright" style={{ background: "rgba(10,10,10,0.7)", border: "1px solid rgba(212,175,55,0.3)" }}>
+                  {/* شارة الخدمة (العنوان اللاتيني) — مخفية على الهاتف، تظهر من sm وفوق.
+                      كانت 9px — أقل من حدّ جوجل للنص المقروء (12px)، ورفعها لـ 12px
+                      جعلها تُلفّ على سطرين فتحجب الصورة (رأيته في لقطة المقارنة).
+                      القرار: الشارة مُكرّرة للعنوان العربي تحتها — إخفاءها على الهاتف
+                      يحذف نصًا غير مقروء ويريح الصورة، بلا فقد معلومة. */}
+                  <span className="hidden sm:inline-block absolute top-3 right-3 px-3 py-1 rounded-full text-[12px] tracking-normal text-gold-bright" style={{ background: "rgba(10,10,10,0.72)", border: "1px solid rgba(212,175,55,0.3)" }}>
                     {s.subtitle}
                   </span>
                 </div>
                 <div className="p-3.5 sm:p-6">
-                  <h3 className="font-amiri text-pearl mb-1.5 sm:mb-2" style={{ fontSize: "clamp(0.95rem, 3.5vw, 1.15rem)", fontWeight: 700 }}>{s.title}</h3>
-                  <p className="text-pearl/60 text-xs sm:text-sm leading-relaxed line-clamp-2">{s.description}</p>
+                  {/* عنوان الخدمة — الحدّ الأدنى رُفع من 0.95rem (15px) إلى 1.0625rem (17px).
+                      h3 بـ15px كان أصغر من نص المتصفح الافتراضي (16px) — عنوان أصغر من
+                      الجسم يعكس التسلسل البصري. */}
+                  <h3 className="font-amiri text-pearl mb-1.5 sm:mb-2" style={{ fontSize: "clamp(1.0625rem, 4.2vw, 1.25rem)", fontWeight: 700, lineHeight: 1.35 }}>{s.title}</h3>
+                  {/* الوصف — رُفع من 12px إلى 14px وزيدت العتامة 60٪→72٪.
+                      12px + عتامة 60٪ = تباين منخفض × حجم صغير: أسوأ تركيبة للقراءة. */}
+                  <p className="text-pearl/72 text-[14px] sm:text-[15px] leading-[1.55] line-clamp-2">{s.description}</p>
                 </div>
               </motion.button>
             ))}
@@ -296,7 +358,7 @@ export default function ServicesClient() {
             <h2 className="text-pearl mb-3 font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
               لم تجد الباقة المثاليّة؟
             </h2>
-            <p className="text-pearl/55 text-sm mb-6 max-w-lg mx-auto">صمّم معنا باقة ضيافة خاصة بمناسبتك. فريقنا جاهز للاستشارة.</p>
+            <p className="text-pearl/75 text-sm mb-6 max-w-lg mx-auto">صمّم معنا باقة ضيافة خاصة بمناسبتك. فريقنا جاهز للاستشارة.</p>
             <a
               href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("السلام عليكم، أرغب في تصميم باقة ضيافة مخصصة.")}`}
               target="_blank"

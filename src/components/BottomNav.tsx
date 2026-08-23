@@ -1,18 +1,21 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { WHATSAPP_NUMBER as WA_NUMBER, WHATSAPP_DISPLAY as WA_DISPLAY, whatsappUrl } from "@/lib/constants";
+// م-٢٠ب — WHATSAPP_DISPLAY لم يُستورد بعد الآن: زر واتساب صار بلا رقم بأمر القائد
+// («خليه زر بدون رقم، زر على طول واتساب»)، فحذف الاستيراد يمنع تحذير lint.
+import { WHATSAPP_NUMBER as WA_NUMBER, whatsappUrl } from "@/lib/constants";
+import { isStandaloneRoute } from "@/lib/standaloneRoutes";
 
 const WA_URL = whatsappUrl("السلام عليكم، أرغب بالاستفسار عن خدمات أصول الضيافة.");
 
 type SideItem = {
   href: string;
   label: string;
-  icon: (p: { active?: boolean }) => JSX.Element;
+  icon: (p: { active?: boolean }) => React.JSX.Element;
 };
 
 const leftItems: SideItem[] = [
@@ -38,10 +41,14 @@ export default function BottomNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Close menu on route change
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  // Close menu on route change — official React "adjust state during render"
+  // pattern (https://react.dev/learn/you-might-not-need-an-effect) instead of
+  // setState inside an effect, which triggers a cascading re-render.
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    if (open) setOpen(false);
+  }
 
   // Lock body scroll while menu is open
   useEffect(() => {
@@ -72,6 +79,15 @@ export default function BottomNav() {
     },
     [pathname]
   );
+
+  /**
+   * لا شريط سفلي في الصفحات المستقلة (مثل `/links`).
+   * سبب مُقاس لا تقدير: لقطة شاشة أثبتت أن هذا الشريط العائم كان يغطّي
+   * بطاقة X جسديًا في صفحة الروابط.
+   * موضع الشرط مقصود: بعد جميع الـhooks لا قبلها، حتى لا تُخرق قاعدة
+   * React في ترتيب الـhooks عند تغيّر المسار.
+   */
+  if (isStandaloneRoute(pathname)) return null;
 
   return (
     <>
@@ -176,9 +192,15 @@ export default function BottomNav() {
               <div className="osoul-menu__handle" />
 
               <div className="osoul-menu__brand">
+                {/* alt="" مقصود: اسم العلامة مكتوب نصًّا في الفقرة المجاورة أسفله
+                    مباشرة، فوصف الشعار يجعل قارئ الشاشة ينطق «أصول الضيافة» مرتين.
+                    المرجع: W3C WAI Images Tutorial — Decorative Images، المثال 3
+                    (Image with adjacent text alternative): «This picture … is already
+                    sufficiently described by the adjacent text. There is no need to
+                    repeat this information, and a null (empty) alt value can be used». */}
                 <Image
-                  src="/logo.webp"
-                  alt="أصول الضيافة"
+                  src="/logo-192.webp"
+                  alt=""
                   width={64}
                   height={64}
                   className="osoul-menu__logo"
@@ -234,9 +256,6 @@ export default function BottomNav() {
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347" />
                   </svg>
                   <span>واتساب</span>
-                  <span className="osoul-menu__ctaPhone" dir="ltr">
-                    {WA_DISPLAY}
-                  </span>
                 </a>
                 <a
                   href={`tel:+${WA_NUMBER}`}
@@ -260,9 +279,26 @@ export default function BottomNav() {
                 </a>
               </div>
 
-              <p className="osoul-menu__foot">
-                © {new Date().getFullYear()} أصول الضيافة · جميع الحقوق محفوظة
-              </p>
+              {/* م-٢٠د — اعتماد المطوّر داخل القائمة المنبثقة، مركّز ومرتّب في سطرين
+                  منفصلين: حقوق العلامة ثم جهة التطوير، لأن دمجهما في سطر واحد
+                  ينتج لفًّا عشوائيًا على الشاشات الضيقة. ارتفاع اللمس ٢٤بكسل للرابط. */}
+              <div className="osoul-menu__foot">
+                <p className="osoul-menu__footLine">
+                  © {new Date().getFullYear()} أصول الضيافة · جميع الحقوق محفوظة
+                </p>
+                <p className="osoul-menu__footLine">
+                  تطوير{" "}
+                  <a
+                    href="https://alabbasi.uk"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="osoul-menu__devLink"
+                    aria-label="العباسي تك — استوديو تطوير المواقع (يفتح في تبويب جديد)"
+                  >
+                    العباسي تك
+                  </a>
+                </p>
+              </div>
             </motion.div>
           </>
         )}

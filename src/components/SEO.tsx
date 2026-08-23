@@ -5,10 +5,9 @@ import {
   PHONE_TEL,
   EMAIL as SITE_EMAIL,
   WHATSAPP_NUMBER,
-  WHATSAPP_DISPLAY,
-} from "@/lib/constants";
+  WHATSAPP_DISPLAY, OG_IMAGE_URL } from "@/lib/constants";
 
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+const DEFAULT_OG_IMAGE = OG_IMAGE_URL;
 
 export interface SEOProps {
   title: string;
@@ -39,6 +38,20 @@ export function generatePageMetadata({
 }: SEOProps): Metadata {
   const url = `${SITE_URL}${path}`;
 
+  // D1.1/D1.2: العلامة تُدار هنا حصريًا — نزيل أي علامة واردة من المصدر ثم
+  // نلحقها مرة واحدة فقط إن سمح طول 60 حرفًا. النتيجة: صفر تكرار، صفر عنوان طويل.
+  const stripped = title
+    .replace(new RegExp(`\\s*[|\\-—–]\\s*${SITE_NAME}\\s*`, "g"), " ")
+    .replace(new RegExp(`\\s*${SITE_NAME}\\s*[|\\-—–]\\s*`, "g"), " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  const withBrand = `${stripped} | ${SITE_NAME}`;
+  const fullTitle = stripped.includes(SITE_NAME)
+    ? stripped
+    : withBrand.length <= 60
+      ? withBrand
+      : stripped;
+
   const defaultKeywords = [
     "أصول الضيافة",
     "خدمات ضيافة",
@@ -54,7 +67,7 @@ export function generatePageMetadata({
   ];
 
   return {
-    title,
+    title: fullTitle,
     description,
     keywords: [...defaultKeywords, ...keywords],
     alternates: {
@@ -65,7 +78,7 @@ export function generatePageMetadata({
       type: ogType,
       siteName: SITE_NAME,
       locale: "ar_SA",
-      title: `${title} | ${SITE_NAME}`,
+      title: fullTitle,
       description,
       url,
       images: [
@@ -74,7 +87,13 @@ export function generatePageMetadata({
           width: 1200,
           height: 630,
           alt: ogImageAlt,
-          type: "image/webp",
+          // ⚠️ يجب أن يطابق الامتداد الفعلي للملف. og-image.jpg هو JPEG.
+          // إعلان image/webp لملف JPEG يجعل واتساب/تويتر يرفض المعاينة أحيانًا.
+          type: ogImage.endsWith(".webp")
+            ? "image/webp"
+            : ogImage.endsWith(".png")
+              ? "image/png"
+              : "image/jpeg",
         },
       ],
       ...(publishedTime && { publishedTime }),
@@ -82,7 +101,7 @@ export function generatePageMetadata({
     },
     twitter: {
       card: twitterCard,
-      title: `${title} | ${SITE_NAME}`,
+      title: fullTitle,
       description,
       images: [ogImage],
     },

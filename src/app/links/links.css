@@ -1,0 +1,525 @@
+/* ═══════════════════════════════════════════════════════════════════
+   أنماط صفحة الروابط — /links فقط
+
+   لماذا ملف منفصل ولا يُضاف إلى globals.css؟
+   قياس: ملف الأنماط العام في هذا المشروع = ٨٣٫٣ كيلوبايت، ويُحمَّل في
+   **كل** صفحة من ٥٥ صفحة. إضافة أنماط صفحة واحدة إليه تعني أن زائر
+   الصفحة الرئيسية يحمّل تنسيقات صفحة لن يفتحها. Next.js يقسّم
+   الأنماط المستوردة داخل مسار واحد إلى حزمة خاصة به، فلا يدفع
+   ثمنها إلا من يفتح /links.
+
+   كل الحركات محصورة داخل
+     @media (prefers-reduced-motion: no-preference)
+   فمن يطلب تقليل الحركة يصل إلى صفحة ساكنة تمامًا — بلا أي شرط في
+   JSX (الشرط في JSX هو ما سبّب عطل React #418/#422 في الصفحة الرئيسية).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.links-page {
+  --gold: #d4af37;
+  --gold-light: #f5e6b8;
+  --gold-deep: #8a6a1e;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: #050505;
+  padding: 0 0 env(safe-area-inset-bottom);
+  /* Tajawal للعربي + Cormorant للاتيني الفاخر */
+  font-family: var(--font-tajawal), system-ui, sans-serif;
+}
+
+/* ── الخلفية ───────────────────────────────────────────────────── */
+.links-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.links-bg img {
+  opacity: 0.42;
+}
+.links-bg-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(212, 175, 55, 0.16) 0%, transparent 60%),
+    radial-gradient(90% 60% at 50% 110%, rgba(212, 175, 55, 0.08) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(5, 5, 5, 0.62) 0%, rgba(5, 5, 5, 0.86) 45%, rgba(5, 5, 5, 0.97) 100%);
+}
+
+/* ── حبيبات الغبار الذهبي ──────────────────────────────────────── */
+.links-dust {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.links-dust span {
+  position: absolute;
+  bottom: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 230, 184, 0.9) 0%, transparent 70%);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.55);
+  opacity: 0;
+}
+
+/* ── الهيكل ────────────────────────────────────────────────────── */
+.links-shell {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 30rem; /* 480px — عرض بطاقة موبايل مثالي */
+  margin: 0 auto;
+  padding: 1.5rem 1.15rem 2.5rem;
+}
+
+/* ── الترويسة ──────────────────────────────────────────────────── */
+.links-header {
+  text-align: center;
+  padding: 1.25rem 0 1.5rem;
+}
+
+.links-monogram {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(60% 60% at 30% 25%, rgba(255, 240, 190, 0.5) 0%, transparent 60%),
+    conic-gradient(from 210deg, var(--gold-deep), var(--gold), var(--gold-light), var(--gold), var(--gold-deep));
+  box-shadow:
+    0 0 0 1.5px rgba(212, 175, 55, 0.4),
+    0 8px 24px rgba(212, 175, 55, 0.28),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 2px 3px rgba(255, 240, 190, 0.5);
+}
+/* القرص الداكن الذي يحتضن الشعار.
+   `overflow: hidden` + `border-radius: 50%` يقصّان الصورة المربّعة
+   إلى دائرة، فلا تظهر زوايا حادة داخل الحلقة الذهبية. */
+.links-monogram-inner {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 35% 30%, #1c1c1c, #050505);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* الشعار نفسه: نُكبّره ١٠٨٪ ليلامس حدّ القرص بلا هامش ميّت،
+   ونُضيف هالة ذهبية خفيفة تفصله عن السواد خلفه. */
+.links-monogram-inner img {
+  width: 108%;
+  height: 108%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.85))
+          drop-shadow(0 0 7px rgba(212, 175, 55, 0.32));
+}
+
+.links-title {
+  margin: 0;
+  font-family: var(--font-amiri), serif;
+  font-size: clamp(1.75rem, 7vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  background: linear-gradient(180deg, #f8e9b8 0%, var(--gold) 62%, #a68420 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-light); /* احتياط لمتصفح لا يدعم background-clip */
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+}
+
+.links-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin: 0.7rem auto 0.55rem;
+}
+.links-ornament i {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.65));
+}
+.links-ornament i:last-child {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.65), transparent);
+}
+.links-ornament b {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.links-tagline {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: rgba(245, 230, 184, 0.78);
+}
+.links-sub {
+  margin: 0.75rem auto 0;
+  max-width: 24rem;
+  font-size: 0.85rem;
+  line-height: 1.75;
+  color: rgba(245, 230, 184, 0.52);
+}
+
+/* ── قائمة البطاقات ───────────────────────────────────────────── */
+.links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.links-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 78px;
+  padding: 0 0.9rem 0 1rem;
+  border-radius: 20px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+
+  /* سطح البطاقة — نسخة variant="tinted" من التصميم الأصلي:
+     كل بطاقة تأخذ لون منصّتها في حدّها وتوهّجها. */
+  background:
+    radial-gradient(140% 100% at 85% -10%, rgba(255, 255, 255, 0.13) 0%, transparent 55%),
+    radial-gradient(120% 100% at 0% 110%, var(--glow) 0%, transparent 60%),
+    linear-gradient(200deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.65) 50%, rgba(0, 0, 0, 0.9) 100%),
+    #0a0a0a;
+  border: 1px solid color-mix(in srgb, var(--tint) 34%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 10px 28px var(--glow),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+
+  transition:
+    transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1),
+    box-shadow 0.32s ease,
+    border-color 0.32s ease;
+}
+
+/* احتياط للمتصفحات بلا color-mix (سفاري أقدم من 16.2) */
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .links-card {
+    border-color: rgba(212, 175, 55, 0.34);
+  }
+}
+
+.links-card-shimmer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.13) 50%, transparent 70%);
+  transform: translateX(-120%);
+  pointer-events: none;
+  transition: transform 0.9s ease;
+}
+
+.links-card-icon {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+  filter: drop-shadow(0 4px 12px var(--glow));
+}
+.links-card-icon img {
+  /* ١١٢٪ مع إزاحة ٦٪− : نفس تجاوز الحدّ في التصميم الأصلي،
+     يجعل الأيقونة ثلاثية الأبعاد تبدو خارجة من البطاقة */
+  position: absolute;
+  top: -6%;
+  left: -6%;
+  width: 112%;
+  height: 112%;
+  object-fit: contain;
+}
+
+.links-card-text {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+.links-card-name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  color: var(--gold-light);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+.links-card-en {
+  font-family: var(--font-tajawal), system-ui, sans-serif;
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.links-card-ar {
+  font-family: var(--font-amiri), serif;
+  font-size: 0.87rem;
+  font-weight: 400;
+  opacity: 0.66;
+}
+.links-card-handle {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: rgba(245, 230, 184, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* dir="ltr" في الترميز يضمن ظهور +966 صحيحًا داخل صفحة RTL */
+  text-align: start;
+}
+
+.links-card-chev {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: linear-gradient(140deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.05));
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--gold-light);
+  transition: transform 0.3s ease;
+}
+
+/* ── التفاعل: hover لأجهزة المؤشّر فقط ──────────────────────────
+   `@media (hover: hover)` تمنع «hover اللاصق» على اللمس: بدونها،
+   لمس البطاقة في الجوال يُبقيها في حالة hover حتى لمس غيرها. */
+@media (hover: hover) and (pointer: fine) {
+  .links-card:hover {
+    transform: translateY(-2px) scale(1.012);
+    border-color: color-mix(in srgb, var(--tint) 68%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 20px 42px var(--glow),
+      0 0 22px var(--glow);
+  }
+  .links-card:hover .links-card-shimmer {
+    transform: translateX(120%);
+  }
+  .links-card:hover .links-card-icon {
+    transform: scale(1.08) rotate(-3deg);
+  }
+  .links-card:hover .links-card-chev {
+    transform: translateX(-3px);
+  }
+}
+
+/* اللمس: ردّ فعل فوري بالضغط بدل hover */
+.links-card:active {
+  transform: scale(0.985);
+}
+
+/* وضوح لوحة المفاتيح — إلزامي لإمكانية الوصول */
+.links-card:focus-visible,
+.links-call-btn:focus-visible,
+.links-mail:focus-visible,
+.links-nav a:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ── الاتصال المباشر ──────────────────────────────────────────── */
+.links-call {
+  margin-top: 1.35rem;
+  text-align: center;
+}
+.links-call-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.72rem 1.35rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  color: #0a0a0a;
+  background: linear-gradient(140deg, #f5e6b8 0%, var(--gold) 55%, #a68420 100%);
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .links-call-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(212, 175, 55, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+}
+.links-call-btn:active {
+  transform: scale(0.97);
+}
+.links-mail {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.03em;
+  color: rgba(245, 230, 184, 0.45);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .links-mail:hover {
+    color: rgba(245, 230, 184, 0.8);
+  }
+}
+
+/* ── التذييل ──────────────────────────────────────────────────── */
+.links-footer {
+  margin-top: 2rem;
+  text-align: center;
+}
+.links-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: rgba(212, 175, 55, 0.82);
+}
+.links-nav {
+  margin-top: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+.links-nav a {
+  color: rgba(245, 230, 184, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+@media (hover: hover) {
+  .links-nav a:hover {
+    color: var(--gold);
+  }
+}
+.links-nav span {
+  color: rgba(212, 175, 55, 0.32);
+}
+.links-rights {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-amiri), serif;
+  font-size: 0.72rem;
+  color: rgba(245, 230, 184, 0.3);
+}
+
+/* ═══ الحركات — لمن لم يطلب تقليلها فقط ═══ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes linksRise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes linksFade {
+    from {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes linksDust {
+    0% {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    12% {
+      opacity: 0.75;
+    }
+    88% {
+      opacity: 0.55;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-100vh);
+    }
+  }
+
+  .links-header {
+    animation: linksFade 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .links-card {
+    /* التتالي: ٠٫٠٧ ثانية لكل بطاقة — يُحسب من --i بلا JS */
+    animation: linksRise 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 0.07s + 0.15s);
+  }
+  .links-call,
+  .links-footer {
+    animation: linksFade 0.8s ease both;
+    animation-delay: 0.75s;
+  }
+  .links-dust span {
+    animation-name: linksDust;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+}
+
+/* شاشات ضيقة جدًا (≤ 360px): تصغير محسوب لا اقتصاص */
+@media (max-width: 360px) {
+  .links-shell {
+    padding-inline: 0.85rem;
+  }
+  .links-card {
+    min-height: 70px;
+    gap: 0.7rem;
+    padding: 0 0.7rem 0 0.8rem;
+  }
+  .links-card-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .links-card-en {
+    font-size: 0.98rem;
+  }
+}
+
+/* سطح المكتب: توسيط عمودي مريح */
+@media (min-width: 768px) {
+  .links-shell {
+    padding-top: 2.5rem;
+    padding-bottom: 3.5rem;
+  }
+}
+
+/* ── إلغاء الفراغ الميت أسفل الصفحة ───────────────────────────────
+   قياس: `globals.css` يضيف على الموبايل
+     body { padding-bottom: calc(84px + env(safe-area-inset-bottom)) }
+   لتفريغ مكان الشريط السفلي العائم. وبعد أن أصبحت هذه الصفحة مستقلة
+   (بلا شريط سفلي) بقي ذلك الفراغ فارغًا بلا سبب — ٨٤ بكسل من العدم
+   أسفل آخر بطاقة. نصفّره هنا فقط، ونُبقي فقط هامش المنطقة الآمنة
+   في هواتف الحافة المنحنية.                                        */
+body:has(.links-page) {
+  padding-bottom: env(safe-area-inset-bottom, 0) !important;
+}

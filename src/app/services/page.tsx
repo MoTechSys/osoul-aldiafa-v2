@@ -9,9 +9,9 @@ import {
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = generatePageMetadata({
-  title: "خدماتنا",
+  title: "خدمات قهوجيين وصبابين وضيافة مناسبات",
   description:
-    "صبّابو قهوة بزي تراثي، أركان ضيافة، بوفيهات تمر وحلويات، تأجير عدّة تقديم ذهبية، وضيافة الفعاليات في كامل المملكة.",
+    "صبّابو قهوة وقهوجيون بزي تراثي، أركان ضيافة فاخرة، بوفيهات تمر وحلويات، تأجير عدّة تقديم ذهبية، وضيافة فعاليات ومؤتمرات في كامل مدن المملكة.",
   path: "/services",
   keywords: [
     "صبابين قهوة",
@@ -37,7 +37,7 @@ const serviceSchema = generateServiceSchema({
 
 const webPageSchema = generateWebPageSchema({
   name: "خدماتنا - أصول الضيافة",
-  description: "باقات ضيافة شاملة لمناسباتك في كامل المملكة العربية السعودية",
+  description: "باقات ضيافة شاملة لمناسباتك في منطقتي مكة المكرمة والمدينة المنورة",
   url: `${SITE_URL}/services`,
 });
 

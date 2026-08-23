@@ -33,7 +33,7 @@ module.exports = {
           bright:    '#E2C68E',  // champagne
           glow:      '#E2C68E',
           deep:      '#A67C37',  // antique
-          bronze:    '#85642E',
+          bronze:    '#85642E', // decorative only — never text (3.43:1 fails WCAG AA)
           // legacy aliases (kept so existing classNames keep compiling)
           matte:     '#C5A059',
           primary:   '#C5A059',
