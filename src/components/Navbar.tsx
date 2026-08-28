@@ -90,7 +90,7 @@ function NavbarContent() {
             transition={{ type: "spring", stiffness: 320 }}
             className="relative"
           >
-            <DallahLogo size={48} />
+            <DallahLogo size={56} />
             <motion.div
               className="absolute -inset-1 rounded-full pointer-events-none"
               style={{
