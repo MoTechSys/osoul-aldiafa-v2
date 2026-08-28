@@ -15,11 +15,19 @@
  * S9  كلمات محظورة: فرع/فروعنا/مقرنا (R2)
  * S10 أرقام غير موثّقة: «+N مناسبة» أو «N% رضا» بلا data/proof.json (R9)
  * S11 روابط داخلية < 3 · أو نص رابط عام
- * S12 التشابه > 60% (يستدعي similarity-check)
+ * S12 التشابه > 55% (يستدعي similarity-check)
+ * S14 روابط sameAs في JSON-LD تُرجع 200 (شبكي — يُفعَّل بـ CHECK_LINKS=1)
+ * S15 عدد المناطق المعروض في الواجهة = عدد areaServed/serviceArea في JSON-LD
+ * S16 og:image لكل صفحة في og-manifest: مطلق · تحت /og/ · alt مطابق · JPEG أولًا
+ * S17 صفر صفحة من صفحات manifest بقيت على og-image.jpg (منع تغطية جزئية)
+ * S18 الصفحات خارج manifest تبقى على الصورة الاحتياطية (منع اختراع صور)
  */
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
-import { computePairs } from "./similarity-check.mjs";
+// العتبة تأتي من similarity-check (مصدر الحقيقة الوحيد) — لا تُعرَّف هنا.
+// بعد توحيد الحزمتين في فرع واحد صار الاسم SIM_MAX مؤكَّد الوجود، فسقط
+// احتياط «اقبل الاسمين» الذي كان لازمًا حين كان ترتيب الدمج غير محسوم.
+import { computePairs, SIM_MAX } from "./similarity-check.mjs";
 import { gate } from "./baseline.mjs";
 
 const ROOT = process.cwd();
@@ -140,6 +148,13 @@ for (const file of files) {
       const flat = JSON.stringify(parsed);
       if (flat.includes('"LocalBusiness"')) errors.push(`S8 · ${bare}: JSON-LD يحتوي LocalBusiness (R5)`);
       if (/"address"\s*:/.test(flat)) errors.push(`S8 · ${bare}: JSON-LD يحتوي address (النشاط SAB بلا مقر)`);
+      // ---- S13 نموذج SAB: الكيان الأساسي لازم areaServed لا serviceArea المهجورة ----
+      if (flat.includes('"ProfessionalService"')) {
+        if (!/"areaServed"\s*:/.test(flat))
+          errors.push(`S13 · ${bare}: ProfessionalService بلا areaServed (نموذج SAB يتطلّب مناطق خدمة)`);
+        if (/"serviceArea"\s*:/.test(flat))
+          errors.push(`S13 · ${bare}: JSON-LD يستخدم serviceArea المهجورة — استخدم areaServed`);
+      }
     } catch {
       errors.push(`S8 · ${bare}: JSON-LD لا يمرّ JSON.parse`);
     }
@@ -156,11 +171,41 @@ for (const file of files) {
   }
 
   // S10 أرقام غير موثّقة
-  const claimMatches = [...visible.matchAll(/\+?\s*\d{2,4}\s*(?:مناسبة|حفل|عميل)/g),
-                        ...visible.matchAll(/\d{1,3}\s*%\s*(?:رضا|رضى)/g)];
+  // ثقب مُصلَح: النمط القديم كان \d فقط، وCountUp يعرض أرقامًا هندية-عربية
+  // (٠١٢…، انظر arabicMap في src/components/CountUp.tsx) فكان الحارس أعمى
+  // عن الأرقام المعروضة فعليًا للزائر. النطاق الآن يشمل الصيغتين، وكذلك ٪.
+  const D = "[\\d\u0660-\u0669]";
+  // CountUp يُصدِر في SSR القيمة الابتدائية (٠) والقيمة الحقيقية في aria-label
+  // (مثال: aria-label="99٪" مع نصّ مرئي «٠٪»). فحص النصّ المرئي وحده يُبلّغ عن
+  // «0٪ رضا» — رقم غير موجود — فيبدو الحارس مخطئًا ويُدرَّب الفريق على تجاهله.
+  // نُسقِط قيمة aria-label مكان النصّ لتُقرأ المطالبة كما يراها الزائر بعد التحرك.
+  const visibleClaims = html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(
+      new RegExp(`<span[^>]*aria-label="(${D}{1,4})([+\u066A%]?)"[^>]*>[\\s\\S]{0,80}?<\\/span>`, "g"),
+      (_m, real, suffix) => ` ${real}${suffix} `
+    )
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ");
+  const claimMatches = [
+    ...visibleClaims.matchAll(new RegExp(`\\+?\\s*${D}{2,4}\\s*\\+?\\s*(?:مناسبة|حفل|عميل)`, "g")),
+    ...visibleClaims.matchAll(new RegExp(`${D}{1,3}\\s*[%\u066A]\\s*(?:رضا|رضى)`, "g")),
+    ...visibleClaims.matchAll(new RegExp(`${D}{1,2}\\s*(?:سنة|سنوات)\\s*(?:من\\s*)?(?:الخبرة|خبرة)`, "g")),
+  ];
+  const arabicToLatin = (t) => t.replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660));
   for (const cm of claimMatches) {
-    const claim = cm[0].replace(/\s+/g, " ").trim();
-    const documented = (proof.claims || []).some((c) => claim.includes(String(c)) || String(c).includes(claim));
+    const claim = arabicToLatin(cm[0].replace(/\s+/g, " ").trim());
+    const claimDigits = (claim.match(/\d+/g) || []).join("");
+    // «موثّق» = مؤكَّد من المالك، لا مجرد مُدرَج. إدراج رقم في proof.json بـ
+    // verified_by_owner:false يعني «معلَّق» — لو مرّ الحارس عليه صار الملف
+    // قائمةَ تجاوزات لا سجلَّ إثبات، وهو نقيض R9.
+    const documented = (proof.claims || []).some((c) => {
+      const obj = typeof c === "object" && c !== null;
+      const v = String(obj ? c.value : c);
+      const ok = !obj || c.verified_by_owner === true;
+      return ok && (claimDigits === v || claim.includes(v) || v.includes(claim));
+    });
     if (!documented) errors.push(`S10 · ${bare}: رقم غير موثّق «${claim}» (R9 — أضِفه إلى data/proof.json)`);
   }
 
@@ -174,12 +219,118 @@ for (const file of files) {
   }
 }
 
+// ---- S16/S17/S18 صور OG لكل صفحة ----
+// عيب محروس: تغطية جزئية صامتة. لو مرّت صفحة واحدة بالصورة القديمة فقد
+// يمرّ الـPR ويُشارَك رابطها بصورة خاطئة — والعيب لا يظهر إلا لعميل.
+try {
+  const manifestPath = join(ROOT, "src", "data", "og-manifest.json");
+  if (existsSync(manifestPath)) {
+    const man = JSON.parse(readFileSync(manifestPath, "utf8"));
+    const byPath = new Map(man.map((e) => [e.path, e]));
+    for (const file of files) {
+      const bare = relative(APP_DIR, file).replace(/\.html$/, "");
+      const route = bare === "index" ? "/" : `/${bare}`;
+      const html = readFileSync(file, "utf8");
+      const imgs = [...html.matchAll(/property="og:image"[^>]*content="([^"]*)"/g)].map((m) => m[1]);
+      const alts = [...html.matchAll(/property="og:image:alt"[^>]*content="([^"]*)"/g)].map((m) => m[1]);
+      const entry = byPath.get(route);
+      if (entry) {
+        const webp = `https://asoulaldiafa.com${entry.image}`;
+        const jpg = webp.replace(/\.webp$/, ".jpg");
+        if (!imgs.includes(webp) || !imgs.includes(jpg)) {
+          errors.push(`S16 · ${bare}: og:image لا يحمل نسختي الصورة المخصّصة (JPEG+WebP)`);
+        }
+        if (imgs[0] !== jpg) {
+          errors.push(`S16 · ${bare}: أول og:image ليس JPEG (توافق معاينات واتساب)`);
+        }
+        if (imgs.some((u) => !/^https:\/\/asoulaldiafa\.com\/og\//.test(u))) {
+          errors.push(`S16 · ${bare}: og:image غير مطلق أو خارج /og/`);
+        }
+        if (alts.length && alts[0] !== entry.alt) {
+          errors.push(`S16 · ${bare}: og:image:alt لا يطابق manifest`);
+        }
+        if (imgs.some((u) => /og-image\.jpg/.test(u))) {
+          errors.push(`S17 · ${bare}: صفحة في manifest ما زالت على الصورة الاحتياطية`);
+        }
+      } else if (imgs.length && imgs.some((u) => /\/og\//.test(u))) {
+        errors.push(`S18 · ${bare}: صفحة خارج manifest أُسنِدت لها صورة مخصّصة`);
+      }
+    }
+  }
+} catch (e) {
+  warn.push(`S16 · تعذّر فحص صور OG: ${e.message}`);
+}
+
+// ---- S14 روابط sameAs تُرجع 200 (شبكي، اختياري) ----
+// ثقب مُصلَح: الحارس لم يكن يفحص sameAs إطلاقًا، ولهذا مرّ رابط سناب شات
+// المكسور (404) الموجود في src/lib/constants.ts. رابط ميت في sameAs يُضعف
+// ربط الكيان عند جوجل. شبكي فلا يعمل افتراضيًا — يُفعَّل بـ CHECK_LINKS=1.
+if (process.env.CHECK_LINKS === "1") {
+  const sameAs = new Set();
+  for (const file of files) {
+    const html = readFileSync(file, "utf8");
+    for (const m of html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {
+      try {
+        const j = JSON.parse(m[1].replace(/\\u003c/g, "<").replace(/\\u003e/g, ">").replace(/\\u0026/g, "&"));
+        for (const node of Array.isArray(j) ? j : [j]) {
+          for (const u of [].concat(node.sameAs || [])) if (/^https?:/.test(u)) sameAs.add(u);
+        }
+      } catch { /* S8 يتولّى أخطاء التحليل */ }
+    }
+  }
+  for (const url of sameAs) {
+    try {
+      const res = await fetch(url, { redirect: "follow", headers: { "user-agent": "Mozilla/5.0 (seo-guard)" } });
+      // 403/429 = حجب مضاد للبوتات لا رابط ميت (x.com يُرجع 403 لأي عميل آلي).
+      // نُبلغ عنه تحذيرًا لا خطأ، وإلا صار الحارس مصدر إنذارات كاذبة تُدرَّب
+      // الفِرَق على تجاهلها — وحارس يُتجاهَل أسوأ من غياب الحارس.
+      if (res.status === 403 || res.status === 429) {
+        warn.push(`S14 · ${url} أرجع ${res.status} (حجب مضاد للبوتات — تحقّق يدويًا)`);
+      } else if (!res.ok) {
+        errors.push(`S14 · رابط sameAs لا يُرجع 200 (${res.status}): ${url}`);
+      }
+    } catch (e) {
+      warn.push(`S14 · تعذّر فحص ${url}: ${e.message}`);
+    }
+  }
+  console.log(`S14 · روابط sameAs مفحوصة: ${sameAs.size}`);
+}
+
+// ---- S15 اتساق عدد المناطق: الواجهة ↔ البيانات المنظمة ----
+// عيب مرصود: بطاقة الرئيسية تقول «13 منطقة نصل إليها» بينما schema تعلن
+// 5 GeoCircle فقط. تناقض إشارة محلية يجب أن ينكسر عليه البناء لا أن يمرّ.
+try {
+  const homeFile = files.find((f) => /(^|[\\/])index\.html$/.test(f));
+  if (homeFile) {
+    const html = readFileSync(homeFile, "utf8");
+    let declared = 0;
+    for (const m of html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {
+      try {
+        const j = JSON.parse(m[1].replace(/\\u003c/g, "<").replace(/\\u003e/g, ">").replace(/\\u0026/g, "&"));
+        for (const node of Array.isArray(j) ? j : [j]) {
+          const areas = [].concat(node.serviceArea || node.areaServed || []);
+          declared = Math.max(declared, areas.filter((a) => a && typeof a === "object").length);
+        }
+      } catch { /* S8 */ }
+    }
+    const claimed = html.match(/aria-label="(\d{1,3})"[^>]*>[^<]*<\/span>[\s\S]{0,200}?منطقة/);
+    const claimedN = claimed ? Number(claimed[1]) : null;
+    if (claimedN !== null && declared > 0 && claimedN !== declared) {
+      errors.push(`S15 · عدد المناطق في الواجهة (${claimedN}) ≠ عدد المناطق في JSON-LD (${declared})`);
+    }
+  }
+} catch (e) {
+  warn.push(`S15 · تعذّر فحص اتساق المناطق: ${e.message}`);
+}
+
 // ---- S12 التشابه ----
 try {
   const { results } = computePairs();
-  const sim = results.filter((r) => r.ratio > 0.60);
+  // العتبة تأتي من similarity-check (مصدر الحقيقة الوحيد) — لا تعريف مستقل هنا،
+  // وإلا تعارض المصدران عند التدرّج إلى 0.45.
+  const sim = results.filter((r) => r.ratio > SIM_MAX);
   sim.forEach((r) => {
-    errors.push(`S12 · تشابه > 60%: ${r.a} ↔ ${r.b}`);
+    errors.push(`S12 · تشابه > ${(SIM_MAX * 100).toFixed(0)}%: ${r.a} ↔ ${r.b}`);
     warn.push(`S12 · ${(r.ratio * 100).toFixed(2)}%: ${r.a} ↔ ${r.b}`);
   });
 } catch (e) {

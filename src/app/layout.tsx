@@ -19,7 +19,10 @@ import { SITE_URL, OG_IMAGE_URL } from "@/lib/constants";
 // تعني أن العنوان نفسه يبقى مخزَّنًا سنةً كاملة عند فيسبوك/واتساب وكل زاحف.
 // لذلك لا يكفي إعادة النشر: نضيف بصمة الملف إلى العنوان حتى يراه الزاحف عنوانًا
 // جديدًا فيُعيد جلبه. تُحدَّث هذه البصمة عند كل تغيير فعلي للصورة.
-const OG_IMAGE = OG_IMAGE_URL;
+// افتراضي الـlayout يبقى الصورة القديمة عمدًا: أي صفحة لا تُعرّف صورتها
+// (مثل /luxe-demo أو أي صفحة مستقبلية خارج manifest) ترث الـfallback لا صورة
+// الرئيسية — وإلا نشرنا صورة خاطئة على صفحات لم يطلبها المالك.
+const LAYOUT_OG = OG_IMAGE_URL;
 
 const tajawal = Tajawal({
   subsets: ["arabic", "latin"],
@@ -76,9 +79,10 @@ export const metadata: Metadata = {
     description:
       "نحيي أصول الضيافة العربية الأصيلة بفريق صبّابين بزي تراثي وقهوة عربية وتمور فاخرة في جدة وينبع ومكة المكرمة والمدينة المنورة وبدر.",
     url: SITE_URL,
+    // صور الرئيسية من og-manifest (JPEG أولًا للتوافق مع واتساب، ثم WebP).
     images: [
       {
-        url: OG_IMAGE,
+        url: LAYOUT_OG,
         width: 1200,
         height: 630,
         alt: "أصول الضيافة - خدمات الضيافة الفاخرة",
@@ -91,7 +95,7 @@ export const metadata: Metadata = {
     title: "أصول الضيافة | خدمات الضيافة الفاخرة",
     description:
       "نحيي أصول الضيافة العربية الأصيلة في جدة وينبع ومكة المكرمة والمدينة المنورة وبدر",
-    images: [OG_IMAGE],
+    images: [LAYOUT_OG],
   },
   robots: {
     index: true,

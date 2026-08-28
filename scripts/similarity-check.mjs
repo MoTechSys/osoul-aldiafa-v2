@@ -18,7 +18,16 @@ import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
 const APP_DIR = join(ROOT, ".next", "server", "app");
-const THRESHOLD_PAIR = 0.60;
+// شُدِّدت العتبة من 0.60 → 0.55 (مهمة P0-7). الهدف المقترح 0.40 غير قابل
+// للتطبيق الآن: أزواج مشروعة قائمة تقيس فعليًا حتى ~53% بعد إزالة الهيكل
+// (diyafa-azaa jeddah↔yanbu = 53.00% موثّقة أدناه)، فخفضها إلى 0.40 يكسر
+// البناء على محتوى صحّي. التدرّج المعتمد: 0.55 الآن → 0.45 بعد تمايز المحتوى
+// → 0.40 هدفًا نهائيًا، بتغيير SIM_MAX في مكان واحد (CI) لا بتعديل ملفين.
+//
+// مصدر الحقيقة الوحيد للعتبة، يستهلكه seo-guard (S12) أيضًا. يُصدَّر بالاسمين:
+// SIM_MAX هو الاسم المعتمد، وTHRESHOLD_PAIR يبقى للتوافق مع أي مستهلك قديم.
+export const SIM_MAX = Number(process.env.SIM_MAX ?? 0.55);
+export const THRESHOLD_PAIR = SIM_MAX;
 
 const CITY_TOKENS = [
   "المدينة المنورة", "مكة المكرمة",

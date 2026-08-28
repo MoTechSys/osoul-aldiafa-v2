@@ -79,11 +79,11 @@ export default function AboutClient() {
       <section className="relative pt-6 pb-10 px-4 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "var(--gradient-vignette)" }} />
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ تعرّف علينا ✦</motion.p>
+          <motion.p initial={{ opacity: 1, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ تعرّف علينا ✦</motion.p>
           <motion.h1 initial={false} whileInView={{ opacity: [0, 1], y: [30, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }} className="text-pearl mb-4 font-amiri" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.15 }}>
             من نحن في<br /><span className="gold-text">أصول الضيافة</span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
+          <motion.p initial={{ opacity: 1, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
             نرتّب الضيافة السعودية بروح أصيلة وحضور هادئ يليق بضيفك.
           </motion.p>
         </div>
@@ -93,7 +93,7 @@ export default function AboutClient() {
       <section className="px-4 pb-20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 1, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             className="relative grid grid-cols-2 gap-3"
           >
@@ -110,7 +110,7 @@ export default function AboutClient() {
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }}>
+          <motion.div initial={{ opacity: 1, x: -40 }} animate={{ opacity: 1, x: 0 }}>
             <p className="text-gold-bright text-xs mb-3" style={{ letterSpacing: "0.35em" }}>✦ قصّتنا ✦</p>
             <h2 className="text-pearl mb-5 font-amiri" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.2rem)", fontWeight: 700 }}>
               ضيافة بأصولها… حضورٌ بمعناها
@@ -153,7 +153,7 @@ export default function AboutClient() {
       {/* Values */}
       <section className="py-12 sm:py-20 px-4" style={{ background: "linear-gradient(180deg, #050505 0%, #0a0a0a 100%)" }}>
         <div className="max-w-7xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+          <motion.div initial={{ opacity: 1, y: 24 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
             <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ قيمنا ✦</p>
             <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.6rem, 4.5vw, 2.4rem)", fontWeight: 700 }}>ما يميّز ضيافتنا</h2>
             <div className="ornament-line mt-5 mx-auto" style={{ width: 110 }} />
@@ -163,7 +163,7 @@ export default function AboutClient() {
             {values.map((v, i) => (
               <motion.div
                 key={v.title}
-                initial={{ opacity: 0, y: 32 }}
+                initial={{ opacity: 1, y: 32 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 className="card-royal p-6 text-center"

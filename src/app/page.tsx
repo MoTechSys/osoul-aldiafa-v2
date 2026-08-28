@@ -5,7 +5,10 @@ import {
   generateBreadcrumbSchema,
   generateFAQSchema, jsonLd } from "@/lib/schema";
 
-import { SITE_URL, OG_IMAGE_URL, EMAIL } from "@/lib/constants";
+import { SITE_URL, EMAIL } from "@/lib/constants";
+import { ogImagesFor } from "@/components/SEO";
+
+const HOME_OG = ogImagesFor("/");
 
 export const metadata: Metadata = {
   title: "أصول الضيافة | قهوجيين وصبابين وضيافة فاخرة في السعودية",
@@ -23,20 +26,20 @@ export const metadata: Metadata = {
     description:
       "نحيي أصول الضيافة العربية الأصيلة بفريق صبّابين بزي تراثي وقهوة عربية وتمور فاخرة في جدة ومكة المكرمة والمدينة المنورة وينبع وبدر.",
     url: SITE_URL,
-    images: [
-      {
-        url: OG_IMAGE_URL,
-        width: 1200,
-        height: 630,
-        alt: "أصول الضيافة - خدمات الضيافة الفاخرة",
-      },
-    ],
+    // صور الرئيسية من og-manifest (JPEG أولًا للتوافق مع واتساب، ثم WebP).
+    images: HOME_OG.map((i) => ({
+      url: i.url,
+      width: 1200,
+      height: 630,
+      alt: i.alt,
+      type: i.type,
+    })),
   },
   twitter: {
     card: "summary_large_image",
     title: "أصول الضيافة | خدمات الضيافة الفاخرة",
     description: "خدمات الضيافة الفاخرة في جدة ومكة المكرمة والمدينة المنورة وينبع وبدر",
-    images: [OG_IMAGE_URL],
+    images: HOME_OG.map((i) => i.url),
   },
 };
 
@@ -49,7 +52,7 @@ const faqSchema = generateFAQSchema([
   {
     question: "ما هي المناطق التي تغطّيها أصول الضيافة؟",
     answer:
-      "تغطيتنا التشغيلية الثابتة هي منطقتا مكة المكرمة والمدينة المنورة: جدة، مكة المكرمة، المدينة المنورة، ينبع، وبدر. وما خرج عن هذا النطاق نناقشه طلبًا بطلب قبل أي التزام.",
+      "تركيزنا الأساسي على جدة وينبع، ونخدم كذلك مكة المكرمة والمدينة المنورة وبدر. وما خرج عن نطاقنا الأساسي نناقشه طلبًا بطلب قبل أي التزام.",
   },
   {
     question: "كيف يمكنني الحجز؟",

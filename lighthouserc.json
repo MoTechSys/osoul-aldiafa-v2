@@ -1,24 +1,56 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npm run start",
+      "startServerCommand": "npm run start -- -p 3000",
       "startServerReadyPattern": "ready|started|Local:",
       "url": [
         "http://localhost:3000/",
         "http://localhost:3000/services",
-        "http://localhost:3000/contact"
+        "http://localhost:3000/contact",
+        "http://localhost:3000/sababin-qahwa-jeddah",
+        "http://localhost:3000/diyafa-munasabat-yanbu"
       ],
-      "numberOfRuns": 1,
-      "settings": { "preset": "desktop" }
+      "numberOfRuns": 3,
+      "settings": {
+        "preset": "desktop"
+      }
     },
     "assert": {
       "assertions": {
-        "categories:performance": ["error", { "minScore": 0.9 }],
-        "categories:accessibility": ["error", { "minScore": 0.95 }],
-        "categories:seo": ["error", { "minScore": 1.0 }],
-        "categories:best-practices": ["warn", { "minScore": 0.9 }]
+        "categories:performance": [
+          "error",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "categories:accessibility": [
+          "error",
+          {
+            "minScore": 0.95
+          }
+        ],
+        "categories:seo": [
+          "error",
+          {
+            "minScore": 1.0
+          }
+        ],
+        "categories:best-practices": [
+          "error",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "total-byte-weight": [
+          "warn",
+          {
+            "maxNumericValue": 1600000
+          }
+        ]
       }
     },
-    "upload": { "target": "temporary-public-storage" }
+    "upload": {
+      "target": "temporary-public-storage"
+    }
   }
 }

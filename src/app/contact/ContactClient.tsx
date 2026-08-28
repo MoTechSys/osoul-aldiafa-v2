@@ -53,7 +53,7 @@ const contactMethods = [
     label: "تغطيتنا",
     // ⚠️ يجب أن يطابق CITIES في localPages.ts و SERVICE_AREAS في schema.ts.
     // كان مكتوبًا «كامل المملكة» وهو يعارض البيانات المهيكلة (٥ مدن).
-    value: "منطقتا مكة المكرمة والمدينة المنورة",
+    value: "جدة وينبع أساسًا — ونصل لبقية المناطق",
     href: "#coverage",
     color: "#C5A059",
   },
@@ -78,7 +78,7 @@ export default function ContactClient() {
   if (submitted) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center max-w-md">
+        <motion.div initial={{ opacity: 1, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center max-w-md">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -105,11 +105,11 @@ export default function ContactClient() {
       <section className="relative pt-6 pb-10 px-4 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "var(--gradient-vignette)" }} />
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ تواصل معنا ✦</motion.p>
+          <motion.p initial={{ opacity: 1, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ تواصل معنا ✦</motion.p>
           <motion.h1 initial={false} whileInView={{ opacity: [0, 1], y: [30, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }} className="text-pearl mb-4 font-amiri" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.15 }}>
             نسعد <span className="gold-text">بخدمتكم</span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
+          <motion.p initial={{ opacity: 1, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
             احجز عبر واتساب أو اتصل بنا — استشارة مجانية لاختيار باقة الضيافة المناسبة لمناسبتك.
           </motion.p>
         </div>
@@ -123,7 +123,7 @@ export default function ContactClient() {
               href={method.href}
               target={method.href.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ y: -4 }}
@@ -143,7 +143,7 @@ export default function ContactClient() {
         <div className="max-w-2xl mx-auto">
           <motion.form
             onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 1, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="p-6 sm:p-8 rounded-3xl card-royal"
@@ -258,7 +258,7 @@ export default function ContactClient() {
       {/* مناطق نخدمها — النشاط مزوّد خدمة متنقّل بلا مقر (SAB) */}
       <section id="service-areas" className="px-4 pb-16">
         <div className="max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+          <motion.div initial={{ opacity: 1, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
             <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ مناطق نخدمها ✦</p>
             <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
               مناطق خدمتنا
@@ -269,7 +269,7 @@ export default function ContactClient() {
             {Object.values(CITIES).map((city, i) => (
               <motion.div
                 key={city.slug}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
@@ -291,15 +291,15 @@ export default function ContactClient() {
 
       <section id="coverage" className="px-4 pb-20">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
+          <motion.div initial={{ opacity: 1, y: 24 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
             <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ تغطيتنا ✦</p>
             <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
-              نخدم منطقتي مكة المكرمة والمدينة المنورة
+              نخدم جدة وينبع، ونصل إلى بقية المناطق
             </h2>
             <p className="text-pearl/75 text-sm mt-3 max-w-lg mx-auto">
-              تغطيتنا التشغيلية الثابتة هي منطقتا مكة المكرمة والمدينة المنورة،
-              وفيها نضمن الفريق والعدّة والوقت. وما خرج عنها نناقشه طلبًا بطلب قبل
-              أي التزام — لا نعد بما لا نملك أدواته.
+              تركيزنا التشغيلي الأساسي على جدة وينبع، وفيهما نضمن الفريق والعدّة
+              والوقت. ونصل إلى بقية مناطق المملكة، ونناقش ما خرج عن نطاقنا الأساسي
+              طلبًا بطلب قبل أي التزام — لا نعد بما لا نملك أدواته.
             </p>
           </motion.div>
           <div className="flex flex-wrap justify-center gap-3">
@@ -308,7 +308,7 @@ export default function ContactClient() {
             {[...Object.values(CITIES).map((c) => c.ar), "ومواقع أخرى بحسب الطلب"].map((city, i) => (
               <motion.span
                 key={city}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 1, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.04 }}
                 className="px-4 py-2 rounded-full text-sm"
@@ -324,7 +324,7 @@ export default function ContactClient() {
       {/* حساباتنا — بطاقات لكل حساب، ومطابقة لِـ sameAs في البيانات المهيكلة */}
       <section id="accounts" className="px-4 pb-24">
         <div className="max-w-3xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
+          <motion.div initial={{ opacity: 1, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
             <p className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ حساباتنا ✦</p>
             <h2 className="text-pearl font-amiri" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 700 }}>
               تابع أعمالنا على حساباتنا الرسمية

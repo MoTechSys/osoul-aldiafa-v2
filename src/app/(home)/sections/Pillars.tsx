@@ -42,7 +42,7 @@ export function Pillars() {
           {pillars.map((p, i) => (
             <motion.div
               key={p.title}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 1, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.7, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}

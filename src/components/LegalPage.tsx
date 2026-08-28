@@ -59,7 +59,7 @@ export function LegalPage({
       {/* ── الهيرو ── */}
       <section className="pt-10 pb-10 px-4 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 1, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-3xl mx-auto"
@@ -129,7 +129,7 @@ export function LegalPage({
             <motion.section
               key={s.id}
               id={s.id}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 1, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.1 }}
               transition={{

@@ -46,6 +46,19 @@ function walk(dir, out = []) {
 
 // ---- فحص الصور في public/ ----
 const publicFiles = walk(PUBLIC);
+
+/**
+ * public/og/ = أصول اجتماعية لا أصول صفحة.
+ *
+ * هذه الصور لا تُحمَّل مع أي صفحة إطلاقًا — تُطلب من مُكشِّطات المنصات
+ * (واتساب/فيسبوك/X) عند مشاركة رابط، فلا تدخل ميزانية وزن الصفحة (CH2)
+ * ولا حد 100KB الموجَّه لصور المحتوى (CH1)، وصيغة JPEG فيها **مقصودة**
+ * لتوافق معاينات واتساب فلا تُحاسَب بـCH8.
+ * حدودها الخاصة تُفرَض في tests/og-manifest.test.ts (<300KB و1200×630).
+ * التكرار (CH3) يبقى مفعّلًا: نسخة WebP وJPEG لهما بصمتان مختلفتان.
+ */
+const isSocialAsset = (f) => relative(ROOT, f).replace(/\\/g, "/").startsWith("public/og/");
+
 const imageFiles = publicFiles.filter((f) => IMAGE_EXTS.has(extname(f).toLowerCase()));
 
 let totalBytes = 0;
@@ -54,18 +67,19 @@ const hashes = new Map();
 for (const file of imageFiles) {
   const rel = relative(ROOT, file);
   const size = statSync(file).size;
-  totalBytes += size;
   const ext = extname(file).toLowerCase();
+  const social = isSocialAsset(file);
+  if (!social) totalBytes += size;
 
   // CH1 — حجم الصورة (الأيقونات .ico مستثناة من حد 100KB لطبيعتها متعددة الأبعاد)
   // مفتاح مستقر (بلا الحجم المتغيّر) ليصمد في مقارنة خط الأساس؛ الحجم يظهر كتحذير سياقي.
-  if (size > MAX_IMAGE_BYTES && ext !== ".ico") {
+  if (size > MAX_IMAGE_BYTES && ext !== ".ico" && !social) {
     errors.push(`CH1 · صورة > 100 KB: ${rel}`);
     warn.push(`CH1 · ${rel} = ${(size / KB).toFixed(0)} KB`);
   }
 
   // CH8 — تنسيق غير مسموح
-  if (!ALLOWED_EXTS.has(ext)) {
+  if (!ALLOWED_EXTS.has(ext) && !social) {
     errors.push(`CH8 · تنسيق غير WebP/SVG/ICO: ${rel}`);
   }
 
@@ -121,5 +135,9 @@ gate({
   name: "assets",
   errors,
   warn,
-  header: `── G-4b ميزانية الأصول ──\nصور public/: ${imageFiles.length} · الحجم الكلي: ${totalMB.toFixed(2)} MB`,
+  header:
+    `── G-4b ميزانية الأصول ──\n` +
+    `صور الصفحات: ${imageFiles.filter((f) => !isSocialAsset(f)).length} · ` +
+    `الحجم المحسوب: ${totalMB.toFixed(2)} MB\n` +
+    `أصول اجتماعية (public/og/، خارج الميزانية): ${imageFiles.filter(isSocialAsset).length}`,
 });

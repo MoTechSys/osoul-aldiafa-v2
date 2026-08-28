@@ -32,7 +32,7 @@ export function Stats() {
           {statItems.map((s, i) => (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0.001, y: 26 }}
+              initial={{ opacity: 1, y: 26 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}

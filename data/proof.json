@@ -1,0 +1,34 @@
+{
+  "_note": "P0-0 — سدّ ثقب S10 في seo-guard: الملف كان غائبًا فيمرّ فحص «الأرقام غير الموثّقة» بصمت (claims فارغة). أعدّه: ضمان الجودة.",
+  "_status": "تصحيح (2026-08-27): المالك أكّد صراحةً «7 سنوات» فقط. نصّه عن المناسبات كان «عدّة وشلل كثيرة» بلا رقم — فلا يُوثَّق 1200 ولا 99٪ بتفسير.",
+  "claims": [
+    {
+      "value": "7",
+      "label": "سنوات من الخبرة",
+      "source": "Stats.tsx",
+      "verified_by_owner": true,
+      "note": "مؤكَّد صراحةً من المالك 2026-08-27؛ يتسق مع foundingDate 2017."
+    },
+    {
+      "value": "1200",
+      "label": "مناسبة أُقيمت",
+      "source": "Stats.tsx",
+      "verified_by_owner": false,
+      "note": "بند ن-٢ في docs/01-status/02-قرارات-معلّقة.md"
+    },
+    {
+      "value": "13",
+      "label": "منطقة نصل إليها",
+      "source": "Stats.tsx",
+      "verified_by_owner": false,
+      "note": "تعارض: schema.ts يعلن 5 GeoCircle فقط — يحتاج توحيدًا"
+    },
+    {
+      "value": "99",
+      "label": "٪ رضا عملائنا",
+      "source": "Stats.tsx",
+      "verified_by_owner": false,
+      "note": "بند ن-٢ — ادعاء غير قابل للإثبات بلا مراجعات موثّقة"
+    }
+  ]
+}

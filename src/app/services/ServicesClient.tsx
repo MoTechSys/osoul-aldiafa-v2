@@ -150,7 +150,7 @@ function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-[80] flex items-center justify-center p-2 sm:p-6"
@@ -160,7 +160,7 @@ function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void
     >
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
       <motion.div
-        initial={{ opacity: 0, scale: 0.94, y: 30 }}
+        initial={{ opacity: 1, scale: 0.94, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.94, y: 30 }}
         transition={{ type: "spring", damping: 26, stiffness: 250 }}
@@ -182,7 +182,7 @@ function Modal({ service, onClose }: { service: ServiceItem; onClose: () => void
           <AnimatePresence mode="wait">
             <motion.div
               key={current}
-              initial={{ opacity: 0, scale: 1.03 }}
+              initial={{ opacity: 1, scale: 1.03 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
@@ -316,7 +316,7 @@ export default function ServicesClient() {
               <motion.button
                 key={s.id}
                 onClick={() => setSelected(s)}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 1, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: i * 0.08 }}
                 whileTap={{ scale: 0.97 }}

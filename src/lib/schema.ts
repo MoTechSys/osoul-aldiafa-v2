@@ -62,14 +62,16 @@ export function generateProfessionalServiceSchema() {
     name: SITE_NAME,
     alternateName: "Asoul Al-Diafa",
     description:
-      "أصول الضيافة — خدمات ضيافة فاخرة متنقّلة في منطقتي مكة المكرمة والمدينة المنورة: قهوة عربية، شاي، تمور، وفريق صبّابين وقهوجيين بزي تراثي يصل إليك أينما كانت مناسبتك.",
+      "أصول الضيافة — خدمات ضيافة فاخرة متنقّلة في جدة وينبع أساسًا، مع خدمة تصل إلى بقية مناطق المملكة: قهوة عربية، شاي، تمور، وفريق صبّابين وقهوجيين بزي تراثي يصل إليك أينما كانت مناسبتك.",
     url: SITE_URL,
     telephone: PHONE,
     email: EMAIL,
     image: `${SITE_URL}/logo.webp`,
     logo: `${SITE_URL}/logo.webp`,
-    // SAB: مناطق خدمة فقط — بلا address وبلا geo (R5 / SC2 / SC3)
-    serviceArea: SERVICE_AREAS,
+    // SAB: مناطق خدمة فقط — بلا address وبلا geo (R5 / SC2 / SC3).
+    // نستخدم areaServed (الخاصية الحديثة في schema.org التي تَخلُف serviceArea
+    // المهجورة) — واتّساقًا مع generateServiceSchema أدناه الذي يستخدم areaServed.
+    areaServed: SERVICE_AREAS,
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: [
@@ -84,7 +86,10 @@ export function generateProfessionalServiceSchema() {
       opens: "00:00",
       closes: "23:59",
     },
-    priceRange: "$$$$",
+    // نطاق سعري يشمل المتوسط والفاخر (قرار المالك: "فاخرة ومتوسطة ليظهر لكل
+    // الناس"). "$$-$$$$" نطاق صالح في schema.org يغطّي من المتوسط إلى الفاخر.
+    // (الصياغة النهائية بين "$$-$$$$" و"$$$" لمراجع الكود في مراجعة الـPR.)
+    priceRange: "$$-$$$$",
     // ملاحظة: أُزيلت aggregateRating/review الذاتية — التقييمات الذاتية على موقع الشركة
     // مخالفة لسياسة Google (self-serving reviews) وقد تُسقط النتائج الغنية.
     sameAs: [

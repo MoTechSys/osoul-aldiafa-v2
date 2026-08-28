@@ -1,0 +1,247 @@
+[
+  {
+    "path": "/",
+    "image": "/og/og-qahwajiin-sababin-diyafa-fakhira-saudia.webp",
+    "alt": "قهوجيين وصبابين قهوة وضيافة فاخرة في السعودية — أصول الضيافة"
+  },
+  {
+    "path": "/services",
+    "image": "/og/og-khadamat-qahwajiin-sababin-diyafa.webp",
+    "alt": "خدمات قهوجيين وصبابين قهوة وضيافة مناسبات"
+  },
+  {
+    "path": "/offerings",
+    "image": "/og/og-taqdimat-qahwa-arabiya-tamr-diyafa.webp",
+    "alt": "تقديمات ضيافة: قهوة عربية وتمور وشاي فاخر"
+  },
+  {
+    "path": "/portfolio",
+    "image": "/og/og-aamal-diyafa-munasabat-aaras.webp",
+    "alt": "معرض أعمال ضيافة المناسبات والأعراس"
+  },
+  {
+    "path": "/about",
+    "image": "/og/og-fariq-qahwajiin-sababin-mhtarif.webp",
+    "alt": "فريق قهوجيين وصبابين محترف بزي تراثي"
+  },
+  {
+    "path": "/contact",
+    "image": "/og/og-talab-qahwajiin-diyafa-munasaba.webp",
+    "alt": "اطلب قهوجيين وضيافة لمناسبتك"
+  },
+  {
+    "path": "/links",
+    "image": "/og/og-tawasul-asoul-aldiafa.webp",
+    "alt": "روابط التواصل — أصول الضيافة"
+  },
+  {
+    "path": "/privacy",
+    "image": "/og/og-siyasat-khususiya-asoul-aldiafa.webp",
+    "alt": "سياسة الخصوصية — أصول الضيافة"
+  },
+  {
+    "path": "/terms",
+    "image": "/og/og-shurut-ahkam-asoul-aldiafa.webp",
+    "alt": "الشروط والأحكام — أصول الضيافة"
+  },
+  {
+    "path": "/qahwajiin-mubasherin",
+    "image": "/og/og-qahwajiin-mubasherin-munasabat.webp",
+    "alt": "قهوجيين ومباشرين للمناسبات في السعودية"
+  },
+  {
+    "path": "/rukn-qahwa-arabiya",
+    "image": "/og/og-rukn-qahwa-arabiya-munasabat.webp",
+    "alt": "ركن قهوة عربية للمناسبات"
+  },
+  {
+    "path": "/diyafa-aaras",
+    "image": "/og/og-diyafat-aaras-haflat-zafaf.webp",
+    "alt": "ضيافة أعراس وحفلات زفاف — صبابين قهوة"
+  },
+  {
+    "path": "/diyafa-mutamarat",
+    "image": "/og/og-diyafat-mutamarat-faaliyat-rasmiya.webp",
+    "alt": "ضيافة مؤتمرات وفعاليات رسمية"
+  },
+  {
+    "path": "/tajheez-diyafa-haflat",
+    "image": "/og/og-tajheez-diyafa-haflat-kamil.webp",
+    "alt": "تجهيز ضيافة حفلات كامل"
+  },
+  {
+    "path": "/sababin-qahwa-jeddah",
+    "image": "/og/og-sababin-qahwa-jeddah-qahwajiin.webp",
+    "alt": "صبابين قهوة جدة — قهوجيين ومباشرين"
+  },
+  {
+    "path": "/sababin-qahwa-yanbu",
+    "image": "/og/og-sababin-qahwa-yanbu-qahwajiin.webp",
+    "alt": "صبابين قهوة ينبع — قهوجيين ومباشرين"
+  },
+  {
+    "path": "/sababin-qahwa-badr",
+    "image": "/og/og-sababin-qahwa-badr-qahwajiin.webp",
+    "alt": "صبابين قهوة بدر — قهوجيين ومباشرين"
+  },
+  {
+    "path": "/sababin-qahwa-madinah",
+    "image": "/og/og-sababin-qahwa-almadinah-qahwajiin.webp",
+    "alt": "صبابين قهوة المدينة المنورة — قهوجيين ومباشرين"
+  },
+  {
+    "path": "/sababin-qahwa-makkah",
+    "image": "/og/og-sababin-qahwa-makkah-qahwajiin.webp",
+    "alt": "صبابين قهوة مكة المكرمة — قهوجيين ومباشرين"
+  },
+  {
+    "path": "/diyafa-munasabat-jeddah",
+    "image": "/og/og-diyafat-munasabat-jeddah.webp",
+    "alt": "ضيافة مناسبات جدة"
+  },
+  {
+    "path": "/diyafa-munasabat-yanbu",
+    "image": "/og/og-diyafat-munasabat-yanbu.webp",
+    "alt": "ضيافة مناسبات ينبع"
+  },
+  {
+    "path": "/diyafa-munasabat-badr",
+    "image": "/og/og-diyafat-munasabat-badr.webp",
+    "alt": "ضيافة مناسبات بدر"
+  },
+  {
+    "path": "/diyafa-munasabat-madinah",
+    "image": "/og/og-diyafat-munasabat-almadinah.webp",
+    "alt": "ضيافة مناسبات المدينة المنورة"
+  },
+  {
+    "path": "/diyafa-munasabat-makkah",
+    "image": "/og/og-diyafat-munasabat-makkah.webp",
+    "alt": "ضيافة مناسبات مكة المكرمة"
+  },
+  {
+    "path": "/qahwajiin-jeddah",
+    "image": "/og/og-qahwaji-jeddah-qahwajiin-mubasherin.webp",
+    "alt": "قهوجي جدة — قهوجيين ومباشرين في جدة"
+  },
+  {
+    "path": "/diyafa-aaras-jeddah",
+    "image": "/og/og-diyafat-aaras-jeddah-zafaf.webp",
+    "alt": "ضيافة أعراس جدة — حفلات زفاف"
+  },
+  {
+    "path": "/diyafa-nisaiya-jeddah",
+    "image": "/og/og-diyafa-nisaiya-jeddah-sababat.webp",
+    "alt": "ضيافة نسائية جدة — صبابات قهوة"
+  },
+  {
+    "path": "/diyafa-sharikat-jeddah",
+    "image": "/og/og-diyafat-sharikat-mutamarat-jeddah.webp",
+    "alt": "ضيافة شركات ومؤتمرات جدة"
+  },
+  {
+    "path": "/rukn-qahwa-jeddah",
+    "image": "/og/og-rukn-qahwa-arabiya-jeddah.webp",
+    "alt": "ركن قهوة عربية جدة"
+  },
+  {
+    "path": "/diyafa-istirahat-jeddah",
+    "image": "/og/og-diyafat-istirahat-shaliyhat-jeddah.webp",
+    "alt": "ضيافة استراحات وشاليهات جدة"
+  },
+  {
+    "path": "/diyafa-azaa-jeddah",
+    "image": "/og/og-diyafat-azaa-jeddah-majalis.webp",
+    "alt": "ضيافة مجالس عزاء جدة"
+  },
+  {
+    "path": "/diyafa-munasabat-saghira-jeddah",
+    "image": "/og/og-diyafa-mawalid-takharuj-jeddah.webp",
+    "alt": "ضيافة مواليد وتخرج ومناسبات صغيرة جدة"
+  },
+  {
+    "path": "/qahwajiin-yanbu",
+    "image": "/og/og-qahwaji-yanbu-qahwajiin-mubasherin.webp",
+    "alt": "قهوجي ينبع — قهوجيين ومباشرين في ينبع"
+  },
+  {
+    "path": "/diyafa-aaras-yanbu",
+    "image": "/og/og-diyafat-aaras-yanbu-zafaf.webp",
+    "alt": "ضيافة أعراس ينبع — حفلات زفاف"
+  },
+  {
+    "path": "/diyafa-sharikat-yanbu",
+    "image": "/og/og-diyafat-sharikat-faaliyat-yanbu.webp",
+    "alt": "ضيافة شركات وفعاليات ينبع"
+  },
+  {
+    "path": "/diyafa-istirahat-yanbu",
+    "image": "/og/og-diyafat-istirahat-mazari-yanbu.webp",
+    "alt": "ضيافة استراحات ومزارع ينبع"
+  },
+  {
+    "path": "/diyafa-nisaiya-yanbu",
+    "image": "/og/og-diyafa-nisaiya-yanbu-sababat.webp",
+    "alt": "ضيافة نسائية ينبع — صبابات قهوة"
+  },
+  {
+    "path": "/rukn-qahwa-yanbu",
+    "image": "/og/og-rukn-qahwa-arabiya-yanbu.webp",
+    "alt": "ركن قهوة عربية ينبع"
+  },
+  {
+    "path": "/diyafa-azaa-yanbu",
+    "image": "/og/og-diyafat-azaa-yanbu-majalis.webp",
+    "alt": "ضيافة مجالس عزاء ينبع"
+  },
+  {
+    "path": "/diyafa-munasabat-yanbu-dalil",
+    "image": "/og/og-dalil-diyafat-munasabat-yanbu.webp",
+    "alt": "دليل ترتيب ضيافة مناسبات ينبع"
+  },
+  {
+    "path": "/asaar-diyafa",
+    "image": "/og/og-asaar-qahwajiin-diyafa-saudia.webp",
+    "alt": "أسعار القهوجيين والضيافة في السعودية"
+  },
+  {
+    "path": "/diyafa-nisaiya",
+    "image": "/og/og-diyafa-nisaiya-sababat-qahwa.webp",
+    "alt": "ضيافة نسائية — صبابات قهوة"
+  },
+  {
+    "path": "/diyafa-azaa",
+    "image": "/og/og-diyafat-azaa-majalis.webp",
+    "alt": "ضيافة العزاء والمجالس"
+  },
+  {
+    "path": "/diyafa-sharikat",
+    "image": "/og/og-diyafat-sharikat-mutamarat.webp",
+    "alt": "ضيافة الشركات والمؤتمرات"
+  },
+  {
+    "path": "/diyafa-istirahat",
+    "image": "/og/og-diyafat-istirahat-mukhayamat.webp",
+    "alt": "ضيافة استراحات ومخيمات"
+  },
+  {
+    "path": "/diyafa-mawalid",
+    "image": "/og/og-diyafat-mawalid-takharuj.webp",
+    "alt": "ضيافة استقبال مولود وتخرج"
+  },
+  {
+    "path": "/diyafa-makkah",
+    "image": "/og/og-diyafat-munasabat-makkah-qahwajiin.webp",
+    "alt": "ضيافة مناسبات مكة المكرمة — قهوجيين"
+  },
+  {
+    "path": "/diyafa-madinah",
+    "image": "/og/og-diyafat-munasabat-almadinah-qahwajiin.webp",
+    "alt": "ضيافة مناسبات المدينة المنورة — قهوجيين"
+  },
+  {
+    "path": "/diyafa-badr",
+    "image": "/og/og-diyafat-munasabat-badr-qahwajiin.webp",
+    "alt": "ضيافة مناسبات بدر — قهوجيين"
+  }
+]

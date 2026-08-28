@@ -96,7 +96,7 @@ function Lightbox({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-[90] flex items-center justify-center"
@@ -185,11 +185,11 @@ export default function OfferingsClient() {
       <section className="relative pt-6 pb-8 px-4 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "var(--gradient-vignette)" }} />
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ تقديماتنا ✦</motion.p>
+          <motion.p initial={{ opacity: 1, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-gold-bright mb-3" style={{ fontSize: "0.75rem", letterSpacing: "0.4em" }}>✦ تقديماتنا ✦</motion.p>
           <motion.h1 initial={false} whileInView={{ opacity: [0, 1], y: [30, 0] }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }} className="text-pearl mb-4 font-amiri" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.15 }}>
             دليل اختيار عناصر<br /><span className="gold-text">الضيافة السعودية</span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
+          <motion.p initial={{ opacity: 1, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-pearl/65 max-w-xl mx-auto text-sm leading-relaxed">
             تصفّح الصور كخيارات ومراجع تساعدك على صياغة طلب واضح، لا كقائمة ثابتة أو وعد بتوفّر كل عنصر ظاهر.
           </motion.p>
         </div>
@@ -240,7 +240,7 @@ export default function OfferingsClient() {
           {current.items.map((item, idx) => (
             <motion.button
               key={item.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45 }}
               whileHover={{ y: -4 }}

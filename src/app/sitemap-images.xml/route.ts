@@ -19,6 +19,17 @@
  */
 import { SITE_URL } from "@/lib/constants";
 import { PAGE_IMAGES, MAX_IMAGES_PER_URL } from "@/lib/pageImages";
+import ogManifest from "@/data/og-manifest.json";
+
+/**
+ * دمج صور OG المخصّصة في خريطة الصور القائمة (لا ملف منفصل ثانٍ):
+ * توثيق جوجل يقبل الطريقتين، والدمج يبقي مصدرًا واحدًا للصور ويُغني عن
+ * سطر Sitemap إضافي في robots.txt. نضيف نسخة WebP فقط للفهرسة (JPEG نسخة
+ * توافق للمعاينات الاجتماعية لا للبحث، وإدراج الاثنتين يُنتج تكرارًا).
+ */
+const OG_BY_PATH = new Map<string, string>(
+  (ogManifest as { path: string; image: string }[]).map((e) => [e.path, e.image])
+);
 
 export const dynamic = "force-static";
 
@@ -44,7 +55,13 @@ export function GET(): Response {
     '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
   ];
 
-  for (const [path, images] of Object.entries(PAGE_IMAGES)) {
+  const paths = new Set([...Object.keys(PAGE_IMAGES), ...OG_BY_PATH.keys()]);
+  for (const path of paths) {
+    const ogImage = OG_BY_PATH.get(path);
+    const images = [
+      ...(PAGE_IMAGES[path as keyof typeof PAGE_IMAGES] ?? []),
+      ...(ogImage ? [ogImage] : []),
+    ];
     if (images.length === 0) continue; // <url> بلا صور لا معنى له في خريطة صور
     lines.push("  <url>");
     lines.push(`    <loc>${xmlEscape(absolute(path))}</loc>`);

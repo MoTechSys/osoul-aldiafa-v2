@@ -10,7 +10,7 @@ export function FinalCTA() {
   return (
     <section className="relative py-14 sm:py-24 px-4 bg-noir overflow-hidden">
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 1, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
         className="relative max-w-4xl mx-auto rounded-[28px] overflow-hidden text-center p-10 sm:p-14"

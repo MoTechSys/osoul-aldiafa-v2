@@ -120,7 +120,7 @@ export default function BottomNav() {
             aria-controls="osoul-mobile-menu"
           >
             <motion.span
-              initial={{ scale: 0.85, opacity: 0 }}
+              initial={{ scale: 0.85, opacity: 1 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{
                 type: "spring",
@@ -160,7 +160,7 @@ export default function BottomNav() {
           <>
             <motion.div
               key="scrim"
-              initial={{ opacity: 0 }}
+              initial={{ opacity: 1 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
@@ -224,7 +224,7 @@ export default function BottomNav() {
                   return (
                     <motion.div
                       key={m.href}
-                      initial={{ opacity: 0, y: 14 }}
+                      initial={{ opacity: 1, y: 14 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.06 + i * 0.04 }}
                     >

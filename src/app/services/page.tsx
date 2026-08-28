@@ -37,7 +37,7 @@ const serviceSchema = generateServiceSchema({
 
 const webPageSchema = generateWebPageSchema({
   name: "خدماتنا - أصول الضيافة",
-  description: "باقات ضيافة شاملة لمناسباتك في منطقتي مكة المكرمة والمدينة المنورة",
+  description: "باقات ضيافة شاملة لمناسباتك في جدة وينبع، ونصل لبقية مناطق المملكة",
   url: `${SITE_URL}/services`,
 });
 

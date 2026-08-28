@@ -47,7 +47,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-pearl/75 text-sm leading-relaxed max-w-sm">
-              نُحيي أصول الضيافة العربية الأصيلة بفريق صبّابين بزي تراثي، قهوة عربية وتمور فاخرة — تجربة ضيافة تليق بأرقى المناسبات في منطقتي مكة المكرمة والمدينة المنورة.
+              نُحيي أصول الضيافة العربية الأصيلة بفريق صبّابين بزي تراثي، قهوة عربية وتمور فاخرة — تجربة ضيافة تليق بأرقى المناسبات في جدة وينبع، ونصل إلى بقية مناطق المملكة.
             </p>
 
             <div className="flex gap-3 mt-5">
@@ -136,7 +136,7 @@ export default function Footer() {
                 <span className="mt-0.5 flex-shrink-0">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#C5A059" strokeWidth="2" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
                 </span>
-                <span>نخدم منطقتي مكة المكرمة والمدينة المنورة</span>
+                <span>نخدم جدة وينبع، ونصل إلى بقية المناطق</span>
               </div>
             </div>
 

@@ -23,7 +23,7 @@ export default function FloatingWhatsApp() {
       }}
       whileHover={{ scale: 1.12 }}
       whileTap={{ scale: 0.92 }}
-      initial={{ opacity: 0, scale: 0 }}
+      initial={{ opacity: 1, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 200, delay: 1.2 }}
     >
