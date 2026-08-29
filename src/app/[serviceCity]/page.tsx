@@ -120,6 +120,7 @@ export default async function Page({ params }: Props) {
           cityAr={sub.cityAr ?? "السعودية"}
           serviceAr={sub.serviceAr}
           intro={sub.intro}
+          directAnswer={sub.directAnswer}
           heroImage={sub.heroImage}
           heroAlt={sub.heroAlt}
           breadcrumbItems={sub.breadcrumb}

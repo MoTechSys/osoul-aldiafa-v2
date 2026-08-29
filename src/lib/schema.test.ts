@@ -3,6 +3,8 @@ import {
   jsonLd,
   generateServiceSchema,
   generateProfessionalServiceSchema,
+  generateSiteGraph,
+  generateWebPageSchema,
 } from "@/lib/schema";
 
 describe("jsonLd", () => {
@@ -85,5 +87,67 @@ describe("generateProfessionalServiceSchema — عدد مناطق الخدمة",
     // يجب أن يبدأ من CITIES في localPages.ts لا من تعديل الرقم هنا.
     // تأكيدات priceRange والوصف في src/lib/schema-scope.test.ts.
     expect(s.areaServed.length).toBe(6);
+  });
+});
+
+describe("generateSiteGraph (حزمة AEO — رسم @graph موحّد)", () => {
+  const g = generateSiteGraph() as {
+    "@context": string;
+    "@graph": Record<string, unknown>[];
+  };
+
+  it("@context واحد على الجذر و3 عقد فقط", () => {
+    expect(g["@context"]).toBe("https://schema.org");
+    expect(g["@graph"]).toHaveLength(3);
+    // لا @context داخل أي عقدة — تكراره يشوّش بعض المحلّلات.
+    for (const node of g["@graph"]) {
+      expect(node).not.toHaveProperty("@context");
+    }
+  });
+
+  it("كيان الأعمال عقدة واحدة بنوعين مركّبين (ProfessionalService + Organization)", () => {
+    const biz = g["@graph"].find((n) =>
+      String(n["@id"]).endsWith("#business")
+    )!;
+    expect(biz["@type"]).toEqual(["ProfessionalService", "Organization"]);
+    // خصائص الكيانين مدموجة في العقدة الواحدة
+    expect(biz).toHaveProperty("foundingDate", "2017");
+    expect(biz).toHaveProperty("priceRange", "$$-$$$$");
+    expect(biz).toHaveProperty("areaServed");
+    // SAB: بلا address/geo
+    expect(biz).not.toHaveProperty("address");
+    expect(biz).not.toHaveProperty("geo");
+    // الشعار مرجع @id لا كائن مكرر
+    expect(biz.logo).toMatchObject({ "@id": expect.stringContaining("#logo") });
+  });
+
+  it("WebSite.publisher يشير إلى #business بمرجع @id خالص", () => {
+    const site = g["@graph"].find((n) =>
+      String(n["@id"]).endsWith("#website")
+    )!;
+    expect(site.publisher).toEqual({
+      "@id": expect.stringContaining("#business"),
+    });
+  });
+
+  it("قرار موثّق: لا aggregateRating ولا review ذاتية في أي عقدة", () => {
+    // طلب المالك «بأرقام موثقة فقط» — لا مصدر خارجي موثّق اليوم، والتقييم
+    // الذاتي على موقع الشركة مخالفة لسياسة Google (self-serving reviews).
+    const flat = JSON.stringify(g);
+    expect(flat).not.toContain("aggregateRating");
+    expect(flat).not.toContain('"review"');
+  });
+});
+
+describe("generateWebPageSchema — ربط الرسم", () => {
+  const p = generateWebPageSchema({
+    name: "صفحة",
+    description: "وصف",
+    url: "https://asoulaldiafa.com/x",
+  });
+
+  it("isPartOf وabout مرجعا @id خالصان (لا تعريف مكرر للعقد)", () => {
+    expect(p.isPartOf).toEqual({ "@id": expect.stringContaining("#website") });
+    expect(p.about).toEqual({ "@id": expect.stringContaining("#business") });
   });
 });
