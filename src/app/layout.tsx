@@ -3,10 +3,7 @@ import { Tajawal, Amiri } from "next/font/google";
 import "@/styles/globals.css";
 import BottomNav from "@/components/BottomNav";
 import { Analytics } from "@/components/Analytics";
-import {
-  generateProfessionalServiceSchema,
-  generateWebSiteSchema,
-  generateOrganizationSchema, jsonLd } from "@/lib/schema";
+import { generateSiteGraph, jsonLd } from "@/lib/schema";
 
 import { SITE_URL, OG_IMAGE_URL } from "@/lib/constants";
 
@@ -176,22 +173,13 @@ export default function RootLayout({
       className={`scroll-smooth ${tajawal.variable} ${amiri.variable}`}
     >
       <head>
+        {/* حزمة AEO: رسم @graph واحد بعُقد مترابطة عبر @id
+            (#business + #logo + #website) بدل ثلاث كتل منفصلة كانت تصف
+            الكيان نفسه بلا رابط بينها. التفاصيل في generateSiteGraph. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: jsonLd(generateOrganizationSchema()),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: jsonLd(generateProfessionalServiceSchema()),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: jsonLd(generateWebSiteSchema()),
+            __html: jsonLd(generateSiteGraph()),
           }}
         />
       </head>

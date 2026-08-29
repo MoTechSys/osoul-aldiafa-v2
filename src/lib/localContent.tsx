@@ -154,6 +154,9 @@ function sababinContent(cityKey: string): {
   const intro = cityKey === "jeddah"
     ? "حضورٌ مرتب وتفاصيل ضيافة تُنسّق بما يليق بمناسبتك وضيوفك. نفهم طبيعة المجلس في جدة أولًا، ثم نرتّب مسار التقديم ونطاق الخدمة المتفق عليه بوضوح."
     : `صبابين قهوة في ${c.ar} لحضور سعودي هادئ يبدأ بفهم المجلس ومسار الضيوف. نراجع موقع المناسبة في ${c.region} والعناصر المطلوبة، ثم نوضح نطاق خدمة القهوجيين والمباشرين المتفق عليه قبل الاعتماد.`;
+  // حزمة AEO: إجابة مباشرة 40–60 كلمة (قابلة للاقتباس من محركات الإجابة).
+  // لا أرقام غير موثّقة (R9) — المدينة والقناة والمنهجية فقط.
+  const directAnswer = `توفّر أصول الضيافة صبابين قهوة وقهوجيين ومباشرين بزي تراثي في ${c.ar} للأعراس والمجالس ومناسبات العمل، مع قهوة عربية وتمور فاخرة. الحجز عبر واتساب 0568997316 باستشارة مجانية، ويُثبَّت عدد الفريق ونطاق الخدمة في عرض مكتوب قبل الاعتماد — والخدمة متاحة على مدار الساعة.`;
   const blocks = sababinBlocksByCity[cityKey];
   if (!blocks) throw new Error(`Missing sababin blocks: ${cityKey}`);
   const blockFaqs = blocks.find((block) => block.type === "faq");
@@ -169,6 +172,7 @@ function sababinContent(cityKey: string): {
       cityAr: c.ar,
       serviceAr: "صبابين قهوة",
       intro,
+      directAnswer,
       heroImage: TEAM_IMAGES[6],
       heroAlt: `صبابين قهوة وقهوجيين في ${c.ar} - أصول الضيافة`,
       blocks,
@@ -194,6 +198,8 @@ function diyafaContent(cityKey: string): {
   const h1 = `ضيافة مناسبات في ${c.ar} — تجربة ضيافة سعودية فاخرة`;
 
   const intro = `ضيافة مناسبات في ${c.ar} تُبنى حول مقام اللقاء وموقعه في ${c.region}. نفهم رحلة الضيف والعناصر التي ترغب فيها، ثم نوضح ما يمكن إدراجه ضمن عرض مكتوب يليق بالمناسبة من دون افتراضات جاهزة.`;
+  // حزمة AEO: إجابة مباشرة قابلة للاقتباس — بلا أرقام غير موثّقة (R9).
+  const directAnswer = `تقدّم أصول الضيافة تجهيز ضيافة متكاملًا للمناسبات في ${c.ar}: قهوجيين وصبّابين، وركن قهوة عربية، وتمورًا فاخرة، وتنسيقًا يُبنى على نوع المناسبة ومكانها. أرسل تفاصيل مناسبتك عبر واتساب 0568997316 وتحصل على استشارة مجانية وعرض مكتوب يفصّل كل عنصر قبل الاعتماد.`;
   const blocks = diyafaBlocks[cityKey];
   if (!blocks) throw new Error(`Missing diyafa blocks: ${cityKey}`);
   const blockFaqs = blocks.find((block) => block.type === "faq");
@@ -209,6 +215,7 @@ function diyafaContent(cityKey: string): {
       cityAr: c.ar,
       serviceAr: "ضيافة مناسبات",
       intro,
+      directAnswer,
       heroImage: SETUP_IMAGES[5],
       heroAlt: `ضيافة مناسبات فاخرة في ${c.ar} - أصول الضيافة`,
       blocks,

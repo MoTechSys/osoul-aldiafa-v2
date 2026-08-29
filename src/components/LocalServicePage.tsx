@@ -32,6 +32,13 @@ export interface LocalServicePageProps {
   heroAlt: string;
   breadcrumbItems: { label: string; href: string }[];
 
+  /**
+   * حزمة AEO (2026-08-29): إجابة مباشرة 40–60 كلمة على سؤال نية الصفحة،
+   * تُعرض أول المحتوى بعد الهيرو داخل عنصر اقتباس دلالي — الموضع الذي
+   * تلتقطه محركات الإجابة (LLMs) للاستشهاد. لا أرقام غير موثّقة (R9).
+   */
+  directAnswer?: string;
+
   /** D6.1: الأقسام المتغيّرة — عند تمريرها تُعرض هي وحدها بعد الهيرو. */
   blocks?: LocalPageBlock[];
 
@@ -146,6 +153,17 @@ export default function LocalServicePage(props: LocalServicePageProps) {
 
       {/* الأقسام المتغيّرة (D6.1) */}
       <div className="max-w-5xl mx-auto px-4 py-16 space-y-16">
+        {/* AEO: الإجابة المباشرة — أول عنصر محتوى بعد الهيرو، قابلة للاقتباس */}
+        {props.directAnswer ? (
+          <section aria-label="الإجابة المباشرة" className="max-w-3xl mx-auto">
+            <p
+              className="border-r-2 pr-5 text-pearl/90 text-base sm:text-lg leading-loose"
+              style={{ borderColor: "rgba(197,160,89,0.6)" }}
+            >
+              {props.directAnswer}
+            </p>
+          </section>
+        ) : null}
         {blocks.map((b, i) => (
           <RenderBlock key={i} block={b} />
         ))}

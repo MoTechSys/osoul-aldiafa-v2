@@ -124,6 +124,76 @@ export function generateProfessionalServiceSchema() {
   };
 }
 
+/**
+ * حزمة AEO (2026-08-29) — الرسم الموحّد @graph للـlayout.
+ *
+ * بدل ثلاث كتل JSON-LD منفصلة (Organization + ProfessionalService + WebSite)
+ * كانت تصف الكيان نفسه بلا رابط بينها، يبني هذا المولّد **رسمًا واحدًا**
+ * بعُقد مترابطة عبر @id:
+ *
+ *   ┌─ #business  (ProfessionalService + Organization — كيان واحد بنوعين،
+ *   │              لأن النشاط التجاري *هو* المنظمة؛ عقدتان منفصلتان بلا رابط
+ *   │              كانتا تبدوان لمحركات الإجابة ككيانين مختلفين)
+ *   │    └── logo → @id #logo
+ *   ├─ #logo      (ImageObject — يُشار إليه من العقدتين بلا تكرار)
+ *   └─ #website   (WebSite — publisher → @id #business)
+ *
+ * وترتبط به بقية الصفحات خارجيًا:
+ *   - Service.provider        → @id #business  (generateServiceSchema)
+ *   - WebPage.isPartOf        → @id #website   (generateWebPageSchema)
+ *
+ * ⚠️ AggregateRating — قرار موثّق بالرفض (طلب المالك «بأرقام موثقة فقط»):
+ * لا يوجد اليوم أي مصدر تقييم خارجي موثّق للكيان (لا ملف نشاط تجاري على
+ * جوجل ولا منصة مراجعات مستقلة). نشر aggregateRating بأرقام ذاتية على موقع
+ * الشركة نفسها مخالفة صريحة لسياسة Google (self-serving reviews) وقد يُسقط
+ * كل النتائج الغنية للموقع. يُضاف الحقل فقط بعد توفر مصدر خارجي قابل
+ * للتحقق (ملف Google Business Profile بمراجعات حقيقية هو الطريق الأقصر).
+ */
+export function generateSiteGraph() {
+  // نسخ العقد من المولدات المفردة (مصدر الحقيقة يبقى واحدًا) مع إسقاط
+  // @context الداخلي — الرسم يحمل @context واحدًا على الجذر.
+  const org = generateOrganizationSchema() as Record<string, unknown>;
+  const pro = generateProfessionalServiceSchema() as Record<string, unknown>;
+  delete org["@context"];
+  delete pro["@context"];
+  delete org["@type"]; // يُستبدل بالنوع المركّب أدناه
+  delete pro["@type"];
+  delete pro["logo"]; // يُستبدل بمرجع @id للعقدة #logo
+  delete pro["image"];
+  delete org["logo"];
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        // كيان الأعمال الموحّد: المنظمة والنشاط المهني شيء واحد.
+        "@type": ["ProfessionalService", "Organization"],
+        "@id": `${SITE_URL}/#business`,
+        ...org,
+        ...pro,
+        logo: { "@id": `${SITE_URL}/#logo` },
+        image: { "@id": `${SITE_URL}/#logo` },
+      },
+      {
+        "@type": "ImageObject",
+        "@id": `${SITE_URL}/#logo`,
+        url: `${SITE_URL}/logo.webp`,
+        contentUrl: `${SITE_URL}/logo.webp`,
+        caption: SITE_NAME,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        name: SITE_NAME,
+        alternateName: "Asoul Al-Diafa",
+        url: SITE_URL,
+        inLanguage: "ar",
+        publisher: { "@id": `${SITE_URL}/#business` },
+      },
+    ],
+  };
+}
+
 export function generateBreadcrumbSchema(
   items: { name: string; url: string }[]
 ) {
@@ -151,13 +221,11 @@ export function generateWebPageSchema(page: {
     name: page.name,
     description: page.description,
     url: page.url,
-    isPartOf: {
-      "@type": "WebSite",
-      "@id": `${SITE_URL}/#website`,
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
+    // مرجع @id خالص — العقدة الكاملة #website معرّفة مرة واحدة في رسم
+    // الـlayout (generateSiteGraph)؛ تكرار تعريفها هنا كان يخلق نسختين.
+    isPartOf: { "@id": `${SITE_URL}/#website` },
     inLanguage: "ar",
+    about: { "@id": `${SITE_URL}/#business` },
   };
 }
 
@@ -176,13 +244,10 @@ export function generateServiceSchema(service: {
     name: service.name,
     description: service.description,
     url: service.url,
-    // Reference the SINGLE ProfessionalService entity by @id — never create a
+    // Reference the SINGLE business entity by pure @id — never create a
     // new per-city business entity (that implies a physical location = doorway signal).
-    provider: {
-      "@type": "ProfessionalService",
-      name: SITE_NAME,
-      "@id": `${SITE_URL}/#business`,
-    },
+    // العقدة الكاملة #business معرّفة في generateSiteGraph (الـlayout).
+    provider: { "@id": `${SITE_URL}/#business` },
     areaServed: service.cityAr
       ? { "@type": "City", name: service.cityAr }
       : { "@type": "Country", name: "Saudi Arabia" },

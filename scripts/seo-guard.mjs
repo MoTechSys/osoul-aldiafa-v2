@@ -59,6 +59,21 @@ function walk(dir, out = []) {
 function pick(re, html) { const m = html.match(re); return m ? m[1].trim() : null; }
 function textOf(s) { return s ? s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim() : ""; }
 
+/**
+ * حزمة AEO: الـlayout صار يصدر رسمًا موحدًا `{"@graph":[...]}` بدل كتل
+ * مفردة. أي فحص يمشي على «عقد» JSON-LD يجب أن يفكّ الرسم أولًا وإلا صار
+ * أعمى عن كل ما بداخله (S14 كان سيتوقف عن رؤية sameAs وS15 عن areaServed).
+ */
+function ldNodes(parsed) {
+  const top = Array.isArray(parsed) ? parsed : [parsed];
+  const out = [];
+  for (const n of top) {
+    if (n && Array.isArray(n["@graph"])) out.push(...n["@graph"]);
+    else if (n) out.push(n);
+  }
+  return out;
+}
+
 const files = walk(APP_DIR);
 const errors = [];
 const warn = [];
@@ -272,7 +287,7 @@ if (process.env.CHECK_LINKS === "1") {
     for (const m of html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {
       try {
         const j = JSON.parse(m[1].replace(/\\u003c/g, "<").replace(/\\u003e/g, ">").replace(/\\u0026/g, "&"));
-        for (const node of Array.isArray(j) ? j : [j]) {
+        for (const node of ldNodes(j)) {
           for (const u of [].concat(node.sameAs || [])) if (/^https?:/.test(u)) sameAs.add(u);
         }
       } catch { /* S8 يتولّى أخطاء التحليل */ }
@@ -307,7 +322,7 @@ try {
     for (const m of html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {
       try {
         const j = JSON.parse(m[1].replace(/\\u003c/g, "<").replace(/\\u003e/g, ">").replace(/\\u0026/g, "&"));
-        for (const node of Array.isArray(j) ? j : [j]) {
+        for (const node of ldNodes(j)) {
           const areas = [].concat(node.serviceArea || node.areaServed || []);
           declared = Math.max(declared, areas.filter((a) => a && typeof a === "object").length);
         }
