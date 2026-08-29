@@ -98,6 +98,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    // حساب X الرسمي (أكّده المالك 2026-08-29) — نفس اسم الدومين: @asoulaldiafa.
+    // site = الحساب الناشر، creator = صاحب المحتوى؛ يربطان أي مشاركة للموقع
+    // على X ببطاقة غنية منسوبة للحساب الرسمي (إشارة كيان إضافية).
+    site: "@asoulaldiafa",
+    creator: "@asoulaldiafa",
     title: "أصول الضيافة | خدمات الضيافة الفاخرة",
     description:
       "نحيي أصول الضيافة العربية الأصيلة في جدة وينبع وكل مناطق المملكة",
