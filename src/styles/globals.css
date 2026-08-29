@@ -272,6 +272,28 @@ button, a, [role="button"] {
   50%      { box-shadow: 0 0 0 18px rgba(37,211,102,0); }
 }
 
+/* ═══════════ زر واتساب العائم (FAB) ═══════════
+   المعايير: Material FAB = 56px (في المكوّن w-14 h-14)، هامش 24px،
+   جهة اليسار = «النهاية» في RTL. على الجوال (≤860px — نفس نقطة تحوّل
+   .osoul-bottomnav حرفيًا) يرتفع فوق الشريط السفلي:
+   10px حافة + ~69px شريط (padding 10+9 + عمود min-height 48px + حدود)
+   + 22px فجوة ≈ 101px + safe-area-inset-bottom
+   (زر MENU البارز -36px بالمنتصف — لا تقاطع أفقي مع الزر يسارًا)
+   (آيفون نوتش/شريط إيماءات). z-50: فوق المحتوى (z-40 سابقًا كان ينسحق)
+   وتحت قائمة الشريط السفلي المفتوحة (z-60) فلا يغطيها. */
+.osoul-wa-fab {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 50;
+}
+@media (max-width: 860px) {
+  .osoul-wa-fab {
+    left: 16px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 101px);
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--noir-rich); }
@@ -954,6 +976,14 @@ select:focus:not(:focus-visible) {
   from { opacity: 0; transform: translateY(24px) scale(0.96); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
+/* P-LCP (2026-08-29): نسخة «مرئية دائمًا» لبطاقة الـh1 — عنصر LCP.
+   المتصفح لا يحسب LCP لعنصرٍ opacity:0، فأي fade على البطاقة يضيف
+   مدّته كاملة (مضروبة في خنق الجوال) إلى LCP المُقاس. الحل: نفس حركة
+   الصعود transform فقط، والعنصر مرئي من أول إطار → LCP ≈ FCP. */
+@keyframes heroRiseVisible {
+  from { transform: translateY(24px) scale(0.96); }
+  to   { transform: translateY(0) scale(1); }
+}
 @keyframes heroFade {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -966,12 +996,17 @@ select:focus:not(:focus-visible) {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
 }
-.hero-in-card  { animation: heroRise   1s   cubic-bezier(0.22,1,0.36,1) both; }
-.hero-in-logo  { animation: heroLogoIn 1.1s cubic-bezier(0.22,1,0.36,1) both; }
-.hero-in-since { animation: heroFade   0.7s ease 0.6s  both; }
-.hero-in-pills { animation: heroRise   0.7s cubic-bezier(0.22,1,0.36,1) 0.85s both; }
-.hero-in-rule  { animation: heroRule   0.9s cubic-bezier(0.22,1,0.36,1) 0.9s  both; }
-.hero-in-hint  { animation: heroFade   0.6s ease 1.4s  both; }
+/* أداء (LCP): heroRise يبدأ من opacity:0، والمتصفح لا يحسب LCP لعنصرٍ
+   إلا حين يصير مرئيًا — فكل مللي ثانية من مدة الدخول تُضاف مباشرة إلى
+   LCP المُقاس. المدد خُفّضت (1s→0.45s للبطاقة الحاملة لعنوان h1) بنفس
+   المنحنى فيبقى الإحساس الفاخر، ويكسب LCP ~0.5s حقيقية. التتابع اللاحق
+   (since/pills/rule/hint) زخرفي لا يحمل عنصر LCP فتقصيره أخف. */
+.hero-in-card  { animation: heroRiseVisible 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+.hero-in-logo  { animation: heroLogoIn 0.6s  cubic-bezier(0.22,1,0.36,1) both; }
+.hero-in-since { animation: heroFade   0.5s ease 0.3s  both; }
+.hero-in-pills { animation: heroRise   0.5s cubic-bezier(0.22,1,0.36,1) 0.45s both; }
+.hero-in-rule  { animation: heroRule   0.6s cubic-bezier(0.22,1,0.36,1) 0.5s  both; }
+.hero-in-hint  { animation: heroFade   0.5s ease 0.8s  both; }
 
 /* احترام تفضيل تقليل الحركة: يظهر المحتوى فورًا بلا أي حركة */
 @media (prefers-reduced-motion: reduce) {
@@ -981,4 +1016,104 @@ select:focus:not(:focus-visible) {
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* P-LCP (2026-08-29): زخارف الهيرو كلها CSS خالص بدل motion/react.
+   السبب المقاس: استيراد motion في Hero كان يضع مكتبة الحركة كاملة على
+   مسار الترطيب الحرج للصفحة الرئيسية (Script Evaluation ~2.1s على جوال
+   مخنوق) مع أن كل استخداماتها هنا زخرفية (توهّج، بخار، شرر، نبض السهم).
+   نفس الشكل النهائي حرفيًا — لكن بلا أي JS. */
+@keyframes heroAurora {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.92); }
+  50%      { opacity: 0.95; transform: translate(-50%, -50%) scale(1.06); }
+}
+.hero-aurora { animation: heroAurora 8s ease-in-out infinite; }
+
+@keyframes heroSteam {
+  0%   { opacity: 0.25; transform: translateY(0) scaleX(1); }
+  60%  { opacity: 0.11; transform: translateY(-160px) scaleX(1.4); }
+  100% { opacity: 0;    transform: translateY(-300px) scaleX(1.85); }
+}
+.hero-steam {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroSteam 6s ease-out infinite;
+}
+.hero-steam-2 { animation-duration: 7s;   animation-delay: 1.2s; }
+.hero-steam-3 { animation-duration: 6.5s; animation-delay: 2.4s; }
+
+@keyframes heroSparkle {
+  0%, 100% { opacity: 0;    transform: scale(0.5); }
+  50%      { opacity: 0.85; transform: scale(1.3); }
+}
+.hero-sparkle { animation: heroSparkle 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+@keyframes heroScrollPulse {
+  0%, 100% { transform: scaleY(0.4); }
+  50%      { transform: scaleY(1); }
+}
+.hero-scroll-pulse {
+  transform-origin: top;
+  animation: heroScrollPulse 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora, .hero-steam, .hero-sparkle, .hero-scroll-pulse {
+    animation: none !important;
+  }
+}
+
+/* P-LCP: بدائل CSS لتأثيرات motion المُزالة من مكوّنات الـlayout */
+@keyframes waFabIn {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+.osoul-wa-fab {
+  animation: waFabIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s both;
+  transition: transform 0.2s ease;
+}
+.osoul-wa-fab:hover  { transform: scale(1.12); }
+.osoul-wa-fab:active { transform: scale(0.92); }
+
+.footer-social-btn { transition: transform 0.2s ease; }
+.footer-social-btn:hover  { transform: scale(1.1) translateY(-2px); }
+.footer-social-btn:active { transform: scale(0.95); }
+
+/* الهيدر: توهّج الشعار النابض + hover الشعار وزر واتساب — كانت motion */
+@keyframes navGlowPulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.9; }
+}
+.navbar-logo-glow { animation: navGlowPulse 3.5s ease-in-out infinite; }
+.navbar-logo { transition: transform 0.25s cubic-bezier(0.34, 1.3, 0.64, 1); }
+.navbar-logo:hover { transform: rotate(-4deg) scale(1.06); }
+.navbar-wa-btn { transition: transform 0.2s ease; }
+.navbar-wa-btn:hover  { transform: scale(1.04); }
+.navbar-wa-btn:active { transform: scale(0.96); }
+@media (prefers-reduced-motion: reduce) {
+  .navbar-logo-glow { animation: none !important; }
+}
+
+/* الشريط السفلي والقائمة المنبثقة — كانت motion/AnimatePresence */
+@keyframes centerIn {
+  from { transform: scale(0.85); }
+  to   { transform: scale(1); }
+}
+.osoul-center-in { animation: centerIn 0.35s cubic-bezier(0.34, 1.4, 0.64, 1) 0.15s both; }
+@keyframes sheetIn {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.osoul-sheet-in { animation: sheetIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes tileIn {
+  from { transform: translateY(14px); }
+  to   { transform: translateY(0); }
+}
+.osoul-tile-in { animation: tileIn 0.3s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .osoul-center-in, .osoul-sheet-in, .osoul-tile-in { animation: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .osoul-wa-fab { animation: none !important; }
 }

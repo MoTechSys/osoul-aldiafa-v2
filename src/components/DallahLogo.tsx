@@ -20,7 +20,21 @@ import Image from "next/image";
  *                described by the adjacent text … a null (empty) alt value can
  *                be used». مرّر نصًّا صريحًا إن استُخدم الشعار وحده بلا نص مجاور.
  */
-export function DallahLogo({ size = 40, alt = "" }: { size?: number; alt?: string }) {
+export function DallahLogo({
+  size = 40,
+  alt = "",
+  priority = false,
+}: {
+  size?: number;
+  alt?: string;
+  /**
+   * أداء (LCP): كان priority مثبّتًا داخل المكوّن، فكل استخدام — حتى شعار
+   * الفوتر أسفل الصفحة — كان يولّد <link rel="preload"> يزاحم صورة
+   * الهيرو (عنصر LCP) على عرض الشبكة في أول رحلة. الآن يمرّره
+   * المستدعي صراحةً: Navbar (فوق الطيّ) يمرّر true، الفوتر يتركه كسولًا.
+   */
+  priority?: boolean;
+}) {
   return (
     <div
       style={{
@@ -38,7 +52,8 @@ export function DallahLogo({ size = 40, alt = "" }: { size?: number; alt?: strin
         alt={alt}
         width={size}
         height={size}
-        priority
+        priority={priority}
+        loading={priority ? undefined : "lazy"}
         style={{ width: "100%", height: "100%", objectFit: "contain" }}
       />
     </div>

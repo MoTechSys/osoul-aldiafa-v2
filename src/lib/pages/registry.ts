@@ -59,9 +59,22 @@ export function getSubPage(slug: string): SubPage | null {
   return BY_SLUG[slug] ?? null;
 }
 
-/** أولوية sitemap — من الصفحة نفسها أو مشتقّة من نوعها. */
+/**
+ * مدينتا التركيز (قرار المالك 2026-08-29): التغطية كل المملكة، لكن SEO
+ * يركّز بقوة على جدة وينبع — فصفحاتهما تأخذ دفعة أولوية في sitemap.
+ */
+const FOCUS_CITY_RE = /(^|-)(jeddah|yanbu)(-|$)/;
+
+/**
+ * أولوية sitemap — من الصفحة نفسها أو مشتقّة من نوعها، مع دفعة +0.05
+ * (بسقف 0.95) لصفحات جدة وينبع تنفيذًا لقرار التركيز الجغرافي.
+ */
 export function subPagePriority(page: SubPage): number {
-  return page.priority ?? PRIORITY_BY_KIND[page.kind];
+  const base = page.priority ?? PRIORITY_BY_KIND[page.kind];
+  if (FOCUS_CITY_RE.test(page.slug)) {
+    return Math.min(0.95, Math.round((base + 0.05) * 100) / 100);
+  }
+  return base;
 }
 
 /** استخراج الأسئلة الشائعة من كتل الصفحة (لبناء FAQ schema). */

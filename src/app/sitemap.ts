@@ -76,11 +76,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/terms", sources: ["src/app/terms", "src/components/LegalPage.tsx"], priority: 0.3, changeFrequency: "yearly" as const },
   ];
 
-  // صفحات (خدمة × مدينة) — أولوية عالية لاستهداف الكلمات المحلية
+  // صفحات (خدمة × مدينة) — أولوية عالية لاستهداف الكلمات المحلية،
+  // وجدة وينبع تأخذان الأعلى (قرار المالك 2026-08-29: تركيز SEO عليهما).
   const localRoutes = LOCAL_PAGES.map((p) => ({
     path: `/${localSlug(p.service, p.city)}`,
     sources: ["src/app/[serviceCity]", ...LOCAL_SOURCES],
-    priority: 0.9,
+    priority: p.city === "jeddah" || p.city === "yanbu" ? 0.95 : 0.9,
     changeFrequency: "weekly" as const,
   }));
 
