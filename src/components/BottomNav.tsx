@@ -4,7 +4,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
+// P-LCP (2026-08-29): أُزيل motion/react — دخول زر القائمة وانزلاق الورقة
+// وتتابع البلاطات صارت CSS keyframes (osoul-menu-* في globals.css).
+// هذا المكوّن في layout كل الصفحات على الجوال — مسار الترطيب الحرج.
 // م-٢٠ب — WHATSAPP_DISPLAY لم يُستورد بعد الآن: زر واتساب صار بلا رقم بأمر القائد
 // («خليه زر بدون رقم، زر على طول واتساب»)، فحذف الاستيراد يمنع تحذير lint.
 import { WHATSAPP_NUMBER as WA_NUMBER, whatsappUrl } from "@/lib/constants";
@@ -119,19 +121,9 @@ export default function BottomNav() {
             aria-expanded={open}
             aria-controls="osoul-mobile-menu"
           >
-            <motion.span
-              initial={{ scale: 0.85, opacity: 1 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 18,
-                delay: 0.15,
-              }}
-              className="osoul-bottomnav__centerInner"
-            >
+            <span className="osoul-bottomnav__centerInner osoul-center-in">
               <MenuGridIcon />
-            </motion.span>
+            </span>
             <span className="osoul-bottomnav__centerLabel">القائمة</span>
           </button>
 
@@ -155,30 +147,21 @@ export default function BottomNav() {
       </nav>
 
       {/* Full-screen mobile menu sheet */}
-      <AnimatePresence>
-        {open && (
+      {open && (
           <>
-            <motion.div
+            <div
               key="scrim"
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
               className="osoul-menu__scrim"
               onClick={() => setOpen(false)}
               aria-hidden
             />
-            <motion.div
+            <div
               key="sheet"
               role="dialog"
               aria-modal="true"
               aria-label="القائمة الرئيسية"
               id="osoul-mobile-menu"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 320 }}
-              className="osoul-menu__sheet"
+              className="osoul-menu__sheet osoul-sheet-in"
             >
               <button
                 type="button"
@@ -222,11 +205,10 @@ export default function BottomNav() {
                 {fullMenu.map((m, i) => {
                   const active = isActive(m.href);
                   return (
-                    <motion.div
+                    <div
                       key={m.href}
-                      initial={{ opacity: 1, y: 14 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.06 + i * 0.04 }}
+                      className="osoul-tile-in"
+                      style={{ animationDelay: `${0.06 + i * 0.04}s` }}
                     >
                       <Link
                         href={m.href}
@@ -239,7 +221,7 @@ export default function BottomNav() {
                         <span className="osoul-menu__tileIcon">{m.icon}</span>
                         <span className="osoul-menu__tileLabel">{m.label}</span>
                       </Link>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </nav>
@@ -299,10 +281,9 @@ export default function BottomNav() {
                   </a>
                 </p>
               </div>
-            </motion.div>
+            </div>
           </>
-        )}
-      </AnimatePresence>
+      )}
     </>
   );
 }

@@ -30,11 +30,16 @@ export function Analytics() {
 
   return (
     <>
+      {/* أداء (TBT/INP): كان strategy="afterInteractive" فيتنافس سكربت gtag
+          (~500 ك.ب) مع hydration على الخيط الرئيسي في نافذة التفاعل الأولى —
+          وTBT المقيس 650ms. lazyOnload يؤجّله إلى ما بعد اكتمال التحميل؛
+          القياس لا يفقد شيئًا: gtag يلتقط الزيارة عند التحميل أيًّا كان توقيته،
+          وGA4 يعتمد send_page_view عند config لا على لحظة تنفيذ مبكرة. */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
-      <Script id="ga4-init" strategy="afterInteractive">
+      <Script id="ga4-init" strategy="lazyOnload">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}

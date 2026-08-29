@@ -22,4 +22,11 @@ describe("ProfessionalService — نطاق وسعر (قرار المالك)", ()
   it("الوصف لا يحتوي الصياغة القديمة «في منطقتي مكة»", () => {
     expect(pro.description).not.toMatch(/في منطقتي مكة/);
   });
+
+  it("areaServed = المملكة (Country) + 5 دوائر تركيز (قرار المالك 2026-08-29)", () => {
+    const areas = pro.areaServed as { "@type": string }[];
+    expect(Array.isArray(areas)).toBe(true);
+    expect(areas.filter((a) => a["@type"] === "Country")).toHaveLength(1);
+    expect(areas.filter((a) => a["@type"] === "GeoCircle")).toHaveLength(5);
+  });
 });

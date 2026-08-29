@@ -1,7 +1,8 @@
 "use client";
 
+// P-LCP (2026-08-29): أُزيل motion/react — تأثيرات hover/tap الثلاثة صارت
+// CSS (.footer-social-btn في globals.css). Footer في layout كل الصفحات.
 import Link from "next/link";
-import { motion } from "motion/react";
 import { DallahLogo } from "@/components/DallahLogo";
 import { SocialButtons3D } from "@/components/SocialButtons3D";
 import { navLinks, useWhatsAppUrl, WA_NUMBER, WA_DISPLAY } from "@/components/Navbar";
@@ -51,44 +52,38 @@ export default function Footer() {
             </p>
 
             <div className="flex gap-3 mt-5">
-              <motion.a
+              <a
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="واتساب"
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-11 h-11 rounded-full flex items-center justify-center min-h-[44px]"
+                className="footer-social-btn w-11 h-11 rounded-full flex items-center justify-center min-h-[44px]"
                 style={{ background: "#25D36614", border: "1px solid #25D36633", color: "#25D366" }}
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347" />
                 </svg>
-              </motion.a>
-              <motion.a
+              </a>
+              <a
                 href={`tel:+${WA_NUMBER}`}
                 aria-label="اتصل بنا"
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-11 h-11 rounded-full flex items-center justify-center min-h-[44px]"
+                className="footer-social-btn w-11 h-11 rounded-full flex items-center justify-center min-h-[44px]"
                 style={{ background: "rgba(212,175,55,0.10)", border: "1px solid rgba(212,175,55,0.30)", color: "#C5A059" }}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-              </motion.a>
-              <motion.a
+              </a>
+              <a
                 href={`mailto:${EMAIL}`}
                 aria-label="بريد إلكتروني"
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-11 h-11 rounded-full flex items-center justify-center min-h-[44px]"
+                className="footer-social-btn w-11 h-11 rounded-full flex items-center justify-center min-h-[44px]"
                 style={{ background: "rgba(212,175,55,0.10)", border: "1px solid rgba(212,175,55,0.30)", color: "#C5A059" }}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
-              </motion.a>
+              </a>
             </div>
           </div>
 

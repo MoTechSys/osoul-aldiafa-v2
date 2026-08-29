@@ -54,6 +54,26 @@ export const SERVICE_AREAS = Object.values(CITIES).map((c) => ({
   geoRadius: 30000,
 }));
 
+/**
+ * قرار المالك (2026-08-29، نهائي): التغطية **كل مناطق المملكة**، مع تركيز
+ * تشغيلي وSEO قوي على **جدة وينبع** تحديدًا.
+ *
+ * التمثيل في schema.org: areaServed مصفوفة تجمع Country (السعودية كاملة —
+ * يفتح الظهور لأي بحث محلي في المملكة) مع دوائر GeoCircle للمدن الخمس
+ * (إشارة كثافة/أولوية للمناطق الأساسية — جوجل يقرأ العنصرين معًا ولا
+ * تعارض بينهما: الدوائر تخصيص داخل نطاق الدولة لا استثناء منه).
+ * هذا يحل بند ق-٢ في docs/01-status/02-قرارات-معلّقة.md من الاتجاه الثاني
+ * (كنا نخسر أسواق بقية المناطق بإعلان 5 مدن فقط).
+ */
+export const AREA_SERVED_KINGDOM_WITH_FOCUS = [
+  {
+    "@type": "Country" as const,
+    name: "Saudi Arabia",
+    alternateName: "المملكة العربية السعودية",
+  },
+  ...SERVICE_AREAS,
+];
+
 export function generateProfessionalServiceSchema() {
   return {
     "@context": "https://schema.org",
@@ -62,7 +82,7 @@ export function generateProfessionalServiceSchema() {
     name: SITE_NAME,
     alternateName: "Asoul Al-Diafa",
     description:
-      "أصول الضيافة — خدمات ضيافة فاخرة متنقّلة في جدة وينبع أساسًا، مع خدمة تصل إلى بقية مناطق المملكة: قهوة عربية، شاي، تمور، وفريق صبّابين وقهوجيين بزي تراثي يصل إليك أينما كانت مناسبتك.",
+      "أصول الضيافة — خدمات ضيافة فاخرة متنقّلة في كل مناطق المملكة، وبتركيز خاص على جدة وينبع: قهوة عربية، شاي، تمور، وفريق صبّابين وقهوجيين بزي تراثي يصل إليك أينما كانت مناسبتك.",
     url: SITE_URL,
     telephone: PHONE,
     email: EMAIL,
@@ -71,7 +91,8 @@ export function generateProfessionalServiceSchema() {
     // SAB: مناطق خدمة فقط — بلا address وبلا geo (R5 / SC2 / SC3).
     // نستخدم areaServed (الخاصية الحديثة في schema.org التي تَخلُف serviceArea
     // المهجورة) — واتّساقًا مع generateServiceSchema أدناه الذي يستخدم areaServed.
-    areaServed: SERVICE_AREAS,
+    // قرار المالك 2026-08-29: المملكة كاملة + دوائر التركيز الخمس.
+    areaServed: AREA_SERVED_KINGDOM_WITH_FOCUS,
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: [

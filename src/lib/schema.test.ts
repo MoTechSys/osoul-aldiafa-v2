@@ -68,20 +68,22 @@ describe("generateProfessionalServiceSchema (SAB — ترقية areaServed)", ()
     // الترقية المعتمدة (P0): serviceArea → areaServed.
     expect(s).toHaveProperty("areaServed");
     expect(s).not.toHaveProperty("serviceArea");
-    // مناطق الخدمة دوائر GeoCircle (مدن مخدومة، بلا مقر نقطي للنشاط).
+    // قرار المالك (2026-08-29): التغطية كل المملكة (Country أولًا)
+    // + دوائر GeoCircle لمدن التركيز (مزوّد متنقّل، بلا مقر نقطي).
     expect(Array.isArray(s.areaServed)).toBe(true);
-    expect(s.areaServed[0]).toMatchObject({ "@type": "GeoCircle" });
+    expect(s.areaServed[0]).toMatchObject({ "@type": "Country" });
+    expect(s.areaServed[1]).toMatchObject({ "@type": "GeoCircle" });
   });
 });
 
 describe("generateProfessionalServiceSchema — عدد مناطق الخدمة", () => {
   const s = generateProfessionalServiceSchema();
 
-  it("areaServed يطابق مدن الخدمة المعلنة (لا تلفيق للرقم 13)", () => {
-    // الرقم «13 منطقة» المعروض في الواجهة غير مشتق من بيانات المستودع
-    // (CITIES = 5، مجموع الأحياء 42، جدة+ينبع = 21) — دَين معلَن في baseline
-    // لا يُسدّ بتغيير areaServed. هذا الاختبار يثبّت areaServed على مصدرها.
+  it("areaServed = Country + 5 GeoCircle (قرار المالك 2026-08-29)", () => {
+    // المصدر: AREA_SERVED_KINGDOM_WITH_FOCUS = Country (السعودية)
+    // + SERVICE_AREAS (5 GeoCircle مشتقة من CITIES). أي تغيير في العدد
+    // يجب أن يبدأ من CITIES في localPages.ts لا من تعديل الرقم هنا.
     // تأكيدات priceRange والوصف في src/lib/schema-scope.test.ts.
-    expect(s.areaServed.length).toBe(5);
+    expect(s.areaServed.length).toBe(6);
   });
 });

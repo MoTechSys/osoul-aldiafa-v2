@@ -4,25 +4,54 @@ import { useRef, useState, useEffect } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 // ⚠️ HERO_SAFE لا HERO_IMAGES: الأخيرة تشير إلى setup-5 وفيها وجوه
 // مطموسة، ولا يصح أن تكون في موضع LCP (أول ما يراه الزائر).
 import { HERO_SAFE, BRAND_LOGO } from "@/lib/images";
 import { useWhatsAppUrl } from "@/components/Navbar";
 
+// P-LCP (2026-08-29): أُزيل استيراد motion/react من هذا الملف كليًا.
+// السبب المقاس: الهيرو أول ما يترطّب على الرئيسية، واستيراد motion فيه كان
+// يضع مكتبة الحركة كاملة على المسار الحرج (Script Evaluation ~2.1s على جوال
+// مخنوق) مع أن كل استخداماتها هنا زخرفية. البدائل:
+//   • التوهّج/البخار/الشرر/نبض السهم → CSS keyframes (hero-aurora وأخواتها
+//     في globals.css) — نفس الشكل النهائي حرفيًا وبلا JS.
+//   • الـparallax وتلاشي المحتوى مع التمرير → مستمع scroll سلبي + rAF يكتب
+//     متغيّري CSS (--hero-y / --hero-fade) — أخف بمراتب من useScroll.
+// لا تُعِد motion إلى هذا الملف؛ الأقسام تحت الطية (dynamic) حرّة فيها.
+
 export function Hero() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const parallax = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
-  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const heroRef = useRef<HTMLElement>(null);
   const waUrl = useWhatsAppUrl();
-  const reduceMotion = useReducedMotion();
+
+  // parallax + fade عبر متغيّرات CSS — بلا مكتبة حركة.
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const h = el.offsetHeight || 1;
+      const p = Math.min(Math.max(-el.getBoundingClientRect().top / h, 0), 1);
+      el.style.setProperty("--hero-y", `${(p * 22).toFixed(2)}%`);
+      el.style.setProperty("--hero-fade", `${Math.max(1 - p / 0.8, 0).toFixed(3)}`);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   // أداء (LCP): الفيديو الخلفي مؤجَّل — الصورة (priority) هي عنصر LCP الفوري،
   // والفيديو يُركَّب بعد خمول المتصفح فقط ثم يظهر فوقها بهدوء.
   const [videoReady, setVideoReady] = useState(false);
   useEffect(() => {
-    if (reduceMotion) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const start = () => setVideoReady(true);
     if ("requestIdleCallback" in window) {
       const id = window.requestIdleCallback(start, { timeout: 3000 });
@@ -30,7 +59,7 @@ export function Hero() {
     }
     const t = setTimeout(start, 1500);
     return () => clearTimeout(t);
-  }, [reduceMotion]);
+  }, []);
 
   return (
     <section
@@ -39,7 +68,10 @@ export function Hero() {
       aria-label="الصفحة الرئيسية"
     >
       {/* parallax cinematic video background (coffee + steam) with image poster fallback */}
-      <motion.div className="absolute inset-0" style={{ y: parallax }}>
+      <div
+        className="absolute inset-0 will-change-transform"
+        style={{ transform: "translateY(var(--hero-y, 0%))" }}
+      >
         {/* LCP: صورة الهيرو في HTML الأولي — priority (غير كسولة) وبأبعاد المساحة كاملة */}
         <Image
           src={HERO_SAFE.desktop}
@@ -65,7 +97,7 @@ export function Hero() {
             <source src="/videos/hero-bg.mp4" type="video/mp4" />
           </video>
         )}
-      </motion.div>
+      </div>
 
       {/* cinematic vignette overlay - golden/black gradient */}
       <div className="absolute inset-0" style={{
@@ -75,21 +107,19 @@ export function Hero() {
         background: "radial-gradient(ellipse at 50% 35%, rgba(226,198,142,0.22) 0%, rgba(197,160,89,0.08) 35%, transparent 68%)"
       }} />
 
-      {/* luxury aurora glow behind the title - breathing golden light (mobile-first) */}
-      <motion.div
-        className="absolute left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      {/* luxury aurora glow behind the title - breathing golden light (CSS-only) */}
+      <div
+        className="hero-aurora absolute left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         style={{
           width: "min(120vw, 900px)",
           height: "min(70vh, 560px)",
           background: "radial-gradient(ellipse at center, rgba(226,198,142,0.28) 0%, rgba(197,160,89,0.12) 32%, transparent 66%)",
           filter: "blur(28px)",
         }}
-        animate={reduceMotion ? undefined : { opacity: [0.55, 0.95, 0.55], scale: [0.92, 1.06, 0.92] }}
-        transition={reduceMotion ? undefined : { duration: 8, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden
       />
 
-      {/* steam/vapor effect - soft animated SVG (mobile-first: visible on phones too) */}
+      {/* steam/vapor effect - soft animated SVG (CSS-only keyframes) */}
       <div className="absolute inset-0 opacity-30 sm:opacity-20 pointer-events-none" aria-hidden>
         <svg className="absolute w-full h-full" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
           <defs>
@@ -98,64 +128,21 @@ export function Hero() {
             </filter>
           </defs>
           <g filter="url(#steamBlur)">
-            <motion.ellipse
-              cx="960"
-              cy="780"
-              rx="180"
-              ry="90"
-              fill="rgba(245,239,224,0.18)"
-              animate={reduceMotion ? undefined : {
-                cy: [780, 620, 480],
-                rx: [180, 240, 320],
-                opacity: [0.25, 0.12, 0]
-              }}
-              transition={reduceMotion ? undefined : { duration: 6, repeat: Infinity, ease: "easeOut" }}
-            />
-            <motion.ellipse
-              cx="820"
-              cy="820"
-              rx="140"
-              ry="70"
-              fill="rgba(226,198,142,0.15)"
-              animate={reduceMotion ? undefined : {
-                cy: [820, 680, 560],
-                rx: [140, 200, 280],
-                opacity: [0.22, 0.10, 0]
-              }}
-              transition={reduceMotion ? undefined : { duration: 7, delay: 1.2, repeat: Infinity, ease: "easeOut" }}
-            />
-            <motion.ellipse
-              cx="1100"
-              cy="800"
-              rx="160"
-              ry="80"
-              fill="rgba(197,160,89,0.12)"
-              animate={reduceMotion ? undefined : {
-                cy: [800, 640, 500],
-                rx: [160, 220, 300],
-                opacity: [0.20, 0.08, 0]
-              }}
-              transition={reduceMotion ? undefined : { duration: 6.5, delay: 2.4, repeat: Infinity, ease: "easeOut" }}
-            />
+            <ellipse className="hero-steam" cx="960" cy="780" rx="180" ry="90" fill="rgba(245,239,224,0.18)" />
+            <ellipse className="hero-steam hero-steam-2" cx="820" cy="820" rx="140" ry="70" fill="rgba(226,198,142,0.15)" />
+            <ellipse className="hero-steam hero-steam-3" cx="1100" cy="800" rx="160" ry="80" fill="rgba(197,160,89,0.12)" />
           </g>
         </svg>
       </div>
 
-      {/* floating golden sparkles - visible on mobile too (95% of users), reduced-motion aware
-
-          ⚠️ إصلاح hydration (React #418/#422) — سبب مُثبَت بتجربة A/B:
-          كان هنا شرط `{!reduceMotion && (…)}` يحكم الـJSX نفسه.
-          و`useReducedMotion()` يرجع false على السيرفر دائمًا (لا يعرف
-          تفضيل الجهاز)، فمن يُفعّل «تقليل الحركة» يحصل على HTML فيه
-          الشرر ثم يحاول React حذفه لحظة الـhydration ⇒ تباعُد في الشجرة.
-          الحل: نُرسمه دائمًا ونخفيه بـCSS عبر `motion-reduce:hidden` —
-          وهو النمط المُستخدم أصلًا للفيديو في السطر ٢٦، فالقرار يتخذه
-          المتصفّح لا JavaScript ⇒ لا تباعُد أصلًا.                          */}
+      {/* floating golden sparkles — CSS keyframes، وإخفاء تقليل الحركة بـCSS
+          (motion-reduce:hidden) فالقرار للمتصفّح لا JavaScript ⇒ لا تباعُد
+          hydration أصلًا (نفس نمط الفيديو أعلاه). */}
       <div aria-hidden className="motion-reduce:hidden">
           {[...Array(7)].map((_, i) => (
-            <motion.span
+            <span
               key={i}
-              className="absolute block rounded-full"
+              className="hero-sparkle absolute block rounded-full"
               style={{
                 left: `${12 + ((i * 53) % 78)}%`,
                 top: `${15 + ((i * 37) % 60)}%`,
@@ -163,17 +150,17 @@ export function Hero() {
                 height: 2.5,
                 background: "radial-gradient(circle, #E2C68E 0%, transparent 70%)",
                 boxShadow: "0 0 12px rgba(226,198,142,0.7)",
+                animationDuration: `${3 + (i % 2)}s`,
+                animationDelay: `${i * 0.5}s`,
               }}
-              animate={{ opacity: [0, 0.85, 0], scale: [0.5, 1.3, 0.5] }}
-              transition={{ duration: 3 + (i % 2), repeat: Infinity, delay: i * 0.5, ease: [0.22, 1, 0.36, 1] }}
             />
           ))}
           {/* a few extra sparkles on larger screens */}
           <div className="hidden sm:block">
             {[...Array(4)].map((_, i) => (
-              <motion.span
+              <span
                 key={`lg-${i}`}
-                className="absolute block rounded-full"
+                className="hero-sparkle absolute block rounded-full"
                 style={{
                   left: `${55 + ((i * 41) % 40)}%`,
                   top: `${20 + ((i * 29) % 55)}%`,
@@ -181,16 +168,19 @@ export function Hero() {
                   height: 3,
                   background: "radial-gradient(circle, #E2C68E 0%, transparent 70%)",
                   boxShadow: "0 0 14px rgba(226,198,142,0.75)",
+                  animationDuration: `${3.5 + (i % 2)}s`,
+                  animationDelay: `${i * 0.7}s`,
                 }}
-                animate={{ opacity: [0, 0.8, 0], scale: [0.5, 1.25, 0.5] }}
-                transition={{ duration: 3.5 + (i % 2), repeat: Infinity, delay: i * 0.7, ease: [0.22, 1, 0.36, 1] }}
               />
             ))}
           </div>
       </div>
 
       {/* content */}
-      <motion.div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4 sm:px-6" style={{ opacity: fade }}>
+      <div
+        className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4 sm:px-6"
+        style={{ opacity: "var(--hero-fade, 1)" as unknown as number }}
+      >
        {/* ✨ luxury glass card wrapping the hero content */}
        {/* ⚠️ أداء (LCP): حركة الدخول هنا بـ CSS (hero-in-*) وليست motion.
            السبب: initial={{opacity:0}} كان يجعل محتوى الهيرو مخفيًا في HTML
@@ -279,19 +269,11 @@ export function Hero() {
         {/* scroll hint */}
         <div className="hero-in-hint absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gold-bright/70">
           <span className="text-[10px] tracking-[0.4em]">اسحب للأسفل</span>
-          <motion.span
-            className="block w-px h-7 sm:h-8 bg-gradient-to-b from-gold to-transparent"
-            animate={reduceMotion ? undefined : { scaleY: [0.4, 1, 0.4] }}
-            transition={reduceMotion ? undefined : { duration: 1.8, repeat: Infinity }}
+          <span
+            className="hero-scroll-pulse motion-reduce:hidden block w-px h-7 sm:h-8 bg-gradient-to-b from-gold to-transparent"
           />
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
-
-// ─────────────────────────────────────────────────────────────
-// Marquee strip of real photos — a strong, visual "proof" right
-// under the hero (replaces the old partners marquee).
-// ─────────────────────────────────────────────────────────────
-// دالة رياضية لضمان التفاف الشريط (Seamless Wrap) بلا فراغ مهما سُحب بقوة — مطابقة لمنطق "كيف الضيافة"
