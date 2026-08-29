@@ -37,6 +37,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    // @asoulaldiafa — حساب X الرسمي بنفس اسم الدومين (قرار المالك 2026-08-29).
+    site: "@asoulaldiafa",
+    creator: "@asoulaldiafa",
     title: "أصول الضيافة | خدمات الضيافة الفاخرة",
     description: "خدمات الضيافة الفاخرة في جدة وينبع وكل مناطق المملكة",
     images: HOME_OG.map((i) => i.url),
