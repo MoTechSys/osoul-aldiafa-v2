@@ -4,7 +4,6 @@ import {
   SITE_NAME,
   PHONE_TEL as PHONE,
   EMAIL,
-  WHATSAPP_NUMBER,
   SOCIAL_LINKS,
 } from "@/lib/constants";
 import { CITIES } from "@/lib/localPages";
@@ -28,8 +27,13 @@ export function generateOrganizationSchema() {
         name: "Saudi Arabia",
       },
     },
+    // sameAs — تعريف جوجل الحرفي (توثيق Organization structured data):
+    // «URL of a page on another website with additional information about your
+    //  organization … profile page on a social media or review site».
+    // رابط wa.me رابط إجراء (فتح محادثة) لا صفحة ملف تعريفي — أُزيل من هنا
+    // (تدقيق معايير جوجل 2026-08-29، انظر docs/04-research/) وبقي في
+    // الواجهة وllms.txt كقناة تواصل.
     sameAs: [
-      `https://wa.me/${WHATSAPP_NUMBER}`,
       SOCIAL_LINKS.tiktok,
       SOCIAL_LINKS.instagram,
       SOCIAL_LINKS.snapchat,
@@ -113,8 +117,8 @@ export function generateProfessionalServiceSchema() {
     priceRange: "$$-$$$$",
     // ملاحظة: أُزيلت aggregateRating/review الذاتية — التقييمات الذاتية على موقع الشركة
     // مخالفة لسياسة Google (self-serving reviews) وقد تُسقط النتائج الغنية.
+    // sameAs: ملفات تعريفية فقط (بلا wa.me — راجع التعليق في generateOrganizationSchema).
     sameAs: [
-      `https://wa.me/${WHATSAPP_NUMBER}`,
       SOCIAL_LINKS.tiktok,
       SOCIAL_LINKS.instagram,
       SOCIAL_LINKS.snapchat,
@@ -272,25 +276,10 @@ export function generateFAQSchema(
   };
 }
 
-export function generateWebSiteSchema() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": `${SITE_URL}/#website`,
-    name: SITE_NAME,
-    alternateName: "Asoul Al-Diafa",
-    url: SITE_URL,
-    inLanguage: "ar",
-    publisher: {
-      "@type": "Organization",
-      name: SITE_NAME,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE_URL}/logo.webp`,
-      },
-    },
-  };
-}
+// محذوف: generateWebSiteSchema() — كان كودًا ميتًا (صفر استخدامات) يعرّف
+// نسخة ثانية متضاربة من عقدة #website (publisher مدمج بدل مرجع @id).
+// العقدة الوحيدة المعتمدة لـ WebSite داخل generateSiteGraph أعلاه.
+// (تدقيق معايير جوجل 2026-08-29)
 
 /**
  * تسلسل آمن لـ JSON-LD يمنع XSS عبر هروب < و > و &
